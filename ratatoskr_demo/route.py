@@ -145,6 +145,10 @@ class RouterRejected(Exception):
 # The priority source of a task written while Decider is unreachable, under the urgent tag (ruling 12).
 URGENT_SOURCE = "urgent"
 
+# The label, and the wrist's sensitivity field, of every task written with [route] backend = "none":
+# no sensitivity check ran and nothing could be held (ruling 37).
+UNGATED = "ungated"
+
 
 def routing_state(task: Task, contact: Contact) -> dict[str, Any]:
     """Everything a router is shown about one task. Guarded text only.

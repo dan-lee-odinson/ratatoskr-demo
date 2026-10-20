@@ -60,7 +60,7 @@ import httpx
 
 from ratatoskr_demo.errors import TerminalError, TransientError, raise_for_http, transport_error
 from ratatoskr_demo.extract import Contact
-from ratatoskr_demo.route import URGENT_SOURCE, RoutedTask
+from ratatoskr_demo.route import UNGATED, URGENT_SOURCE, RoutedTask
 
 SYNC_URL = "https://api.todoist.com/api/v1/sync"
 
@@ -90,6 +90,7 @@ def build_task_args(
     contact: Contact,
     project_id: str,
     label: str,
+    ungated: bool = False,
 ) -> dict[str, Any]:
     """The item_add args for one task. Pure, so it is easy to test.
 
@@ -106,6 +107,8 @@ def build_task_args(
         labels.append(PROJECT_LABEL_PREFIX + task.project)
     if task.priority_source == URGENT_SOURCE:
         labels.append(UNROUTED_LABEL)  # ruling 12: written under the urgent tag while Decider was unreachable
+    if ungated:
+        labels.append(UNGATED)  # ruling 37: backend "none", no sensitivity check ran
 
     args: dict[str, Any] = {
         "content": content,

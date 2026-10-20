@@ -73,6 +73,8 @@ from ratatoskr_demo.todoist import TodoistClient
 log = logging.getLogger("ratatoskr_demo")
 
 EX_CONFIG = 78
+UNGATED_WARNING = ("backend=none: no sensitivity gate; nothing is held for sensitivity "  # rulings 37, 38
+                   "(the stop-list tripwire still runs)")
 
 
 @dataclass
@@ -264,11 +266,13 @@ def build_runtime(
 
 
 def check_startup(runtime: Runtime) -> None:
-    """At startup: the model record against its baseline, and the router.
+    """At startup: a warning when there is no gate, the model record against its baseline, and the router.
 
     A changed model record or a rejected key stops (exit 78). No network yet
     is not an error: the record is then checked before the first Bedrock call.
     """
+    if runtime.settings.route.backend == "none":
+        log.warning(UNGATED_WARNING)
     if runtime.bedrock is not None:
         try:
             runtime.bedrock.check_model_record()

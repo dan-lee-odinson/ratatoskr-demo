@@ -61,14 +61,14 @@ twenty-line example. See [`patterns/gatekeeper_triage/README.md`](patterns/gatek
 | **required** | an Amazon Bedrock API key | `openai.gpt-oss-20b` extracts the commitments |
 | **required** | a Telegram bot and its chat | `/demo <text>` in, `/status`, and every notice out |
 | **required** | a Todoist account | where the tasks land, in one project |
+| **required** | Strands Decider (local, about 8 GB of RAM) | the source-text gate and the routing (`[route] backend = "decider"`) |
 | optional | a Pocket recorder and its API key | conversations in, recorded instead of typed (`inputs = ["pocket", ...]`) |
 | optional | an Artemis watch, or any phone with Telegram | where the three-line message is read |
 | optional | smart glasses, later, through the mock kit | an input slot only: the glasses adapter is a stub today |
-| optional | Strands Decider (local, about 8 GB of RAM) | the source-text gate and the routing; without it, `backend = "none"`: no gate, no routing |
 | optional | a TypeSafe API key | the bench's Jev column only |
 
-The minimum install is the four required items, `[devices] inputs = ["text"]` and
-`[route] backend = "none"` or `"decider"`. A secret is asked for only when the adapter that uses it
+The minimum install is the five required items, `[devices] inputs = ["text"]` and
+`[route] backend = "decider"`. A secret is asked for only when the adapter that uses it
 is enabled: no Pocket key without the Pocket input, no TypeSafe key without Jev or the bench.
 
 ## System requirements
@@ -163,7 +163,11 @@ no title, no words from the conversation); the recording is released by a tag (`
 The project sort is not a privacy question: it judges a task whose conversation has already been
 cleared, and when it is unsure the task is filed "unsorted", not held.
 
-Privacy is a feature of this design, and these four refusals are how it is built.
+Privacy is a feature of this design, and these four refusals are how it is built. With Decider
+configured, which the quickstart ("Run it") requires, nothing in the config loosens them; the two exceptions
+are the `urgent` tag while Decider is unreachable, described below, and the demo-only
+`backend = "none"` setting, which runs the courier with no sensitivity gate (the stop-list
+tripwire still runs; see "Running without a gate (demo only)").
 
 **The tripwire.** Before any model call, Strands Decider included, a check in code holds any
 conversation that names a stop-listed client, even when the transcriber misspells the name or
@@ -179,7 +183,7 @@ sensitive or Decider is unsure of one. Decider is the only model that may read t
 because it is bound to `127.0.0.1` (the config refuses any other host) and persists nothing; a test
 fails if transcript text is ever sent anywhere else but the extraction itself. A window takes a
 few seconds on four laptop CPU threads (1.7–3.3 s in the 19 Oct bench), which is fine for the
-demo's short recordings. With `[route] backend` other than `"decider"` the source gate is skipped, and the
+demo's short recordings. With the bench-only `"jev"` backend the source gate is skipped, and the
 post-extraction check on each task (below) is the only sensitivity check.
 
 **Task-text sensitivity.** After the extraction, one of Decider's six judgments about each task is
@@ -341,7 +345,8 @@ at least the Bedrock key, the Telegram bot token and chat id, and the Todoist to
 ```
 
 starts Strands Decider on `127.0.0.1:8000`, on the CPU, capped at four threads (the first run
-downloads the Qwen3.5-2B base model, about 4.5 GB). In another terminal:
+downloads the Qwen3.5-2B base model, about 4.5 GB). Leave `[route] backend = "decider"` in
+`config.toml`, as shipped. In another terminal:
 
 ```bash
 .venv/Scripts/ratatoskr-demo --decider-check
@@ -355,6 +360,14 @@ option-order test), `--inspect-shape <recording_id>` (key names and types of one
 never values), `--scrub-list`. For the bench's real-task set, `--once --dry-run --save-tasks`
 (optionally with `--demo-text "<text>"` and `--option-descriptions on|off`) saves the guarded
 extractions, never the transcripts, to the git-ignored `bench/raw/`.
+
+### Running without a gate (demo only)
+
+With `[route] backend = "none"` and no Decider, no sensitivity check runs and nothing is held for
+sensitivity (the stop-list tripwire still runs); the courier logs
+`backend=none: no sensitivity gate; nothing is held for sensitivity (the stop-list tripwire still runs)`
+at startup, and every task it writes carries the label `ungated`, which the wrist shows in place of
+the sensitivity field.
 
 ## Set up your projects and your stop list
 

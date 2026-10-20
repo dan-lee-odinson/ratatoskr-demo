@@ -76,7 +76,7 @@ def test_unrouted_tasks_are_written_to_todoist_unchanged(tmp_path, clock, servic
     rec_001 = [a for a in todoist.tasks.values() if "Pocket id: rec_001" in a["description"]]  # in write order
     assert [a["content"] for a in rec_001] == [t["content"] for t in REC_001_TASKS]
     for args in rec_001:
-        assert args["labels"] == ["pocket"]  # no proj: label
+        assert args["labels"] == ["pocket", "ungated"]  # no proj: label; routing off is ungated (ruling 37)
         assert "priority" not in args  # Todoist default
         assert not args["content"].startswith("[maybe]")
 

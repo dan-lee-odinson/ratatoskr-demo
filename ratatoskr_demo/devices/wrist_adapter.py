@@ -35,8 +35,9 @@ sensitivity answer: with backend "decider" only under the urgent tag while
 Decider is unreachable (ruling 12), since an unusable reply makes the recording
 wait and a malformed `sensitive` answer holds it (ruling 23); with the
 bench-only "jev" backend, when its reply was unusable (the private
-repository's rule that the notice must say so). It says "sens -" when routing
-is off or the task was never routed (the "Met ..." task).
+repository's rule that the notice must say so). It says "sens -" when the task
+was never routed (the "Met ..." task). With backend "none" it says "ungated"
+in place of the sensitivity field: no sensitivity check ran (ruling 37).
 """
 
 from __future__ import annotations
@@ -44,7 +45,7 @@ from __future__ import annotations
 from typing import Any, Mapping
 
 from ratatoskr_demo.judge import PRIORITY_SHORT, SOURCE_SHORT
-from ratatoskr_demo.route import URGENT_SOURCE
+from ratatoskr_demo.route import UNGATED, URGENT_SOURCE
 
 URGENT_FIRST_LINE = "urgent · unrouted"
 from ratatoskr_demo.route import RoutedTask
@@ -55,9 +56,10 @@ SEP = " · "
 UNSORTED = "unsorted"
 
 
-def format_task(routed: RoutedTask, content: str, *, sensitivity_unchecked: bool) -> str:
+def format_task(routed: RoutedTask, content: str, *, sensitivity_unchecked: bool, ungated: bool = False) -> str:
     """The three-line wrist message for one task. `content` is the Todoist content (with any "[maybe] ")."""
-    return "\n".join([first_line(routed), content, third_line(routed, sensitivity_unchecked=sensitivity_unchecked)])
+    return "\n".join([first_line(routed), content,
+                      third_line(routed, sensitivity_unchecked=sensitivity_unchecked, ungated=ungated)])
 
 
 def first_line(routed: RoutedTask) -> str:
@@ -74,7 +76,7 @@ def first_line(routed: RoutedTask) -> str:
     return line
 
 
-def third_line(routed: RoutedTask, *, sensitivity_unchecked: bool) -> str:
+def third_line(routed: RoutedTask, *, sensitivity_unchecked: bool, ungated: bool = False) -> str:
     judged = _judged(routed)
     commit = judged.get("real_commitment")
     if commit is None or commit.problem:
@@ -83,7 +85,9 @@ def third_line(routed: RoutedTask, *, sensitivity_unchecked: bool) -> str:
         word = {True: "yes", False: "no"}.get(routed.real_commitment, "unsure")
         commit_text = f"commit {word} {_confidence(commit)}"
     sensitive = judged.get("sensitive")
-    if routed.sensitivity is None:
+    if ungated:
+        sens_text = UNGATED
+    elif routed.sensitivity is None:
         sens_text = "sens not checked" if sensitivity_unchecked else "sens -"
     else:
         sens_text = f"sens {routed.sensitivity} {_confidence(sensitive)}"

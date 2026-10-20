@@ -352,6 +352,50 @@ def test_the_hook_holds_on_the_source_text_even_when_the_tool_arguments_look_har
     assert len(server.bodies) == 1 and isinstance(server.bodies[0]["state"], str)  # the arguments were never asked
 
 
+class FakeAgent:
+    """Stands in for the Strands agent: records each call, then asks for add_task as a model would."""
+
+    def __init__(self, hook, built):
+        self.hook, self.calls, self.events = hook, [], []
+        built.append(self)
+
+    def __call__(self, note):
+        self.calls.append(note)
+        event = event_for("add_task", {"content": "Email Priya the preprint by Friday"})
+        registry_with(self.hook).invoke_callbacks(event)
+        self.events.append(event)
+
+
+def run_demo(note, reply):
+    import strands_hook
+
+    built, out = [], io.StringIO()
+    with LocalDecider(reply) as server, redirect_stdout(out):
+        strands_hook.main([note], client=dc.DeciderClient(server.url),
+                          build_agent=lambda hook: FakeAgent(hook, built))
+    return built, server.bodies, out.getvalue()
+
+
+def test_the_hook_demo_holds_a_sensitive_note_before_the_agent_is_ever_called():
+    built, bodies, out = run_demo(MEDICAL, by_text("medical leave"))
+    assert built == []  # no agent built, none called: the note never reached the model
+    assert len(bodies) == 1 and isinstance(bodies[0]["state"], str)
+    assert "source: hold (source-sensitive)" in out and "held before the agent ran" in out
+
+
+def test_the_hook_demo_runs_the_agent_on_a_clear_note_and_the_hook_still_gates_add_task():
+    def reply(body):  # the note is clear; the add_task arguments are what Decider holds
+        return 200, decider_answers(sensitive=0.05 if isinstance(body["state"], str) else 0.97)
+
+    built, bodies, out = run_demo("Met Priya at the meetup. I promised to email her the preprint.", reply)
+    [agent] = built
+    assert len(agent.calls) == 1
+    assert [type(body["state"]) for body in bodies] == [str, dict]  # the note first, then the tool call
+    assert bodies[1]["state"]["tool"] == "add_task"
+    assert "HELD by gatekeeper triage (sensitive)" in agent.events[0].cancel_tool
+    assert "source: proceed" in out and "add_task: hold" in out
+
+
 def test_without_source_text_the_hook_falls_back_to_the_arguments():
     import strands_hook
 

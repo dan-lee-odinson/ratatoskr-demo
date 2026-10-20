@@ -15,22 +15,31 @@
 """Gatekeeper triage as a Strands Agents hook: Decider decides before a tool may run.
 
     from strands import Agent
+    from decider_client import gate_source_text
     from strands_hook import GatekeeperHook
 
-    hook = GatekeeperHook(tools={"add_task"}, source_text=note)
-    agent = Agent(model=..., tools=[add_task], hooks=[hook])
-    agent(note)
+    verdict = gate_source_text(note)  # 1. the note, before any model reads it
+    if verdict.verdict == "hold":
+        ...  # a person reviews it; the agent never runs
+    else:
+        hook = GatekeeperHook(tools={"add_task"})  # 2. then each add_task call
+        agent = Agent(model=..., tools=[add_task], hooks=[hook])
+        agent(note)
 
-`GatekeeperHook` registers a `BeforeToolCallEvent` callback. Before the first
-call to a guarded tool it gates the SOURCE text, when it was given one
-(`source_text`: the transcript, note or email the agent is acting on), with
-decider_client.gate_source_text(); a hold there cancels every guarded call.
-An agent writes its own tool arguments and can drop the detail that made the
-source sensitive, which is why the arguments alone are only the fallback.
-Then, for each pending call, it runs the pattern over the call's arguments
+The SOURCE text (the transcript, note or email the agent is acting on) is
+gated first, with decider_client.gate_source_text(), before the agent is
+invoked: once the agent runs, the model has read the note. An agent writes
+its own tool arguments and can drop the detail that made the source
+sensitive, which is why the arguments alone are only the fallback.
+
+`GatekeeperHook` registers a `BeforeToolCallEvent` callback. For each pending
+call to a guarded tool it runs the pattern over the call's arguments
 (decider_client.triage: the tripwire, then the six typed questions in one
 read). A "hold" sets `event.cancel_tool`, so the tool does not run and the
-agent is told why; `hook.decisions` records how each call was judged.
+agent is told why; `hook.decisions` records how each call was judged. Given
+`source_text`, the hook also gates that text once, before the first guarded
+call, and a hold there cancels every guarded call; by then the model has
+read it, so this is a backstop, not the gate.
 
 Hook API read from strands-agents 1.61.1 (strands/hooks/events.py and
 registry.py, 16 Oct 2026): BeforeToolCallEvent carries `tool_use` (name,
@@ -152,11 +161,19 @@ def describe(decision: Triage | Verdict) -> str:
     return decision.line()
 
 
-def main(argv: list[str]) -> int:
+def main(argv: list[str], *, client: DeciderClient | None = None,
+         build_agent: Callable[[GatekeeperHook], Any] | None = None) -> int:
     note = " ".join(argv) or "Met Priya at the meetup. I promised to email her my thermal preprint by Friday."
-    hook = GatekeeperHook(tools={"add_task"}, source_text=note)
-    agent = make_agent(bedrock_model(os.environ["BEDROCK_API_KEY"]), hook)
-    agent(note)
+    client = client or DeciderClient()
+    questions = load_questions()
+    verdict = client.gate_source_text(note, questions)  # 1. the note, before any model reads it
+    print(f"source: {describe(verdict)}")
+    if verdict.verdict == "hold":
+        print("held before the agent ran: nothing of this note went to the model")
+        return 0
+    hook = GatekeeperHook(client, questions, tools={"add_task"})  # 2. then each add_task call's arguments
+    build_agent = build_agent or (lambda h: make_agent(bedrock_model(os.environ["BEDROCK_API_KEY"]), h))
+    build_agent(hook)(note)
     for name, decision in hook.decisions:
         print(f"{name}: {describe(decision)}")
     print(f"tasks added: {len(ADDED)}")

@@ -62,7 +62,7 @@ to that review.
 |---|---|
 | `questions.toml` | the five questions, their floors, the project defaults, the tripwire terms, the source window |
 | `decider_client.py` | a standard-library client for `POST /v1/systemone`: `gate_source_text()` returning a `Verdict`, and `triage()` returning a typed `Triage` |
-| `strands_hook.py` | a Strands Agents `BeforeToolCallEvent` hook: gates the source text it is given, then each pending tool call's arguments, and sets `cancel_tool` on a hold |
+| `strands_hook.py` | a Strands Agents `BeforeToolCallEvent` hook: gates each pending tool call's arguments and sets `cancel_tool` on a hold; its demo gates the note before the agent runs |
 | `example.py` | twenty lines: one task, one read, five answers |
 
 ```bash
@@ -77,15 +77,22 @@ OpenAI-compatible provider (`pip install "strands-agents[openai]==1.61.1"`, and 
 
 ```python
 from strands import Agent
+from decider_client import gate_source_text
 from strands_hook import GatekeeperHook, bedrock_model, add_task, describe
 
 note = "Met Priya at the meetup. I promised to email her my thermal preprint by Friday."
-hook = GatekeeperHook(tools={"add_task"}, source_text=note)  # the note is gated before any tool runs
-agent = Agent(model=bedrock_model(api_key), tools=[add_task], hooks=[hook])
-agent(note)
-for tool, decision in hook.decisions:
-    print(tool, describe(decision))
+verdict = gate_source_text(note)  # 1. the note is gated before any model reads it
+if verdict.verdict == "hold":
+    print(describe(verdict))  # held: the agent never runs
+else:
+    hook = GatekeeperHook(tools={"add_task"})  # 2. then each add_task call's arguments
+    agent = Agent(model=bedrock_model(api_key), tools=[add_task], hooks=[hook])
+    agent(note)
+    for tool, decision in hook.decisions:
+        print(tool, describe(decision))
 ```
+
+`python strands_hook.py "<note>"` runs the same order.
 
 ## Adapting it
 
@@ -94,8 +101,9 @@ for tool, decision in hook.decisions:
   another, or the probability spreads across them and falls under the floor.
 - **Tune the floors** on your own traffic. Decider's calibration was fitted on short classification
   tasks; its authors advise measuring before trusting a threshold.
-- **Give the gate the source.** Pass `source_text` to the hook, or call `gate_source_text()`
-  before the agent runs, whenever the action comes from a text you have.
+- **Give the gate the source.** Call `gate_source_text()` before the agent runs, whenever the
+  action comes from a text you have, and stop on a hold. The hook's `source_text` is only a
+  backstop: by the time a tool call reaches the hook, the model has read the text.
 - **Choose the failure mode.** `on_unavailable = "hold"` fails closed. Ratatoskr Demo itself writes
   nothing while Decider is down: the recording waits, and after three cycles without Decider one
   notice gives the count waiting.

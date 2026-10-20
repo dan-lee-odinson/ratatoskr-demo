@@ -39,7 +39,7 @@ timeout_seconds = 120
 hard_stop_usd = 5.00              # refuse any Bedrock call that could take the total past this
 
 [route]
-backend = "decider"               # "decider" | "jev" | "none"
+backend = "decider"               # "decider" | "jev" (bench only) | "none" (demo only: no gate)
 min_confidence = 0.70             # documentation default; each route.toml entry carries its own floor
 decider_url = "http://127.0.0.1:8000"
 decider_model = "StrandsAgents/strands-decider-2B-hobson-v21"

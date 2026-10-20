@@ -489,6 +489,17 @@ MUTATIONS = [
      "    pid_file.parent.mkdir(parents=True, exist_ok=True)\n", "",
      ["tests/test_rotation_run.py::test_the_pid_file_is_written_on_a_fresh_clone_with_no_ledger_folder"]),
 
+    # --- backend "none" says it is ungated (Dan's ruling 37, 20 Oct 2026) ---
+    ("Ruling 37: the ungated label dropped", "ratatoskr_demo/todoist.py",
+     '        labels.append(UNGATED)  # ruling 37: backend "none", no sensitivity check ran\n', "",
+     ["tests/test_ungated.py::test_every_task_written_with_backend_none_carries_the_ungated_label"]),
+    ("Ruling 37: no warning at startup with backend none", "ratatoskr_demo/cli.py",
+     "        log.warning(UNGATED_WARNING)\n", "        pass\n",
+     ["tests/test_ungated.py::test_backend_none_logs_one_warning_line_at_startup_and_decider_logs_none"]),
+    ("Ruling 37: the wrist shows sens - instead of ungated", "ratatoskr_demo/devices/wrist_adapter.py",
+     "    if ungated:\n        sens_text = UNGATED\n    elif", "    if",
+     ["tests/test_ungated.py::test_the_wrist_line_shows_ungated_in_place_of_the_sensitivity_field"]),
+
     # --- the urgent tag, bounded (Dan's ruling 12, 18 Oct 2026) ---
     ("Ruling 12: urgent skips the gate even with Decider up", "ratatoskr_demo/cycle.py",
      "        if not self._decider_usable(rid, urgent):  # ruling 9: /health before the cycle's first read",
@@ -505,6 +516,16 @@ MUTATIONS = [
     ("Source gate: the hook ignores its source text", "patterns/gatekeeper_triage/strands_hook.py",
      "        if self.source_text is not None:", "        if False:",
      ["tests/test_patterns.py::test_the_hook_holds_on_the_source_text_even_when_the_tool_arguments_look_harmless"]),
+    ("Ruling 37: the hook demo gates the note inside the hook, after the agent has it (the old order)",
+     "patterns/gatekeeper_triage/strands_hook.py",
+     '    verdict = client.gate_source_text(note, questions)  # 1. the note, before any model reads it\n'
+     '    print(f"source: {describe(verdict)}")\n'
+     '    if verdict.verdict == "hold":\n'
+     '        print("held before the agent ran: nothing of this note went to the model")\n'
+     '        return 0\n'
+     '    hook = GatekeeperHook(client, questions, tools={"add_task"})  # 2. then each add_task call\'s arguments\n',
+     '    hook = GatekeeperHook(client, questions, tools={"add_task"}, source_text=note)\n',
+     ["tests/test_patterns.py::test_the_hook_demo_holds_a_sensitive_note_before_the_agent_is_ever_called"]),
     ("Pattern: gate_source_text never holds", "patterns/gatekeeper_triage/decider_client.py",
      '        return Verdict("hold", f"source-{status}", asked, len(parts), max_p)',
      '        return Verdict("proceed", None, asked, len(parts), max_p)',

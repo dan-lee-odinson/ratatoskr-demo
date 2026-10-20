@@ -29,7 +29,7 @@ def test_a_normal_recording_produces_todoist_tasks_and_a_done_entry(tmp_path, cl
     assert len(entry["todoist_task_ids"]) == 3
     written = [todoist.tasks[i] for i in entry["todoist_task_ids"]]
     assert [a["content"] for a in written] == [t["content"] for t in REC_001_TASKS]
-    assert all(a["labels"] == ["pocket"] and a["project_id"] == todoist.projects["Ratatoskr Demo"] for a in written)
+    assert all(a["labels"] == ["pocket", "ungated"] and a["project_id"] == todoist.projects["Ratatoskr Demo"] for a in written)
     assert written[0]["due"] == {"string": "Friday"}
     wrist = wrist_messages(telegram)
     assert [m.splitlines()[1] for m in wrist][:3] == [t["content"] for t in REC_001_TASKS]  # one per task

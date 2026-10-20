@@ -137,6 +137,7 @@ class Outcome:
     reason: str | None = None
     tasks: list[TaskOutcome] = field(default_factory=list)
     sensitivity_unchecked: bool = False
+    ungated: bool = False  # backend "none": no sensitivity check ran (ruling 37)
     project_name: str = ""
 
 
@@ -365,7 +366,8 @@ class Cycle:
         # route() only annotates; acting on sensitivity is the cycle's job, and
         # it happens before anything is written. Dan's `ok` tag means he has
         # reviewed the recording: it is not checked again.
-        verdict = sensitivity_verdict(routed.tasks) if self.settings.route.backend != "none" else None
+        ungated = self.settings.route.backend == "none"  # ruling 37: no gate ran; every task says so
+        verdict = sensitivity_verdict(routed.tasks) if not ungated else None
         if released and verdict is not None:
             log.info("recording %s: sensitivity %s, but released by ok; writing it", rid, verdict)
             verdict = None
@@ -388,7 +390,7 @@ class Cycle:
             project_id = self._todoist().ensure_project(project) if writes else "(todoist output off)"
         payloads = [
             build_task_args(task, recording_id=rid, ordinal=i, contact=routed.contact,
-                            project_id=project_id, label=self.settings.todoist.label)
+                            project_id=project_id, label=self.settings.todoist.label, ungated=ungated)
             for i, task in enumerate(tasks, start=1)
         ]
         # Check the final strings too: joining notes and context into one
@@ -396,7 +398,8 @@ class Cycle:
         if guard.any_overlap(text, [p["content"] for p in payloads] + [p["description"] for p in payloads], n):
             return self._leak_hold(rid, title, recording_at, demo=demo)
         outcome = Outcome("done", tasks=[TaskOutcome(routed=t, content=p["content"]) for t, p in zip(tasks, payloads)],
-                          sensitivity_unchecked=unchecked, project_name=project if writes or self.dry_run else "")
+                          sensitivity_unchecked=unchecked, ungated=ungated,
+                          project_name=project if writes or self.dry_run else "")
 
         if self.dry_run:
             for args in payloads:
@@ -425,7 +428,7 @@ class Cycle:
             log.info("recording %s %r: %d task(s) written to %s", rid, title, len(payloads), project)
         if not demo:
             for task in outcome.tasks:  # one wrist-shaped message per task
-                self._tell_dan(format_task(task.routed, task.content, sensitivity_unchecked=unchecked))
+                self._tell_dan(format_task(task.routed, task.content, sensitivity_unchecked=unchecked, ungated=ungated))
         return outcome
 
     def _gate_source(self, rid: str, text: str, urgent: bool) -> Any:

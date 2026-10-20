@@ -100,7 +100,8 @@ def format_demo_reply(outcome: Outcome, rid: str, *, backend: str = "decider") -
     if outcome.status == "done":
         blocks = []
         for task in outcome.tasks:
-            lines = [format_task(task.routed, task.content, sensitivity_unchecked=outcome.sensitivity_unchecked)]
+            lines = [format_task(task.routed, task.content, sensitivity_unchecked=outcome.sensitivity_unchecked,
+                                 ungated=outcome.ungated)]
             if task.routed.trace:
                 lines.append(trace_line({j.question: j for j in task.routed.trace}, backend))
             marked = ", marked [maybe]" if task.content.startswith(MAYBE_PREFIX) else ""
