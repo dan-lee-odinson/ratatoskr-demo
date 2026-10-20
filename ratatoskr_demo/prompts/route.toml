@@ -1,0 +1,111 @@
+# prompts/route.toml — the six questions Strands Decider answers about each extracted task,
+# all in one request over one state. The demo taxonomy: generic, and free to adapt.
+#
+# Rules of thumb: one property per question; describe situations rather than numeric
+# thresholds; criteria must be distinct from one another or the confidence spreads
+# across them and falls under the floor.
+#
+# How Ratatoskr Demo reads this file:
+#   - Every entry has type, instructions, criteria and min_confidence. The model sees only
+#     one task's text, notes and due date plus the contact's name, organisation, role and
+#     context. Never the transcript or the recording title.
+#   - An answer below its min_confidence is not used.
+#   - A Noul has no separate confidence field, only p, the probability of yes. Its
+#     confidence is max(p, 1 - p): 0.9 and 0.1 are both 90% sure, 0.5 is a coin toss.
+#   - priority is not asked directly. Three Nouls decide it, by a rule in route.py
+#     (priority_rule), walked in this order (Dan's ruling 7, 17 Oct 2026):
+#       someone_waiting yes (at or above its floor)              -> high   (Todoist 4)
+#       else hard_deadline yes, and the due date is within 30    -> high
+#         days of the recording (or cannot be read); a deadline
+#         more than 30 days out counts as no
+#       else worth_researching_soon yes                           -> medium (Todoist 3)
+#       else                                                      -> low    (Todoist 2)
+#     If the step that would decide rests on an answer under its floor, the walk stops
+#     there and [project.defaults] applies for the routed project (none if the project is
+#     unrouted too). The task records which step set its priority: someone_waiting,
+#     hard_deadline, worth_researching_soon, neither, or default:waiting / default:deadline
+#     / default:soon (which question was unsure).
+#   - [project.defaults] must give every project above one of low / medium / high.
+#   - sensitive, per recording:
+#       yes at or above its floor        -> HOLD, reason "sensitive"
+#       unsure (confidence below floor;  -> HOLD, reason "sensitive-unsure"
+#         at 0.60, p between 0.40 and 0.60)
+#       Decider unreachable, or a read   -> nothing written; the recording waits
+#         timed out                          (Dan's ruling 9)
+#       an unusable reply                 -> tasks written; the wrist message says
+#                                           "sens not checked"
+#     Nothing of a held recording is written until it is tagged ok in Pocket, and a
+#     recording released with ok is not checked for sensitivity again. The same criteria,
+#     asked of the transcript itself before extraction, are the source-text gate
+#     (ratatoskr_demo/source_gate.py).
+#   - Every Noul: the question stays in `instructions`; the words that define the answers
+#     are in `criteria`.
+
+[project]
+type = "choice"
+min_confidence = 0.70
+instructions = "Which of the owner's projects or areas does this task belong to? Judge from the task text, the notes, and the contact's organisation and role. Choose 'other' if none fits well."
+
+[project.criteria]
+research = "Papers, preprints, reviewers, data and methods."
+school = "Coursework, assignments, instructors, registration, study partners."
+work = "Paid work in any form: the day job and its colleagues and clients; a company or product someone is building, with its customers, partners and investors; and a job search, with its recruiters, hiring managers, applications and interviews."
+writing = "Articles, newsletters, interviews given, sources offered."
+community = "Clubs, professional societies, conferences, volunteering."
+personal = "Family, home, errands."
+other = "Anything that fits none of the areas above."
+
+[project.defaults]
+# Default priority per project, used only when the priority step that decides is answered below its floor.
+research = "medium"
+school = "high"
+work = "high"
+writing = "low"
+community = "medium"
+personal = "medium"
+other = "low"
+
+[someone_waiting]
+type = "noul"
+min_confidence = 0.70
+instructions = "Is a specific person — named, or identified by relationship or role (your sister, my boss, the client) — expecting a reply or a deliverable from the owner, whether or not a date was given?"
+
+[someone_waiting.criteria]
+true = "A specific person, named or identified by relationship or role, asked the owner for something, or the owner promised it to them: a reply, a document, an introduction, the owner's attendance. They will notice if it never comes."
+false = "Nobody is expecting anything from the owner: the task is the owner's own idea, or the owner is the one waiting on someone else."
+
+[hard_deadline]
+type = "noul"
+min_confidence = 0.70
+instructions = "Is there a stated date, time or event by which this must be done, after which it is late or the chance is gone?"
+
+[hard_deadline.criteria]
+true = "A date, a time or an event is stated (a session, a closing date, a submission time, a meeting), and after it the task is late or pointless."
+false = "No date, time or event is stated by which it must be done; it could be done later without being late."
+
+[worth_researching_soon]
+type = "noul"
+min_confidence = 0.70
+instructions = "Is this worth investigating or following up on in the next few weeks even though nobody is waiting on a reply by a date?"
+
+[worth_researching_soon.criteria]
+true = "Worth investigating or researching soon; it may connect to another of the owner's projects or to a contact worth developing."
+false = "Worth keeping on the list but nothing waits on it; it could sit for weeks without loss."
+
+[real_commitment]
+type = "noul"
+min_confidence = 0.70
+instructions = "Is this a real commitment that someone actually made, rather than a pleasantry?"
+
+[real_commitment.criteria]
+true = "A real commitment names a concrete thing to send, do, check or attend."
+false = "'Let's grab coffee sometime' or 'stay in touch' with nothing specific attached is a pleasantry."
+
+[sensitive]
+type = "noul"
+min_confidence = 0.60
+instructions = "Does this task or its notes contain details that should not go into a shared task list before the owner has reviewed them?"
+
+[sensitive.criteria]
+true = "confidential or proprietary business matters, another person's private circumstances, health, legal or financial specifics, or anything the other person would expect to be kept between them"
+false = "Ordinary professional follow-ups: sending a paper, a link or a résumé; checking a careers page; scheduling a call; introductions the other person offered openly; anything they'd be comfortable seeing in a shared task list."

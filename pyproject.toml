@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=77"]  # PEP 639: the SPDX license string and license-files
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ratatoskr-demo"
+version = "0.1.0"
+description = "Pocket -> Todoist courier with gatekeeper triage: an open-weight model on Amazon Bedrock extracts the commitments, Strands Decider judges them, the transcript is forgotten."
+readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
+authors = [{ name = "Dan Lee-Odinson" }]
+requires-python = ">=3.12"
+dependencies = [
+    "httpx>=0.28,<1",
+    # The stop-list tripwire's phonetic match (Double Metaphone): pure Python, BSD, standard library only.
+    "Metaphone==0.6",
+]
+
+[project.optional-dependencies]
+# The bench's Jev column (backend = "jev"). Pinned below 0.8 as in the private repo: 0.x API.
+bench = ["typesafe-sdk>=0.7,<0.8"]
+# patterns/gatekeeper_triage/strands_hook.py: the Strands Agents SDK and its OpenAI-compatible provider.
+pattern = ["strands-agents[openai]==1.61.1"]
+dev = [
+    "pytest>=8",
+    "respx>=0.22",
+    "jsonschema>=4.23",
+    "typesafe-sdk>=0.7,<0.8",
+    "strands-agents[openai]==1.61.1",
+]
+
+[project.scripts]
+ratatoskr-demo = "ratatoskr_demo.cli:main"
+
+[tool.setuptools]
+packages = ["ratatoskr_demo", "ratatoskr_demo.jobs", "ratatoskr_demo.devices"]
+
+[tool.setuptools.package-data]
+ratatoskr_demo = ["prompts/*.md", "prompts/*.toml", "devices/*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

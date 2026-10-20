@@ -1,0 +1,101 @@
+{
+  "data": {
+    "created_at": "2026-10-01T16:20:00Z",
+    "duration": 600,
+    "folder_id": "fld_default",
+    "id": "rec_006",
+    "language": "en",
+    "recorded_by": {
+      "display_name": "Dan",
+      "email": "redacted@example.invalid",
+      "user_id": "usr_owner"
+    },
+    "recording_at": "2026-10-01T16:20:00Z",
+    "state": "completed",
+    "summarizations": null,
+    "summarizations_errors": [],
+    "tags": [],
+    "title": "Poster session — row C",
+    "transcript": "Speaker 1: Your poster on sensor drift is the one I wanted to find. I'm Tomasz Brekke, I review for the Journal of Field Instrumentation. Speaker 2: Oh, great, thanks for stopping. Speaker 1: Your calibration method looks solid, but the methods section skips how you handled the outliers. Speaker 2: Fair. I can send you the revised methods section with the outlier handling by Monday. Speaker 1: Please do. And we have a public drift dataset from the coastal buoys; I'll share the link with you this week. Speaker 2: That would help a lot. I should also read that 2019 paper on temperature compensation you mentioned. Speaker 1: Yes, Halvorsen and Ito. Here's my card.",
+    "transcript_error": null,
+    "translation": null,
+    "translation_error": null,
+    "updated_at": "2026-10-01T16:20:00Z"
+  },
+  "expected": {
+    "triage": "process",
+    "source_sensitive": false,
+    "contact": {
+      "name": "Tomasz Brekke",
+      "organisation": "Journal of Field Instrumentation",
+      "role": "reviewer",
+      "context": "Met at a poster session; he reviews for an instrumentation journal and read the sensor-drift poster."
+    },
+    "tasks": [
+      {
+        "match": [
+          [
+            "methods"
+          ],
+          [
+            "outlier"
+          ]
+        ],
+        "content": "Send Tomasz the updated methods section covering how outliers were handled",
+        "due_string": "Monday",
+        "notes": null,
+        "project": "research",
+        "priority": "high",
+        "someone_waiting": true,
+        "hard_deadline": true,
+        "worth_researching_soon": null,
+        "real_commitment": true,
+        "sensitive": false
+      },
+      {
+        "match": [
+          [
+            "dataset"
+          ],
+          [
+            "buoy"
+          ]
+        ],
+        "content": "Expect the coastal buoy drift dataset link from Tomasz; chase if not by next week",
+        "due_string": "next week",
+        "notes": null,
+        "project": "research",
+        "priority": "medium",
+        "someone_waiting": false,
+        "hard_deadline": false,
+        "worth_researching_soon": true,
+        "real_commitment": true,
+        "sensitive": false
+      },
+      {
+        "match": [
+          [
+            "halvorsen"
+          ],
+          [
+            "compensation"
+          ],
+          [
+            "2019"
+          ]
+        ],
+        "content": "Look up: Halvorsen and Ito 2019 paper on temperature compensation",
+        "due_string": null,
+        "notes": null,
+        "project": "research",
+        "priority": "medium",
+        "someone_waiting": false,
+        "hard_deadline": false,
+        "worth_researching_soon": true,
+        "real_commitment": true,
+        "sensitive": false
+      }
+    ]
+  },
+  "success": true
+}

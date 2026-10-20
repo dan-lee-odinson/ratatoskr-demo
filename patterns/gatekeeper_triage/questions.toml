@@ -1,0 +1,97 @@
+# questions.toml — the gatekeeper triage pattern's typed questions, one Decider read.
+#
+# A copy of Ratatoskr Demo's prompts/route.toml (the tests keep the two identical), plus the
+# [gatekeeper] table. Adapt it: rename the projects and rewrite their descriptions for your
+# domain, keep one property per question, describe situations rather than numbers, and keep
+# the criteria distinct from one another or the confidence spreads across them.
+#
+#   project                 choice  which area the action belongs to; below its floor -> unsorted
+#   someone_waiting         noul    } priority, by a rule in code, walked in order: waiting yes
+#   hard_deadline           noul    } -> high; else a deadline yes within 30 days -> high; else
+#   worth_researching_soon  noul    } soon yes -> medium; else low. An unsure answer at the step
+#                                     that decides -> the project's default
+#   real_commitment         noul    a concrete commitment, or a pleasantry ("[maybe]")
+#   sensitive               noul    hold for review? yes, or unsure (below its floor), both HOLD
+#
+# A noul has no confidence field: its confidence is max(p, 1 - p).
+
+[gatekeeper]
+# A code tripwire the model cannot override: a term or a listed spelling in the text (any case),
+# or a word that sounds like the term (Soundex, also on two neighbouring words written together),
+# holds it BEFORE the model is asked anything.
+tripwire = [{ term = "vargrheim", spellings = ["vargrime"] }]
+# What to do when Strands Decider cannot be asked: "hold" (fail closed) or "proceed".
+on_unavailable = "hold"
+# gate_source_text(): the source (a transcript, a note, an email) is read in windows of about
+# this many words, split on speaker turns, and held if any window is sensitive or unsure.
+source_window_words = 300
+source_instruction = "Does this part of the conversation contain details that should not go into a shared task list before the owner has reviewed them?"
+
+[project]
+type = "choice"
+min_confidence = 0.70
+instructions = "Which of the owner's projects or areas does this task belong to? Judge from the task text, the notes, and the contact's organisation and role. Choose 'other' if none fits well."
+
+[project.criteria]
+research = "Papers, preprints, reviewers, data and methods."
+school = "Coursework, assignments, instructors, registration, study partners."
+work = "Paid work in any form: the day job and its colleagues and clients; a company or product someone is building, with its customers, partners and investors; and a job search, with its recruiters, hiring managers, applications and interviews."
+writing = "Articles, newsletters, interviews given, sources offered."
+community = "Clubs, professional societies, conferences, volunteering."
+personal = "Family, home, errands."
+other = "Anything that fits none of the areas above."
+
+[project.defaults]
+# Default priority per project, used only when the priority step that decides is answered below its floor.
+research = "medium"
+school = "high"
+work = "high"
+writing = "low"
+community = "medium"
+personal = "medium"
+other = "low"
+
+[someone_waiting]
+type = "noul"
+min_confidence = 0.70
+instructions = "Is a specific person — named, or identified by relationship or role (your sister, my boss, the client) — expecting a reply or a deliverable from the owner, whether or not a date was given?"
+
+[someone_waiting.criteria]
+true = "A specific person, named or identified by relationship or role, asked the owner for something, or the owner promised it to them: a reply, a document, an introduction, the owner's attendance. They will notice if it never comes."
+false = "Nobody is expecting anything from the owner: the task is the owner's own idea, or the owner is the one waiting on someone else."
+
+[hard_deadline]
+type = "noul"
+min_confidence = 0.70
+instructions = "Is there a stated date, time or event by which this must be done, after which it is late or the chance is gone?"
+
+[hard_deadline.criteria]
+true = "A date, a time or an event is stated (a session, a closing date, a submission time, a meeting), and after it the task is late or pointless."
+false = "No date, time or event is stated by which it must be done; it could be done later without being late."
+
+[worth_researching_soon]
+type = "noul"
+min_confidence = 0.70
+instructions = "Is this worth investigating or following up on in the next few weeks even though nobody is waiting on a reply by a date?"
+
+[worth_researching_soon.criteria]
+true = "Worth investigating or researching soon; it may connect to another of the owner's projects or to a contact worth developing."
+false = "Worth keeping on the list but nothing waits on it; it could sit for weeks without loss."
+
+[real_commitment]
+type = "noul"
+min_confidence = 0.70
+instructions = "Is this a real commitment that someone actually made, rather than a pleasantry?"
+
+[real_commitment.criteria]
+true = "A real commitment names a concrete thing to send, do, check or attend."
+false = "'Let's grab coffee sometime' or 'stay in touch' with nothing specific attached is a pleasantry."
+
+[sensitive]
+type = "noul"
+min_confidence = 0.60
+instructions = "Does this task or its notes contain details that should not go into a shared task list before the owner has reviewed them?"
+
+[sensitive.criteria]
+true = "confidential or proprietary business matters, another person's private circumstances, health, legal or financial specifics, or anything the other person would expect to be kept between them"
+false = "Ordinary professional follow-ups: sending a paper, a link or a résumé; checking a careers page; scheduling a call; introductions the other person offered openly; anything they'd be comfortable seeing in a shared task list."

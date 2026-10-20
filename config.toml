@@ -1,0 +1,58 @@
+# Ratatoskr Demo configuration: the laptop demo, run from the CLI.
+# Secrets are NOT here; they live in .env (see .env.example), read only by ratatoskr_demo/config.py.
+# A key or section the program does not know is a startup error (fail loud).
+
+[poll]
+interval_seconds = 30           # a recording stopped on camera reaches the wrist within a minute
+lookback_days = 1               # start_date window for the list call; the ledger prevents duplicates
+backoff_max_seconds = 3600      # cap for the x2 backoff on HTTP 429 and other transient failures
+
+[triage]
+# The tripwire, before any model call: HOLD if the term or a listed spelling is in the title or
+# transcript (any case), or if any word, or two neighbouring words written together, sounds like
+# the term (Double Metaphone). "vargrime" is how a transcriber spelled it on 17 Oct 2026.
+stop_list = [{ term = "vargrheim", spellings = ["vargrime"] }]
+tag_keep = "keep"
+tag_hold = "hold"
+tag_ok = "ok"
+tag_urgent = "urgent"            # only while Strands Decider is unreachable: written unrouted, priority high
+
+[guard]
+ngram_words = 8                 # C9: any 8-word transcript span found verbatim in model output -> reject
+
+[todoist]
+inbox_project_name = "Ratatoskr Demo"
+label = "pocket"
+
+[model]
+backend = "bedrock"               # the only backend wired in this repo
+model_id = "openai.gpt-oss-20b"   # the only model this project may call
+base_url = "https://bedrock-mantle.us-east-1.api.aws/v1"
+max_tokens = 2000
+reasoning_effort = "low"
+docs_read_on = "2026-10-16"       # model card and prices read on this day
+price_in_per_m = 0.07             # USD per 1M input tokens, us-east-1, Standard tier
+price_out_per_m = 0.30            # USD per 1M output tokens (reasoning tokens are billed as output)
+timeout_seconds = 120
+
+[spend]
+hard_stop_usd = 5.00              # refuse any Bedrock call that could take the total past this
+
+[route]
+backend = "decider"               # "decider" | "jev" | "none"
+min_confidence = 0.70             # documentation default; each route.toml entry carries its own floor
+decider_url = "http://127.0.0.1:8000"
+decider_model = "StrandsAgents/strands-decider-2B-hobson-v21"
+decider_timeout_seconds = 180          # Decider on a 4-thread laptop CPU: about 35 s per read
+source_window_words = 300              # source-text gate: transcript windows of about this many words
+option_descriptions = true             # false: the project options by name alone (for measuring only)
+
+[devices]
+# The courier runs with no wearable at all: "text" is the Telegram /demo command. The demo adds Pocket.
+inputs = ["pocket", "text"]       # any of "text", "pocket", "glasses" (the glasses input is a stub)
+outputs = ["todoist", "telegram"] # a secret is needed only for an enabled adapter
+
+[paths]
+state_dir = "ledger"              # processed.json, retry.json and spend.json live here (git-ignored)
+prompts_dir = "prompts"           # optional local copies of extract.md, context.md, route.toml win over the packaged ones
+model_baseline = "config/model_baseline.json"

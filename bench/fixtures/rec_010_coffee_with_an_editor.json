@@ -1,0 +1,81 @@
+{
+  "data": {
+    "created_at": "2026-10-05T19:30:00Z",
+    "duration": 600,
+    "folder_id": "fld_default",
+    "id": "rec_010",
+    "language": "en",
+    "recorded_by": {
+      "display_name": "Dan",
+      "email": "redacted@example.invalid",
+      "user_id": "usr_owner"
+    },
+    "recording_at": "2026-10-05T19:30:00Z",
+    "state": "completed",
+    "summarizations": null,
+    "summarizations_errors": [],
+    "tags": [],
+    "title": "Coffee with an editor",
+    "transcript": "Speaker 1: I'm Wren Castellanos, I edit the Lowlands Science Weekly newsletter. We'd love a piece from you on amateur ground stations. Speaker 2: I'd like that. I can get you a first draft by the end of the month. Speaker 1: Perfect, around twelve hundred words. Speaker 2: Understood. Speaker 1: And if you want a source, Oskar Lind built a station on his roof; he said he'd be happy to be interviewed. Speaker 2: Then I'll reach out to Oskar this week to set up the interview.",
+    "transcript_error": null,
+    "translation": null,
+    "translation_error": null,
+    "updated_at": "2026-10-05T19:30:00Z"
+  },
+  "expected": {
+    "triage": "process",
+    "source_sensitive": false,
+    "contact": {
+      "name": "Wren Castellanos",
+      "organisation": "Lowlands Science Weekly",
+      "role": "newsletter editor",
+      "context": "Coffee with a newsletter editor who asked for an article on amateur ground stations."
+    },
+    "tasks": [
+      {
+        "match": [
+          [
+            "draft"
+          ],
+          [
+            "piece"
+          ],
+          [
+            "words"
+          ]
+        ],
+        "content": "Send Wren a first draft of the ground stations article (about 1,200 words)",
+        "due_string": "end of the month",
+        "notes": null,
+        "project": "writing",
+        "priority": "high",
+        "someone_waiting": true,
+        "hard_deadline": true,
+        "worth_researching_soon": null,
+        "real_commitment": true,
+        "sensitive": false
+      },
+      {
+        "match": [
+          [
+            "oskar"
+          ],
+          [
+            "interview"
+          ]
+        ],
+        "content": "Contact Oskar Lind to set up an interview for the article",
+        "due_string": "this week",
+        "notes": null,
+        "project": "writing",
+        "priority": "medium",
+        "someone_waiting": false,
+        "hard_deadline": false,
+        "worth_researching_soon": true,
+        "real_commitment": true,
+        "sensitive": false
+      }
+    ]
+  },
+  "success": true
+}

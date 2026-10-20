@@ -1,0 +1,26 @@
+.env
+*.env
+processed.json
+ledger/
+__pycache__/
+.venv/
+bench/raw/
+.venv-decider/
+.pytest_cache/
+*.egg-info/
+# media/: audio and video never enter the repository (Dan's ruling 19); "**" covers every depth,
+# since the audio sits in media/audio/ and the drafts in media/review/
+media/**/*.mp4
+media/**/*.mov
+media/**/*.webm
+media/**/*.wav
+media/**/*.mp3
+media/**/*.m4a
+media/**/*.zip
+media/**/*manifest*
+# media/: the animation tool's bookkeeping files (Dan's ruling 20), at any depth
+media/**/*.json
+media/**/*.csv
+# media/: the animation tool's notes and its archive of earlier revisions (Dan's ruling 26)
+media/**/*.txt
+media/archive/

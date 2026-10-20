@@ -1,0 +1,95 @@
+{
+  "data": {
+    "created_at": "2026-10-03T14:10:00Z",
+    "duration": 600,
+    "folder_id": "fld_default",
+    "id": "rec_008",
+    "language": "en",
+    "recorded_by": {
+      "display_name": "Dan",
+      "email": "redacted@example.invalid",
+      "user_id": "usr_owner"
+    },
+    "recording_at": "2026-10-03T14:10:00Z",
+    "state": "completed",
+    "summarizations": null,
+    "summarizations_errors": [],
+    "tags": [],
+    "title": "Client kickoff — Harrowgate Freight",
+    "transcript": "Speaker 1: Thanks for running the kickoff. I'm Celeste Varga, operations lead at Harrowgate Freight. Speaker 2: Glad to. So next step on our side is the onboarding checklist. I'll send it to you by Wednesday. Speaker 1: Good. Our finance team needs to know which fields map to their export. Speaker 2: I'll check with our data team and confirm the field mapping before the next call. Speaker 1: And can we book the training session for the week of the twentieth? Speaker 2: I'll send a calendar invite for training that week.",
+    "transcript_error": null,
+    "translation": null,
+    "translation_error": null,
+    "updated_at": "2026-10-03T14:10:00Z"
+  },
+  "expected": {
+    "triage": "process",
+    "source_sensitive": false,
+    "contact": {
+      "name": "Celeste Varga",
+      "organisation": "Harrowgate Freight",
+      "role": "operations lead",
+      "context": "A client kickoff call for the day job; she leads operations at the client."
+    },
+    "tasks": [
+      {
+        "match": [
+          [
+            "checklist"
+          ]
+        ],
+        "content": "Send Celeste the onboarding checklist",
+        "due_string": "Wednesday",
+        "notes": null,
+        "project": "work",
+        "priority": "high",
+        "someone_waiting": true,
+        "hard_deadline": true,
+        "worth_researching_soon": null,
+        "real_commitment": true,
+        "sensitive": false
+      },
+      {
+        "match": [
+          [
+            "field mapping"
+          ],
+          [
+            "mapping"
+          ],
+          [
+            "fields"
+          ]
+        ],
+        "content": "Confirm the export field mapping with the data team",
+        "due_string": "before the next call",
+        "notes": null,
+        "project": "work",
+        "priority": "high",
+        "someone_waiting": true,
+        "hard_deadline": true,
+        "worth_researching_soon": null,
+        "real_commitment": true,
+        "sensitive": false
+      },
+      {
+        "match": [
+          [
+            "training"
+          ]
+        ],
+        "content": "Send Celeste a calendar invite for training the week of the 20th",
+        "due_string": "week of the 20th",
+        "notes": null,
+        "project": "work",
+        "priority": "high",
+        "someone_waiting": true,
+        "hard_deadline": true,
+        "worth_researching_soon": null,
+        "real_commitment": true,
+        "sensitive": false
+      }
+    ]
+  },
+  "success": true
+}

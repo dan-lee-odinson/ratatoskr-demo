@@ -1,0 +1,36 @@
+{
+  "data": {
+    "created_at": "2026-09-13T21:00:00Z",
+    "duration": 600,
+    "folder_id": "fld_default",
+    "id": "rec_003",
+    "language": "en",
+    "recorded_by": {
+      "display_name": "Dan",
+      "email": "redacted@example.invalid",
+      "user_id": "usr_owner"
+    },
+    "recording_at": "2026-09-13T21:00:00Z",
+    "state": "completed",
+    "summarizations": null,
+    "summarizations_errors": [],
+    "tags": [
+      {
+        "color": "#888888",
+        "id": "tag_keep",
+        "name": "keep"
+      }
+    ],
+    "title": "Voice memo — course notes",
+    "transcript": "Reminder to self: chapter six problem set is due Sunday, and reread the lift equation derivation.",
+    "transcript_error": null,
+    "translation": null,
+    "translation_error": null,
+    "updated_at": "2026-09-13T21:00:00Z"
+  },
+  "expected": {
+    "triage": "skip:keep",
+    "tasks": []
+  },
+  "success": true
+}

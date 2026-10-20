@@ -1,0 +1,81 @@
+{
+  "data": {
+    "created_at": "2026-10-08T22:40:00Z",
+    "duration": 600,
+    "folder_id": "fld_default",
+    "id": "rec_013",
+    "language": "en",
+    "recorded_by": {
+      "display_name": "Dan",
+      "email": "redacted@example.invalid",
+      "user_id": "usr_owner"
+    },
+    "recording_at": "2026-10-08T22:40:00Z",
+    "state": "completed",
+    "summarizations": null,
+    "summarizations_errors": [],
+    "tags": [],
+    "title": "Networking mixer",
+    "transcript": "Speaker 1: Great talking with you. We should grab coffee sometime. Speaker 2: Definitely, let's stay in touch. Speaker 1: I'm Linnea, by the way. Speaker 2: Dan. Hey, do you know the name of the trio playing tonight? Their bass player is great. Speaker 1: No idea, sorry. Speaker 2: I'll look them up later.",
+    "transcript_error": null,
+    "translation": null,
+    "translation_error": null,
+    "updated_at": "2026-10-08T22:40:00Z"
+  },
+  "expected": {
+    "triage": "process",
+    "source_sensitive": false,
+    "contact": {
+      "name": "Linnea",
+      "organisation": null,
+      "role": null,
+      "context": "A short chat at a networking mixer; no business discussed."
+    },
+    "tasks": [
+      {
+        "match": [
+          [
+            "coffee"
+          ],
+          [
+            "in touch"
+          ]
+        ],
+        "content": "Grab coffee with Linnea sometime",
+        "due_string": null,
+        "notes": null,
+        "project": "other",
+        "priority": "low",
+        "someone_waiting": false,
+        "hard_deadline": false,
+        "worth_researching_soon": false,
+        "real_commitment": false,
+        "sensitive": false
+      },
+      {
+        "match": [
+          [
+            "trio"
+          ],
+          [
+            "band"
+          ],
+          [
+            "bass"
+          ]
+        ],
+        "content": "Look up: the name of the jazz trio playing at the mixer",
+        "due_string": null,
+        "notes": null,
+        "project": "other",
+        "priority": "low",
+        "someone_waiting": false,
+        "hard_deadline": false,
+        "worth_researching_soon": false,
+        "real_commitment": true,
+        "sensitive": false
+      }
+    ]
+  },
+  "success": true
+}

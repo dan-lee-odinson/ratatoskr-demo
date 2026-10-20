@@ -1,0 +1,107 @@
+{
+  "data": {
+    "created_at": "2026-10-02T21:05:00Z",
+    "duration": 600,
+    "folder_id": "fld_default",
+    "id": "rec_007",
+    "language": "en",
+    "recorded_by": {
+      "display_name": "Dan",
+      "email": "redacted@example.invalid",
+      "user_id": "usr_owner"
+    },
+    "recording_at": "2026-10-02T21:05:00Z",
+    "state": "completed",
+    "summarizations": null,
+    "summarizations_errors": [],
+    "tags": [],
+    "title": "After orbital mechanics class",
+    "transcript": "Speaker 1: Did you finish problem set four? Speaker 2: Halfway. The Hohmann transfer part is killing me. Speaker 1: Want to work through it together Wednesday night in the library? Speaker 2: Yes, Wednesday at seven works. I'm Dan, by the way. Speaker 1: Amara. Also, did you see there's a registration hold on your account? Mine had one for the lab fee. Speaker 2: No, I didn't. I'll email Professor Lindqvist about it tomorrow so I can register for spring. Speaker 1: The set is due Friday at noon, don't forget.",
+    "transcript_error": null,
+    "translation": null,
+    "translation_error": null,
+    "updated_at": "2026-10-02T21:05:00Z"
+  },
+  "expected": {
+    "triage": "process",
+    "source_sensitive": false,
+    "contact": {
+      "name": "Amara",
+      "organisation": null,
+      "role": "classmate",
+      "context": "Classmate in an orbital mechanics course; talked after class about the problem set."
+    },
+    "tasks": [
+      {
+        "match": [
+          [
+            "wednesday"
+          ],
+          [
+            "library"
+          ],
+          [
+            "study"
+          ]
+        ],
+        "content": "Work through problem set four with Amara in the library",
+        "due_string": "Wednesday 7pm",
+        "notes": null,
+        "project": "school",
+        "priority": "high",
+        "someone_waiting": true,
+        "hard_deadline": true,
+        "worth_researching_soon": null,
+        "real_commitment": true,
+        "sensitive": false
+      },
+      {
+        "match": [
+          [
+            "registration"
+          ],
+          [
+            "lindqvist"
+          ],
+          [
+            "hold"
+          ]
+        ],
+        "content": "Email Professor Lindqvist about the registration hold",
+        "due_string": "tomorrow",
+        "notes": null,
+        "project": "school",
+        "priority": "high",
+        "someone_waiting": false,
+        "hard_deadline": true,
+        "worth_researching_soon": null,
+        "real_commitment": true,
+        "sensitive": false
+      },
+      {
+        "match": [
+          [
+            "submit"
+          ],
+          [
+            "due friday"
+          ],
+          [
+            "hand in"
+          ]
+        ],
+        "content": "Submit problem set four",
+        "due_string": "Friday noon",
+        "notes": null,
+        "project": "school",
+        "priority": "high",
+        "someone_waiting": false,
+        "hard_deadline": true,
+        "worth_researching_soon": null,
+        "real_commitment": true,
+        "sensitive": false
+      }
+    ]
+  },
+  "success": true
+}

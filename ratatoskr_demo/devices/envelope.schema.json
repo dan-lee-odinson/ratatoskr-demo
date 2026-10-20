@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/dan-lee-odinson/ratatoskr-demo/ratatoskr_demo/devices/envelope.schema.json",
+  "title": "Ratatoskr Demo device envelope",
+  "description": "Every input to the courier and every output from it passes through one envelope. An envelope lives in memory only; it is never persisted.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["device_id", "kind", "ts", "payload"],
+  "properties": {
+    "device_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._:-]{0,63}$"},
+    "kind": {"enum": ["recorder", "watch", "glasses", "text"]},
+    "ts": {"type": "string", "format": "date-time", "pattern": "(Z|[+-][0-9]{2}:[0-9]{2})$"},
+    "payload": {
+      "oneOf": [
+        {"$ref": "#/$defs/transcript_ref"},
+        {"$ref": "#/$defs/text"},
+        {"$ref": "#/$defs/button"},
+        {"$ref": "#/$defs/tag_request"},
+        {"$ref": "#/$defs/audio_ref"},
+        {"$ref": "#/$defs/video_ref"}
+      ]
+    }
+  },
+  "$defs": {
+    "name": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,63}$"},
+    "uri": {"type": "string", "pattern": "^[a-z][a-z0-9+.-]*:\\S+$"},
+    "transcript_ref": {
+      "description": "A finished recording, by id. The transcript is fetched at extraction time and never stored in the envelope.",
+      "type": "object", "additionalProperties": false, "required": ["type", "recording_id"],
+      "properties": {"type": {"const": "transcript_ref"}, "recording_id": {"$ref": "#/$defs/name"}}
+    },
+    "text": {
+      "description": "Typed text, treated exactly as a transcript.",
+      "type": "object", "additionalProperties": false, "required": ["type", "text"],
+      "properties": {"type": {"const": "text"}, "text": {"type": "string", "minLength": 1, "maxLength": 100000, "pattern": "\\S"}}
+    },
+    "button": {
+      "type": "object", "additionalProperties": false, "required": ["type", "name"],
+      "properties": {"type": {"const": "button"}, "name": {"$ref": "#/$defs/name"}}
+    },
+    "tag_request": {
+      "type": "object", "additionalProperties": false, "required": ["type", "recording_id", "tag"],
+      "properties": {"type": {"const": "tag_request"}, "recording_id": {"$ref": "#/$defs/name"}, "tag": {"$ref": "#/$defs/name"}}
+    },
+    "audio_ref": {
+      "type": "object", "additionalProperties": false, "required": ["type", "uri"],
+      "properties": {"type": {"const": "audio_ref"}, "uri": {"$ref": "#/$defs/uri"}}
+    },
+    "video_ref": {
+      "type": "object", "additionalProperties": false, "required": ["type", "uri"],
+      "properties": {"type": {"const": "video_ref"}, "uri": {"$ref": "#/$defs/uri"}}
+    }
+  }
+}

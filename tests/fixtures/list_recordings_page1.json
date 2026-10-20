@@ -1,0 +1,133 @@
+{
+  "data": [
+    {
+      "created_at": "2026-09-12T23:10:00Z",
+      "duration": 600,
+      "folder_id": "fld_default",
+      "id": "rec_001",
+      "language": "en",
+      "recorded_by": {
+        "display_name": "Dan",
+        "email": "redacted@example.invalid",
+        "user_id": "usr_owner"
+      },
+      "recording_at": "2026-09-12T23:10:00Z",
+      "state": "completed",
+      "summarizations": null,
+      "summarizations_errors": [],
+      "tags": [],
+      "title": "Space Coast Meetup \u2014 table 4",
+      "transcript": "Speaker 1: So you said you're doing CubeSat ground station work on the side? Speaker 2: Yeah, amateur, a Norse-themed program, we flew our first pass a couple weeks ago. Speaker 1: That's great. I'm Priya Venkataraman, I run thermal at Aldrin Microsystems, we do small-sat radiators. Speaker 2: Oh nice, I actually wrote something on orbital thermal bounds, I can send you the preprint. Speaker 1: Please do. And if you're ever near Melbourne, come see the vacuum chamber. Speaker 2: I'd love that. I'll email you next week. What's the best address? Speaker 1: priya at aldrin-micro dot example. Also, we're hiring a junior ops person in the spring, keep an eye out. Speaker 2: Will do, I'll check your careers page in March. Speaker 1: And send me that paper, I'll pass it to our lead. Speaker 2: Done, by Friday.",
+      "transcript_error": null,
+      "translation": null,
+      "translation_error": null,
+      "updated_at": "2026-09-12T23:10:00Z"
+    },
+    {
+      "created_at": "2026-09-13T15:40:00Z",
+      "duration": 600,
+      "folder_id": "fld_default",
+      "id": "rec_002",
+      "language": "en",
+      "recorded_by": {
+        "display_name": "Dan",
+        "email": "redacted@example.invalid",
+        "user_id": "usr_owner"
+      },
+      "recording_at": "2026-09-13T15:40:00Z",
+      "state": "completed",
+      "summarizations": null,
+      "summarizations_errors": [],
+      "tags": [],
+      "title": "Coffee with a founder",
+      "transcript": "Speaker 1: What do you do? Speaker 2: Day job is payroll implementation, and I do fractional program management for Vargrheim, a small aerospace outfit. Speaker 1: Cool. I'm Marcus Oyelaran, I do robotics for warehouses. Speaker 2: Send me a link to your arm demo, I'd like to see the controller. Speaker 1: Sure.",
+      "transcript_error": null,
+      "translation": null,
+      "translation_error": null,
+      "updated_at": "2026-09-13T15:40:00Z"
+    },
+    {
+      "created_at": "2026-09-13T21:00:00Z",
+      "duration": 600,
+      "folder_id": "fld_default",
+      "id": "rec_003",
+      "language": "en",
+      "recorded_by": {
+        "display_name": "Dan",
+        "email": "redacted@example.invalid",
+        "user_id": "usr_owner"
+      },
+      "recording_at": "2026-09-13T21:00:00Z",
+      "state": "completed",
+      "summarizations": null,
+      "summarizations_errors": [],
+      "tags": [
+        {
+          "color": "#888888",
+          "id": "tag_keep",
+          "name": "keep"
+        }
+      ],
+      "title": "Voice memo \u2014 course notes",
+      "transcript": "Reminder to self: chapter six problem set is due Sunday, and reread the lift equation derivation.",
+      "transcript_error": null,
+      "translation": null,
+      "translation_error": null,
+      "updated_at": "2026-09-13T21:00:00Z"
+    },
+    {
+      "created_at": "2026-09-14T01:05:00Z",
+      "duration": 0,
+      "folder_id": "fld_default",
+      "id": "rec_004",
+      "language": "en",
+      "recorded_by": {
+        "display_name": "Dan",
+        "email": "redacted@example.invalid",
+        "user_id": "usr_owner"
+      },
+      "recording_at": "2026-09-14T01:05:00Z",
+      "state": "processing",
+      "summarizations": null,
+      "summarizations_errors": [],
+      "tags": [],
+      "title": "Untitled",
+      "transcript": null,
+      "transcript_error": null,
+      "translation": null,
+      "translation_error": null,
+      "updated_at": "2026-09-14T01:05:00Z"
+    },
+    {
+      "created_at": "2026-09-14T18:30:00Z",
+      "duration": 600,
+      "folder_id": "fld_default",
+      "id": "rec_005",
+      "language": "en",
+      "recorded_by": {
+        "display_name": "Dan",
+        "email": "redacted@example.invalid",
+        "user_id": "usr_owner"
+      },
+      "recording_at": "2026-09-14T18:30:00Z",
+      "state": "completed",
+      "summarizations": null,
+      "summarizations_errors": [],
+      "tags": [],
+      "title": "Hallway chat",
+      "transcript": "Speaker 1: Long day. Speaker 2: Same. You seen the launch schedule for next month? Speaker 1: Not yet. Anyway, good talking, I'm Lena. Speaker 2: Dan. See you at the next one.",
+      "transcript_error": null,
+      "translation": null,
+      "translation_error": null,
+      "updated_at": "2026-09-14T18:30:00Z"
+    }
+  ],
+  "pagination": {
+    "has_more": false,
+    "limit": 20,
+    "page": 1,
+    "total": 5,
+    "total_pages": 1
+  },
+  "success": true
+}

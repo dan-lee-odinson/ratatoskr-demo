@@ -1,0 +1,17 @@
+{
+  "created": 1764460800,
+  "data_retention": {
+    "allowed_modes": [
+      "aws_review",
+      "default",
+      "none",
+      "provider_data_share"
+    ],
+    "mode": "default",
+    "source": "model_default"
+  },
+  "id": "openai.gpt-oss-20b",
+  "object": "model",
+  "owned_by": "system",
+  "status": "available"
+}
