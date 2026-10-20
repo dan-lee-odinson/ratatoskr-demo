@@ -534,6 +534,10 @@ the expected answers are invented, so these are small-sample numbers.
 and TypeSafe are all mocked, and a guard makes any real connection fail. `python
 tools/check_tests_bite.py` breaks each safeguard on purpose and checks that its tests go red.
 
+## Contributing
+
+Contributions are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) for how to set up, test, and send a change, and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) for how we treat each other here.
+
 ## Terms of use
 
 Ratatoskr is a personal project published under the Apache License 2.0. The license is the
