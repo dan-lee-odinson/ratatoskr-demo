@@ -2,6 +2,7 @@
 
 import importlib.util
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -186,6 +187,15 @@ def test_the_serve_commands_memory_guard_trips_only_past_its_limit():
     gb = 1024 ** 3
     assert not serve.over_limit(15 * gb, 16) and serve.over_limit(17 * gb, 16)
     assert not serve.over_limit(40 * gb, None)  # no limit given: never
+
+
+def test_the_pid_file_is_written_on_a_fresh_clone_with_no_ledger_folder(tmp_path, monkeypatch):
+    """Ruling 34: `--pid-file ledger/decider.pid` works where `ledger/` does not exist yet."""
+    serve = _load("serve_decider", REPO / "tools" / "serve_decider.py")
+    monkeypatch.chdir(tmp_path)
+    assert not (tmp_path / "ledger").exists()
+    serve.write_pid_file("ledger/decider.pid")
+    assert (tmp_path / "ledger" / "decider.pid").read_text(encoding="ascii") == str(os.getpid())
 
 
 def test_after_each_scheduled_restart_the_previous_task_is_asked_again_and_matches_are_recorded(tmp_path):

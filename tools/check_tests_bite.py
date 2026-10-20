@@ -484,6 +484,11 @@ MUTATIONS = [
      'notice=f"Held {rid}: leak-guard. Nothing was written.")',
      ["tests/test_notices_and_short.py::test_every_hold_notice_carries_the_release_instruction_and_no_title"]),
 
+    # --- the pid file's folder (Dan's ruling 34, 20 Oct 2026) ---
+    ("Ruling 34: the pid file written without creating its folder", "tools/serve_decider.py",
+     "    pid_file.parent.mkdir(parents=True, exist_ok=True)\n", "",
+     ["tests/test_rotation_run.py::test_the_pid_file_is_written_on_a_fresh_clone_with_no_ledger_folder"]),
+
     # --- the urgent tag, bounded (Dan's ruling 12, 18 Oct 2026) ---
     ("Ruling 12: urgent skips the gate even with Decider up", "ratatoskr_demo/cycle.py",
      "        if not self._decider_usable(rid, urgent):  # ruling 9: /health before the cycle's first read",

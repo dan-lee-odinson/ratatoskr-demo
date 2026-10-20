@@ -44,6 +44,7 @@ import os
 import sys
 import threading
 import time
+from pathlib import Path
 
 THREADS = 4
 CHECKPOINT = "StrandsAgents/strands-decider-2B-hobson-v21"
@@ -61,6 +62,14 @@ def lower_priority() -> None:
         process.nice(psutil.BELOW_NORMAL_PRIORITY_CLASS if os.name == "nt" else 10)
     except Exception as exc:  # best effort: the thread cap is the guarantee
         print(f"serve_decider: could not lower the priority ({type(exc).__name__})", file=sys.stderr)
+
+
+def write_pid_file(path: str) -> None:
+    """This process's id, for a clean stop by exact PID. The folder is created first: on a fresh clone
+    `ledger/` does not exist until the courier has run (Dan's ruling 34)."""
+    pid_file = Path(path)
+    pid_file.parent.mkdir(parents=True, exist_ok=True)
+    pid_file.write_text(str(os.getpid()), encoding="ascii")
 
 
 def over_limit(commit_bytes: int, limit_gb: float | None) -> bool:
@@ -107,8 +116,7 @@ def main() -> int:
     if args.max_commit_gb is not None:
         watch_memory(args.max_commit_gb)
     if args.pid_file:
-        with open(args.pid_file, "w", encoding="ascii") as fh:
-            fh.write(str(os.getpid()))
+        write_pid_file(args.pid_file)
     print(f"serve_decider: pid {os.getpid()}, torch {torch.__version__}, intra-op threads "
           f"{torch.get_num_threads()}, inter-op threads {torch.get_num_interop_threads()}, "
           f"OMP_NUM_THREADS={os.environ['OMP_NUM_THREADS']}", flush=True)

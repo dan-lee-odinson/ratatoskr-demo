@@ -12,7 +12,7 @@ Two virtual environments, one for the Decider server and one for the courier, be
 
 1. Python 3.12 or newer.
 2. Courier: `python -m venv .venv`, activate it, `pip install -e ".[dev]"`.
-3. Decider server: `python -m venv .venv-decider`, activate it, `pip install strands-decider==0.1.0` as the README's "Run it" section shows, then, from the repository root, create the `ledger` folder (`mkdir ledger`) and start the server with `python tools/serve_decider.py --pid-file ledger/decider.pid --max-commit-gb 16`.
+3. Decider server: `python -m venv .venv-decider`, activate it, `pip install strands-decider==0.1.0` as the README's "Run it" section shows, then, from the repository root, start the server with `python tools/serve_decider.py --pid-file ledger/decider.pid --max-commit-gb 16`.
 4. Copy `.env.example` to `.env` and fill in only the keys for the adapters you enable. `.env` is git-ignored and must stay that way.
 
 The README's "What you need" table says which keys each adapter needs. With a Telegram bot token and its chat id, a Bedrock key, a Todoist token, a local Decider, and `[devices] inputs = ["text"]` in `config.toml`, `/demo <sentence>` runs the whole pipeline while `ratatoskr-demo --loop` is running.
