@@ -8,7 +8,11 @@
 
 # Ratatoskr Demo
 
-**Gatekeeper triage for a voice-to-task courier.** A conversation ends (on a Pocket wearable
+**Gatekeeper triage for a voice-to-task courier.**
+
+**Demo video (3 min):** https://youtu.be/dl9dS00GEFY
+
+A conversation ends (on a Pocket wearable
 recorder, or typed to a Telegram bot with `/demo`); each follow-up in it lands in Todoist and as a
 three-line message on a CircuitMess Artemis smartwatch or any phone with Telegram:
 
