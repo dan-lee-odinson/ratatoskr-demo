@@ -22,6 +22,8 @@ dependencies = [
 bench = ["typesafe-sdk>=0.7,<0.8"]
 # patterns/gatekeeper_triage/strands_hook.py: the Strands Agents SDK and its OpenAI-compatible provider.
 pattern = ["strands-agents[openai]==1.61.1"]
+# notebooks/gatekeeper_triage.ipynb: JupyterLab to open it, nbclient to run it in the test suite (ruling 35).
+notebook = ["jupyterlab>=4,<5", "nbclient>=0.10,<1"]
 dev = [
     "pytest>=8",
     "respx>=0.22",

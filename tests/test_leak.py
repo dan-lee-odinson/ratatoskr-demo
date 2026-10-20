@@ -117,6 +117,22 @@ def test_no_eight_word_span_of_any_bench_transcript_is_in_the_committed_results(
     assert not any(any_overlap(t, [results], NGRAM_WORDS) for t in transcripts)
 
 
+def test_no_eight_word_span_of_any_fixture_transcript_is_in_a_notebook():
+    """Ruling 35: a notebook is committed with its outputs; it reads transcripts at run time and prints none.
+    Each cell's source and every output it carries are read as text."""
+    notebooks = sorted((REPO / "notebooks").glob("*.ipynb"))
+    transcripts = fixture_transcripts(REPO / "bench" / "fixtures", REPO / "tests" / "fixtures")
+    assert notebooks and len(transcripts) >= 12
+    for path in notebooks:
+        texts = []
+        for cell in json.loads(path.read_text(encoding="utf-8"))["cells"]:
+            texts.append("".join(cell.get("source", [])))
+            for out in cell.get("outputs", []):
+                texts.append("".join(out.get("text", [])))
+                texts.extend("".join(v) if isinstance(v, list) else str(v) for v in out.get("data", {}).values())
+        assert not any(any_overlap(t, texts, NGRAM_WORDS) for t in transcripts), path.name
+
+
 # --- C9: an adversarial model that quotes the transcript ---
 
 SPAN = "we're hiring a junior ops person in the spring, keep an eye out"

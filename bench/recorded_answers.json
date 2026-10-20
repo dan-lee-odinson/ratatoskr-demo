@@ -1,0 +1,69 @@
+{
+  "about": "Strands Decider's answers in the bench pass of 19 Oct 2026 (the raw per-task file RESULTS.md is rendered from, bench/raw/run-2026-10-20T0015TUTC.json, which git ignores), for the task and the two transcripts notebooks/gatekeeper_triage.ipynb uses, in the shape POST /v1/systemone returns. A noul is the probability of yes; the project is the choice and its confidence.",
+  "model": "strands-decider-2B-hobson-v21",
+  "triage": {
+    "recording": "rec_010",
+    "task": "Send Wren a first draft of the ground stations article (about 1,200 words)",
+    "response": {
+      "model": "strands-decider-2B-hobson-v21",
+      "latency_ms": 10948.3,
+      "answers": {
+        "project": {
+          "type": "choice",
+          "choice": "writing",
+          "confidence": 0.8748
+        },
+        "someone_waiting": {
+          "type": "noul",
+          "noul": 0.8351
+        },
+        "hard_deadline": {
+          "type": "noul",
+          "noul": 0.172
+        },
+        "worth_researching_soon": {
+          "type": "noul",
+          "noul": 0.3851
+        },
+        "real_commitment": {
+          "type": "noul",
+          "noul": 0.9139
+        },
+        "sensitive": {
+          "type": "noul",
+          "noul": 0.1742
+        }
+      }
+    }
+  },
+  "gate": {
+    "rec_001": {
+      "latency_ms": 3288.2,
+      "windows": [
+        {
+          "model": "strands-decider-2B-hobson-v21",
+          "answers": {
+            "sensitive": {
+              "type": "noul",
+              "noul": 0.1878
+            }
+          }
+        }
+      ]
+    },
+    "rec_014": {
+      "latency_ms": 2179.7,
+      "windows": [
+        {
+          "model": "strands-decider-2B-hobson-v21",
+          "answers": {
+            "sensitive": {
+              "type": "noul",
+              "noul": 0.848
+            }
+          }
+        }
+      ]
+    }
+  }
+}
