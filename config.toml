@@ -42,6 +42,7 @@ hard_stop_usd = 5.00              # refuse any Bedrock call that could take the 
 backend = "decider"               # "decider" | "jev" (bench only) | "none" (demo only: no gate)
 min_confidence = 0.70             # documentation default; each route.toml entry carries its own floor
 decider_url = "http://127.0.0.1:8000"
+vision_url = "http://127.0.0.1:8001"     # the photo path's image gate (ruling 47): loopback only
 decider_model = "StrandsAgents/strands-decider-2B-hobson-v21"
 decider_timeout_seconds = 180          # Decider on a 4-thread laptop CPU: about 35 s per read
 source_window_words = 300              # source-text gate: transcript windows of about this many words

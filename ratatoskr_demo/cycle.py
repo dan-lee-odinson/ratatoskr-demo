@@ -91,6 +91,7 @@ from ratatoskr_demo.errors import ConfigurationError, RatatoskrError, TerminalEr
 from ratatoskr_demo.extract import Contact, ModelCall, Task
 from ratatoskr_demo.ledger import LedgerEntry
 from ratatoskr_demo.notify import Notifier
+from ratatoskr_demo.photos import PhotoHold
 from ratatoskr_demo.decider import DeciderRejected, DeciderUnavailable
 from ratatoskr_demo import resolve
 from ratatoskr_demo.route import (URGENT_SOURCE, Routed, RoutedTask, Router, load_route_questions, route,
@@ -163,6 +164,9 @@ class Cycle:
         self._waiting_on_decider: set[str] = set()
         self._decider_down_cycles = 0
         self._decider_notice_sent = False
+        # Ruling 47: the photo being handled, if it is one; its gate probability, OCR confidences and
+        # extraction call count go in its ledger entry (numbers only)
+        self._image: dict[str, Any] | None = None
 
     # --- entry points ---
 
@@ -285,6 +289,10 @@ class Cycle:
         source = adapter.source(envelope)
         rid, title, recording_at = source.item_id, source.title, source.recorded_at
         text = adapter.fetch_text(envelope)  # memory only, from here to the end of this call (C1)
+        self._image = (getattr(adapter, "records", None) or {}).get(rid)
+        if isinstance(text, PhotoHold):  # ruling 47: unreadable (no model asked) or held by the image gate
+            return self._hold(rid, title, recording_at, text.reason, demo=demo,
+                              notice=f"Held {rid}: {text.reason}. Nothing was written.")
         recording = {"id": rid, "title": title, "tags": [{"name": tag} for tag in source.tags],
                      "transcript": None if text is NOT_READY else text}
         decision = triage.decide(recording, entry, self.settings)
@@ -335,10 +343,11 @@ class Cycle:
             return Outcome("dry-run", reason="no model")
         n = self.settings.guard.ngram_words
 
-        extraction = extract.run(text, self.settings, self.deps.model_call)
+        model_call = self._counted(self.deps.model_call)
+        extraction = extract.run(text, self.settings, model_call)
         if guard.any_overlap(text, extraction.texts(), n):
             log.warning("recording %s: model output quoted the transcript; retrying with a corrective instruction", rid)
-            extraction = extract.run(text, self.settings, self.deps.model_call, corrective=True)
+            extraction = extract.run(text, self.settings, model_call, corrective=True)
             if guard.any_overlap(text, extraction.texts(), n):
                 return self._leak_hold(rid, title, recording_at, demo=demo)
 
@@ -586,7 +595,21 @@ class Cycle:
 
     # --- helpers ---
 
+    def _counted(self, model_call: ModelCall) -> ModelCall:
+        """For a photo, the same model call, counted for its ledger entry (ruling 47)."""
+        image = self._image
+        if image is None:
+            return model_call
+
+        def counted(*args: Any, **kwargs: Any) -> Any:
+            image["extraction_calls"] = image.get("extraction_calls", 0) + 1
+            return model_call(*args, **kwargs)
+
+        return counted
+
     def _entry(self, status: str, title: str, recording_at: str, **kwargs: Any) -> LedgerEntry:
+        if self._image is not None:
+            kwargs.setdefault("image", dict(self._image))
         decided = datetime.fromtimestamp(self.deps.clock(), tz=timezone.utc).isoformat(timespec="seconds")
         return LedgerEntry(status=status, title=title, recording_at=recording_at, decided_at=decided, **kwargs)
 

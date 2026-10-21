@@ -116,10 +116,21 @@ class VideoRef:
         _require(isinstance(self.uri, str) and URI.match(self.uri), "uri")
 
 
-Payload = Union[TranscriptRef, Text, Button, TagRequest, AudioRef, VideoRef]
+@dataclass(frozen=True)
+class ImageRef:
+    """A photo in the watched folder (ruling 47): where it is, never its bytes."""
+
+    uri: str
+    type: Literal["image_ref"] = field(default="image_ref", init=False)
+
+    def __post_init__(self) -> None:
+        _require(isinstance(self.uri, str) and URI.match(self.uri), "uri")
+
+
+Payload = Union[TranscriptRef, Text, Button, TagRequest, AudioRef, VideoRef, ImageRef]
 PAYLOAD_TYPES: dict[str, type] = {
     "transcript_ref": TranscriptRef, "text": Text, "button": Button,
-    "tag_request": TagRequest, "audio_ref": AudioRef, "video_ref": VideoRef,
+    "tag_request": TagRequest, "audio_ref": AudioRef, "video_ref": VideoRef, "image_ref": ImageRef,
 }
 
 

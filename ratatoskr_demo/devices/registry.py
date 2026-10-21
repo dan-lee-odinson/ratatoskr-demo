@@ -82,5 +82,13 @@ def build_inputs(settings: Any, *, http: Any, clock: Callable[[], float]) -> dic
             built[name] = TextAdapter()
         elif name == "glasses":
             fixture = (Path(settings.fixtures_dir) / "glasses" / "fixture.json") if settings.fixtures_dir else None
-            built[name] = GlassesStub(fixture if fixture is not None and fixture.is_file() else None)
+            if fixture is not None and fixture.is_file():  # the video stub's fixture (tests)
+                built[name] = GlassesStub(fixture)
+            else:  # photos from the watched folder (ruling 47)
+                from ratatoskr_demo.devices.glasses_adapter import PhotoFolder
+                from ratatoskr_demo.photos import Ocr, make_image_gate
+                from ratatoskr_demo.route import load_route_questions
+
+                built[name] = PhotoFolder(settings.paths.state_dir / "inbox" / "photos",
+                                          make_image_gate(settings, load_route_questions(settings)), Ocr())
     return built

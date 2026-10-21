@@ -385,6 +385,30 @@ task, and a last button, `Leave unsorted`. A tap updates the existing Todoist ta
 again. The choice is recorded in the ledger as the owner's (`project_by: owner`), and a second tap changes
 nothing. Taps are handled by the loop's Telegram receiver: they take effect at once while `--loop` runs.
 
+### Photos
+
+A second input: photos (PNG, JPEG, WebP or GIF) dropped in `ledger/inbox/photos/`, with `"glasses"` in
+`[devices] inputs`. Each passes three checks on the laptop before any cloud call: a file that is missing,
+unreadable or blank is held before any model is asked; a second Strands Decider server, started with
+`--vision`, answers "Is this picture of something that must never leave this machine?" and holds the photo on
+yes or unsure; then RapidOCR, on the laptop, reads the photo's text, which meets the stop-list tripwire and the
+text gate like any transcript before the extraction on Bedrock. The image gate uses the same checkpoint, which
+was not trained on images, at the text gate's floor, a starting point rather than a tuned value. For the
+evaluation (`bench/IMAGE_EVAL_2026-10-22.md`) the folder was fed from the desktop with rendered pictures. The
+vision server runs from its own venv, beside the published one:
+
+```bash
+python -m venv .venv-decider-vision
+```
+```bash
+.venv-decider-vision/Scripts/python -m pip install "strands-decider[vision]==0.2.0"
+```
+```bash
+.venv-decider-vision/Scripts/python tools/serve_vision.py --pid-file ledger/vision.pid --max-commit-gb 16
+```
+
+and the courier needs the OCR: `pip install -e ".[photos]"`.
+
 ## Set up your projects and your stop list
 
 After the install above. Everything here is a file you edit; nothing needs code.

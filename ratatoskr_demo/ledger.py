@@ -54,6 +54,9 @@ class LedgerEntry:
     # Unsorted tasks offered to the owner on Telegram (ruling 43), by short id: the task's ordinal, Todoist id,
     # labels as written, priority and p shown; and, once the owner taps, project_by, project and at. No text.
     picks: dict[str, dict[str, Any]] = field(default_factory=dict)
+    # A photo (ruling 47): the image gate's probability and time, the OCR's per-line confidence and time, the
+    # extraction call count, or why it was unreadable. Numbers and labels only, never the picture's text.
+    image: dict[str, Any] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
         if self.status not in STATUSES:
@@ -129,8 +132,9 @@ class Ledger:
 def _plain(entry: LedgerEntry) -> dict[str, Any]:
     """The entry as JSON; an entry with nothing offered on Telegram is written exactly as before ruling 43."""
     data = asdict(entry)
-    if not data["picks"]:
-        del data["picks"]
+    for optional in ("picks", "image"):
+        if not data[optional]:
+            del data[optional]
     return data
 
 

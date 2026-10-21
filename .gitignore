@@ -6,6 +6,7 @@ __pycache__/
 .venv/
 bench/raw/
 .venv-decider/
+.venv-decider-vision/
 .pytest_cache/
 *.egg-info/
 # media/: audio and video never enter the repository (Dan's ruling 19); "**" covers every depth,

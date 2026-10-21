@@ -119,6 +119,8 @@ class RouteSettings:
     backend: str = "decider"
     min_confidence: float = 0.7
     decider_url: str = "http://127.0.0.1:8000"
+    # The vision server for the photo path's image gate (ruling 47): strands-decider 0.2.0 --vision, its own venv.
+    vision_url: str = "http://127.0.0.1:8001"
     decider_model: str = "StrandsAgents/strands-decider-2B-hobson-v21"
     decider_timeout_seconds: float = 180.0  # about 35 s per read on a 4-thread laptop CPU, 95 s seen
     source_window_words: int = 300  # the source-text gate's window, well inside Decider's 4,096 tokens
@@ -370,6 +372,9 @@ def _validate(s: Settings) -> None:
     decider = urlsplit(s.route.decider_url)
     if decider.scheme != "http" or decider.hostname not in LOOPBACK_HOSTS:
         raise ConfigurationError("[route] decider_url must be http:// on this machine (127.0.0.1)")
+    vision = urlsplit(s.route.vision_url)  # a photo goes nowhere before this gate: never off the machine
+    if vision.scheme != "http" or vision.hostname not in LOOPBACK_HOSTS:
+        raise ConfigurationError("[route] vision_url must be http:// on this machine (127.0.0.1)")
     if s.model.backend not in KNOWN_MODEL_BACKENDS:
         raise ConfigurationError(f"[model] backend = {s.model.backend!r} is not known (known: bedrock)")
     if s.model.model_id not in ALLOWED_MODELS:

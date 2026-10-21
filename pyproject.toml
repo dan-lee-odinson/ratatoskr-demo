@@ -24,10 +24,13 @@ bench = ["typesafe-sdk>=0.7,<0.8"]
 pattern = ["strands-agents[openai]==1.61.1"]
 # notebooks/gatekeeper_triage.ipynb: JupyterLab to open it, nbclient to run it in the test suite (ruling 35).
 notebook = ["jupyterlab>=4,<5", "nbclient>=0.10,<1"]
+# The photo path (ruling 47): RapidOCR on the laptop. Pinned here: the repository has no lock file.
+photos = ["rapidocr-onnxruntime==1.4.4", "Pillow>=10"]
 dev = [
     "pytest>=8",
     "respx>=0.22",
     "jsonschema>=4.23",
+    "Pillow>=10",  # the photo tests render their pictures (ruling 47)
     "typesafe-sdk>=0.7,<0.8",
     "strands-agents[openai]==1.61.1",
 ]

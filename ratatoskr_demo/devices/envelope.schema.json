@@ -17,7 +17,8 @@
         {"$ref": "#/$defs/button"},
         {"$ref": "#/$defs/tag_request"},
         {"$ref": "#/$defs/audio_ref"},
-        {"$ref": "#/$defs/video_ref"}
+        {"$ref": "#/$defs/video_ref"},
+        {"$ref": "#/$defs/image_ref"}
       ]
     }
   },
@@ -49,6 +50,10 @@
     "video_ref": {
       "type": "object", "additionalProperties": false, "required": ["type", "uri"],
       "properties": {"type": {"const": "video_ref"}, "uri": {"$ref": "#/$defs/uri"}}
+    },
+    "image_ref": {
+      "type": "object", "additionalProperties": false, "required": ["type", "uri"],
+      "properties": {"type": {"const": "image_ref"}, "uri": {"$ref": "#/$defs/uri"}}
     }
   }
 }
