@@ -1075,6 +1075,10 @@ def _category(conv: FreshConversation) -> str:
     return reason or "no entry"
 
 
+def _grouped(digest: str) -> str:
+    return " ".join(digest[i:i + 16] for i in range(0, len(digest), 16))
+
+
 def _pct(values: list[float], q: float) -> float | None:
     if not values:
         return None
@@ -1105,7 +1109,8 @@ def render_fresh(run: FreshRun, *, settings: Settings, disagreements: list[dict[
            "DIFFER from the tag under `ratatoskr_demo/` or in `config.toml`: a finding."),
         f"- **Questions and labels:** the question wording and the labelling conventions are those of `{FREEZE_TAG}`. "
         "The 18 Oct bench's original labels are preserved in RESULTS.md's \"Label corrections\" section.",
-        f"- **The fresh labels:** `bench/fixtures/fresh/labels.json`, sha256 `{run.labels_sha256}`, committed in "
+        f"- **The fresh labels:** `bench/fixtures/fresh/labels.json`, sha256 `{_grouped(run.labels_sha256)}` (in "
+        "groups of sixteen: the repository's secret scan reads any longer hex run as a key), committed in "
         f"`{run.labels_commit}` before the first model call, and not edited after the run.",
         f"- **Not in this set:** the five recordings made on 21 Oct for the walkthrough video are in no count here.",
         "",

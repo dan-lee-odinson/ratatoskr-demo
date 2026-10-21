@@ -81,15 +81,15 @@ cores, Decider held to four of them, and no GPU.
 |---|---|---|
 | CPU | 4 threads free for Decider while it reads; no other CPU-heavy job on the machine | 4 intra-op threads (and 1 inter-op), laptop CPU with 16 logical cores |
 | Memory | 16 GB; the server commits about 10 GB, and the memory guard stops it at the `--max-commit-gb` value (off unless given; the start command below sets 16) | 9.9 to 10.4 GB committed over 70 reads per server |
-| GPU | None required | None used |
+| GPU | None required. Decider's fast path is a GPU build of torch with `causal_conv1d` and `flash-linear-attention` installed | None used; kernels: reference PyTorch implementation (causal_conv1d and flash-linear-attention not installed; CPU-only torch build) |
 | Disk | Decider weights (4.4 GB in the Hugging Face cache: the 4.3 GB Qwen3.5-2B base model and the 88 MB Decider checkpoint) plus two virtual environments | `.venv-decider` (server), `.venv` (courier) |
 | Python | 3.12 or later (`requires-python = ">=3.12"`) | 3.12.10 |
 | OS | Windows 11 with PowerShell is what the run commands assume; the courier and the pattern have no Windows-only code (the courier needs `httpx` and `Metaphone` from PyPI; the pattern's client is standard-library Python) | Windows 11 |
 | Network | Outbound HTTPS to Bedrock, Telegram, and whichever of Todoist and Pocket are enabled; Decider listens on `127.0.0.1:8000` only and must never be exposed | Same |
 | Accounts | AWS with Bedrock model access to `openai.gpt-oss-20b`; Telegram bot token and chat id; Todoist token and Pocket API key only for the adapters you enable | All four |
 
-Measured latency: median 10.8 s per six-question read with the laptop otherwise idle (19 Oct
-2026). The overnight pass of 17–18 Oct, also with the laptop otherwise idle, measured 30.2 s;
+Measured latency: median 11.1 s (p90 11.3 s) per six-question read in the fresh evaluation of 21 Oct
+2026 ([`bench/FRESH_EVAL_2026-10-22.md`](bench/FRESH_EVAL_2026-10-22.md)), and 10.8 s in the bench pass of 19 Oct, both with the laptop otherwise idle. The overnight pass of 17–18 Oct, also with the laptop otherwise idle, measured 30.2 s;
 what changed between them is not established. With another job keeping every core busy, reads
 did not finish at all: 0 of 44 answered on 17 Oct.
 
@@ -103,8 +103,8 @@ Recommended settings:
   `ratatoskr_demo/config.py`).
 - Write a one-line description for every project in `[project.criteria]` of `prompts/route.toml`
   (the sort reads these; `prompts/context.md` only words the extraction). On the bench, the
-  descriptions carried most of Decider's confidence on the project sort (18 of 30 sure with them,
-  4 of 30 without).
+  descriptions carried most of Decider's confidence on the project sort (the 19 Oct bench in
+  RESULTS.md: 18 of 30 sure with them, 4 of 30 without).
 - Give Decider the machine while it runs. With another job keeping every core busy, reads did not
   finish (above): the courier then makes recordings wait rather than lose them, and the bench can
   hang. The bench timeout is 600 s for that reason; the courier's own read timeout is 180 s.
@@ -183,7 +183,8 @@ tokens), one `sensitive` question per window, and the conversation is held if an
 sensitive or Decider is unsure of one. Decider is the only model that may read transcript text,
 because it is bound to `127.0.0.1` (the config refuses any other host) and persists nothing; a test
 fails if transcript text is ever sent anywhere else but the extraction itself. A window takes a
-few seconds on four laptop CPU threads (1.7–3.3 s in the 19 Oct bench), which is fine for the
+few seconds on four laptop CPU threads (median 2.1 s, p90 4.1 s in the fresh evaluation of 21
+Oct; 1.7–3.3 s in the 19 Oct bench), which is fine for the
 demo's short recordings. With the bench-only `"jev"` backend the source gate is skipped, and the
 post-extraction check on each task (below) is the only sensitivity check.
 
@@ -266,11 +267,13 @@ sensitivity judgment being made on the machine that holds the transcript.
 
 **Where the judgments are weak**
 
-The bench is thirty labeled fixture tasks and five tasks from live recordings. On those, Decider's
-project sort misfiled nothing: it was sure on 18 of the 30 fixtures, right on all 18, and left the
-other 12 unsorted; on the five live tasks it was sure of none and left all five unsorted. The
-hard-deadline question was wrong on 12 of the 21 answers it was sure about against the labels as first
-written (5 of 21 against the labels as corrected on 20 Oct, Dan's ruling 40). The priority rule takes
+In the fresh evaluation of 21 Oct ([`bench/FRESH_EVAL_2026-10-22.md`](bench/FRESH_EVAL_2026-10-22.md): 24 new conversations, labelled before any model
+was asked), Decider's project sort misfiled nothing: it was sure of 8 of the 26 labelled ordinary
+tasks, right on all 8, and left the other 18 unsorted. In the 19 Oct bench (RESULTS.md) it was sure
+on 18 of 30 fixture tasks, right on all 18, and on the five live tasks sure of none. The
+hard-deadline question was wrong on 4 of the 13 answers it was sure about in the fresh evaluation
+(on the 19 Oct bench, 12 of 21 against the labels as first written, 5 of 21 as corrected on 20 Oct,
+Dan's ruling 40). The priority rule takes
 a sure "deadline: yes" at face value and reads the date in code only to decide whether it falls
 within thirty days, so a wrong yes costs a priority level and never a task. Priority and project are
 filing decisions and fail safe (the task lands on the list unsorted, and the wrist says so).
@@ -297,7 +300,7 @@ that.
 
 | | where | what one read covers | time |
 |---|---|---|---|
-| **this build** (measured 19 Oct 2026) | a laptop CPU, **4 threads**, full precision (fp32), below-normal priority, strands-decider 0.1.0, v21 | all the questions about one task in one read, about 960–980 tokens | **about 11 s** per task (bench median 10.8 s; 10.5–18.1 s in the live run) |
+| **this build** (the fresh evaluation, 21 Oct 2026) | a laptop CPU, **4 threads**, full precision (fp32), the reference PyTorch kernels (no `causal_conv1d`, no `flash-linear-attention`), below-normal priority, strands-decider 0.1.0, v21 | all the questions about one task in one read, about 960–980 tokens | **about 11 s** per task (fresh evaluation median 11.1 s, p90 11.3 s; 19 Oct bench median 10.8 s; 10.5–18.1 s in the 18 Oct live run) |
 | Strands Decider's README | an NVIDIA RTX 3090 under WSL2, v19 | one JevBench question | median **115 ms** (95th percentile 299 ms) |
 
 The second row is the project's own GPU figure, for an earlier checkpoint and one question at a
@@ -497,11 +500,30 @@ written, and scores each against the fixtures' expected answers; it also runs th
 gate on every transcript first. The generated report is [`bench/RESULTS.md`](bench/RESULTS.md).
 With `--option-descriptions both` it asks every task twice, with each project option's one-line
 description and with the names alone, side by side; `--real-tasks` adds tasks saved from real
-recordings (reported as counts, never their text).
+recordings (reported as counts, never their text). With `--fresh` it runs the fresh evaluation
+instead: each conversation in `bench/fixtures/fresh/` through the courier's own cycle.
 
-On the 30 canonical tasks (19 Oct 2026, the laptop otherwise idle), with each project option's
-one-line description, as the courier asks, against the labels as first written on 18 Oct (RESULTS.md
-also counts them as corrected on 20 Oct; only the priority row moves, to 50% / 70% / 63%):
+**The fresh evaluation** ([`bench/FRESH_EVAL_2026-10-22.md`](bench/FRESH_EVAL_2026-10-22.md), run on 21 Oct 2026 on the frozen configuration, tag
+`eval-freeze-2026-10-22`): 24 new fictional conversations, 12 with something private in them and 12
+ordinary, their expected outcomes written and committed (`bench/fixtures/fresh/labels.json`) before
+any model was asked, each through the courier's own cycle with Strands Decider on the laptop CPU.
+Decider only; the outcomes come from the courier's own records:
+
+| fresh evaluation, 21 Oct 2026 | result |
+|---|---|
+| sensitive conversations written anyway | **0 of 12** (all 12 held by the source gate, before any Bedrock call) |
+| ordinary conversations held anyway | 4 of 12: 3 by the source gate as unsure, 1 by the task check after extraction |
+| Bedrock extraction calls / task writes for held conversations | 1 / 0 (the one call: the ordinary conversation the task check held) |
+| project, 26 labelled ordinary tasks: right / wrong / left unsorted | 8 / **0** / 18 |
+| priority right (ruling 7's rule), 26 labelled ordinary tasks | 11 of 26 |
+| real commitment, right when sure | 23 of 24 |
+| sensitive (the task text), right when sure | **24 of 24** |
+| median / p90 per read | 11.1 s / 11.3 s (six questions); 2.1 s / 4.1 s (one gate window) |
+
+**The bench comparison** ([`bench/RESULTS.md`](bench/RESULTS.md), the pass of 19 Oct 2026): on the 30
+canonical tasks, the laptop otherwise idle, with each project option's one-line description, as the
+courier asks, against the labels as first written on 18 Oct (RESULTS.md also counts them as
+corrected on 20 Oct; only the priority row moves, to 50% / 70% / 63%):
 
 | | Strands Decider (laptop CPU, 4 threads) | gpt-oss-20b on Bedrock | Jev |
 |---|---|---|---|
@@ -513,13 +535,13 @@ also counts them as corrected on 20 Oct; only the priority row moves, to 50% / 7
 | median latency per task | 10.8 s | 1.7 s | 0.15 s |
 | cost per task | $0 | about $0.00013 | about $0.00005 |
 
-**The option descriptions.** Asked again with the project options as their names alone, Decider
+**The option descriptions** (RESULTS.md, 19 Oct). Asked again with the project options as their names alone, Decider
 was sure of the project for 4 of 30 tasks instead of 18 (right 22 of 30 instead of 24), and on
 the 16 extracted tasks for 2 instead of 10 (right 10 instead of 16). Bedrock and Jev lost
 agreement too (each 22 of 30, from 24 and 27). The one-line descriptions carry most of what makes
 Decider sure of a project.
 
-**The real tasks.** The first live run's five tasks, extracted again from Dan's own recordings,
+**The real tasks** (RESULTS.md, 19 Oct). The first live run's five tasks, extracted again from Dan's own recordings,
 are two commitments in different words, so this is a very small sample. Decider was not sure of
 the project for any of them, with or without the descriptions (with them it leaned mostly to
 `other`, never above p 0.30): in the courier all five go to "unsorted", as the courier's own dry
@@ -527,24 +549,27 @@ runs showed. With the descriptions, Jev put all five in `research` (4 sure) and 
 fifth in `community`), all sure; without them, the three backends moved most of them to `work` or
 `writing`.
 
-What the numbers say: for the project, the commitment and the sensitivity, Decider's confidence is
-what makes the floors useful: when it was sure of them it was right every time, and when it was
-not, the task went to "unsorted" instead of the wrong project. That does not hold for every
-question (RESULTS.md counts the sure-and-wrong answers per question), and on the real tasks it was
-never sure of the project at all. gpt-oss-20b called itself sure of nearly every answer, including
-the wrong ones. The source-text gate held both confidential conversations before any Bedrock
-call, and cleared the other ten. The deadline question is the exception: Decider reads "a stated
-date after which it is late" more strictly than the labels and was confidently "no" on 12 tasks
-labelled yes, so its floor does not protect that question, and it was confidently "yes" on 4
-`someone_waiting` tasks labelled no (two where the owner is the one waiting); its priority agrees
-16 of 30 against 22 and 20. Those counts are against the labels as first written; Dan's ruling 40
-corrected twelve labels on 20 Oct, after which the deadline question is wrong on 5 of its 21 sure
-answers, waiting on 3 of 15, and priority agrees 15, 21 and 19 of 30. Decider is the slowest of the three on a laptop CPU; it is also the
-only one that costs nothing and never leaves the machine. Rotating the order of the project
-options seven ways changed the answer for 2 of 30 tasks, each between `work` and `other`: the
-same two with the same counts as on 18 Oct (3 of 30 on 17 Oct, with an older wording). The
-first-listed option was picked no more often than chance (13.8% against 14.3%). The fixtures and
-the expected answers are invented, so these are small-sample numbers.
+What the numbers say. In the fresh evaluation, Decider's floors did what they are for on the
+project and the sensitivity: when it was sure of a project it was right (8 of 8), and the other 18
+tasks went to "unsorted" instead of the wrong project; it was sure of a task's sensitivity 24 times
+and right every time; of its 24 sure commitment answers, one was wrong. That does not hold for
+every question: the deadline question was wrong on 4 of its 13 sure answers and the waiting
+question on 5 of 13 (the fresh report's question table), and priority, which the rule builds from
+them, was right for 11 of the 26 tasks. The source-text gate held every sensitive conversation (12
+of 12 in the fresh evaluation, 2 of 2 in the 19 Oct bench) before any Bedrock call; in the fresh
+evaluation it also held three ordinary conversations it was unsure of (a garage's call about a
+car's "diagnosis", a thesis advisor's corridor chat, a storyboard review while a client's lawyers
+read the contract), and the task check held a fourth, a hospital volunteer's orientation, after
+its extraction. In the 19 Oct bench (RESULTS.md): gpt-oss-20b called itself sure of nearly every
+answer, including the wrong ones; Decider's priority agreed 16 of 30 against 22 and 20, against the
+labels as first written, and 15, 21 and 19 of 30 after Dan's ruling 40 corrected twelve labels on
+20 Oct; on the real tasks it was never sure of the project at all. Decider is the slowest of the
+three on a laptop CPU; it is also the only one that costs nothing and never leaves the machine.
+Rotating the order of the project options seven ways (RESULTS.md, 19 Oct) changed the answer for 2
+of 30 tasks, each between `work` and `other`: the same two with the same counts as on 18 Oct (3 of
+30 on 17 Oct, with an older wording). The first-listed option was picked no more often than chance
+(13.8% against 14.3%). The conversations and the expected answers are invented, in both runs, so
+these are small-sample numbers.
 
 ## Tests
 

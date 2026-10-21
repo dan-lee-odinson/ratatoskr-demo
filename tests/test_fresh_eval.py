@@ -100,7 +100,7 @@ def test_held_conversations_have_no_extraction_and_no_writes_read_from_their_rec
                  "| ordinary conversations unnecessarily held: source gate | 0 of 12 |",
                  "| Bedrock extraction calls for held conversations | 0 (over 12 held) |",
                  "| task writes for held conversations | 0 (over 12 held) |",
-                 f"sha256 `{run.labels_sha256}`", "RESULTS.md's \"Label corrections\" section",
+                 f"sha256 `{bench._grouped(run.labels_sha256)}`", "RESULTS.md's \"Label corrections\" section",
                  "the five recordings made on 21 Oct for the walkthrough video are in no count"):
         assert line in text, line
     assert "**Finding:**" not in text and "## Label disagreements\n\nNone recorded." in text
