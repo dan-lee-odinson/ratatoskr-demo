@@ -83,11 +83,25 @@
         "notes": null,
         "project": "community",
         "priority": "high",
-        "someone_waiting": false,
-        "hard_deadline": true,
+        "someone_waiting": true,
+        "hard_deadline": false,
         "worth_researching_soon": null,
         "real_commitment": true,
-        "sensitive": false
+        "sensitive": false,
+        "corrections": [
+          {
+            "label": "hard_deadline",
+            "was": true,
+            "on": "2026-10-20",
+            "reason": "Dan's ruling 40: no date, time or event is in the task as it is asked (the task text stays as extracted); the Tuesday session is only in the conversation."
+          },
+          {
+            "label": "someone_waiting",
+            "was": false,
+            "on": "2026-10-20",
+            "reason": "Dan's ruling 40: the owner promised Mara he would tell the session chair; she is expecting it."
+          }
+        ]
       }
     ]
   },

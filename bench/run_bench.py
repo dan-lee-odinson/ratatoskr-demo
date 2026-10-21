@@ -75,7 +75,8 @@ from ratatoskr_demo.bedrock import BedrockClient, NetworkLost, make_spend_ledger
 from ratatoskr_demo.config import Settings, load_settings  # noqa: E402
 from ratatoskr_demo.decider import DeciderRejected, DeciderRouter, DeciderUnavailable, make_router  # noqa: E402
 from ratatoskr_demo.errors import ConfigurationError, RatatoskrError  # noqa: E402
-from ratatoskr_demo.expected import FIXTURE_DIRS, ExpectedTask, canonical_tasks, load_expected, match_task  # noqa: E402
+from ratatoskr_demo.expected import (  # noqa: E402
+    FIXTURE_DIRS, ExpectedTask, as_first_labelled, canonical_tasks, load_expected, match_task)
 from ratatoskr_demo.extract import Contact, Task, bedrock_model_call, unfence  # noqa: E402
 from ratatoskr_demo.judge import SOURCE_SHORT, Judgement, interpret  # noqa: E402
 from ratatoskr_demo.route import (  # noqa: E402
@@ -87,6 +88,10 @@ from ratatoskr_demo.spend import input_token_bound, worst_case_usd  # noqa: E402
 from ratatoskr_demo.transcript import NOT_READY, extract_text  # noqa: E402
 
 RESULTS = REPO / "bench" / "RESULTS.md"
+ROUTE_TOML = REPO / "ratatoskr_demo" / "prompts" / "route.toml"
+# The priority Nouls' labels (someone_waiting, hard_deadline, worth_researching_soon) were first written with
+# Dan's ruling 7, committed on 18 Oct 2026; the corrections of ruling 40 keep them beside the new values.
+FIRST_LABELLED = "18 Oct"
 RAW_DIR = REPO / "bench" / "raw"  # git-ignored: per-call numbers for the write-up, never transcript text
 JEV_PRICE_IN_PER_M = 0.042  # USD per 1M input tokens; output tokens free (docs.typesafe.ai/models, 16 Oct 2026)
 QUESTIONS = ("project", "priority", "someone_waiting", "hard_deadline", "worth_researching_soon", "real_commitment",
@@ -614,6 +619,7 @@ def render(run: Run, *, settings: Settings, spend: dict[str, Any], versions: dic
             f"{name} {_ms(statistics.median(values) if values else None)}"
             for name, values in canonical_latency.items()) + "."]
         lines += sure_and_wrong(run.canonical, run.canonical_tasks)
+    lines += label_corrections(run)
     if getattr(run, "canonical_off", None):
         lines += side_by_side(run.canonical, run.canonical_off, run.canonical_tasks, "the canonical tasks")
     if getattr(run, "asked_off", None):
@@ -655,6 +661,56 @@ def render(run: Run, *, settings: Settings, spend: dict[str, Any], versions: dic
         lines.append(f"| {t.recording_id} | {_md(t.task.content)} | {exp} | " + " | ".join(cells) + " |")
     lines += ["", "## Bedrock spend (whole ledger, all purposes)", "", "```", json.dumps(spend, indent=2), "```", ""]
     return "\n".join(lines)
+
+
+def label_corrections(run: Run) -> list[str]:
+    """Where a label was corrected after the bench ran (Dan's ruling 40): each correction, and the questions it
+    touches counted both ways, as first labelled and as corrected. The tables above count the corrected labels."""
+    groups = [(f"{len(run.canonical_tasks)} canonical", run.canonical, run.canonical_tasks),
+              (f"{len(run.tasks)} extracted", run.asked, run.tasks)]
+    seen: dict[tuple[str, str], ExpectedTask] = {}
+    for _, _, tasks in groups:
+        for t in tasks:
+            if t.expected is not None and t.expected.corrections:
+                seen.setdefault((t.recording_id, t.expected.task.content), t.expected)
+    if not seen:
+        return []
+    corrections = [(rid, e, c) for (rid, _), e in seen.items() for c in e.corrections]
+    dates = sorted({c.on for _, _, c in corrections})
+    questions = [q for q in QUESTIONS if any(c.label == q for _, _, c in corrections)]
+    word = {True: "yes", False: "no", None: "-"}
+    lines = ["", "## Label corrections", "",
+             f"{len(corrections)} label(s) on {len(seen)} canonical task(s) were corrected on {', '.join(dates)} "
+             "(Dan's ruling 40). Every table above counts the labels as corrected; each fixture keeps the label as "
+             "first written beside its correction (`corrections` in its `expected` block).", "",
+             "| recording | task | label | first labelled | corrected | reason |", "|---|---|---|---|---|---|"]
+    for rid, e, c in corrections:
+        now = getattr(e, c.label)
+        lines.append(f"| {rid} | {_md(e.task.content)} | {c.label} | {word.get(c.was, c.was)} | "
+                     f"{word.get(now, now)} | {_md(c.reason)} |")
+    lines += ["", f"The questions they touch, counted both ways (agree / sure / agree when sure), as labelled on "
+                  f"{FIRST_LABELLED} and as corrected on {', '.join(dates)}:", "",
+              f"| tasks | backend | question | as labelled on {FIRST_LABELLED} | as corrected |", "|---|---|---|---|---|"]
+    for name, by_backend, tasks in groups:
+        first = [replace(t, expected=as_first_labelled(t.expected) if t.expected else None) for t in tasks]
+        for backend, asked in by_backend.items():
+            before, after = agreement(asked, first), agreement(asked, tasks)
+            for q in questions:
+                cell = [f"{s['agree']}/{s['matched']} / {s['sure']} / {s['sure_agree']}/{s['sure']}" for s in
+                        (before[q], after[q])]
+                lines.append(f"| {name} | {backend} | {q} | {cell[0]} | {cell[1]} |")
+    return lines
+
+
+def labels_now(run: Run) -> None:
+    """A saved run keeps the labels it was scored with; a re-render reads them as the fixtures hold them now,
+    corrections and all (Dan's ruling 40), so both label states can be shown."""
+    current = expected_by_id()
+    for t in run.canonical_tasks:
+        [t.expected] = [e for e in current.get(t.recording_id, []) if e.task == t.task]
+    for t in run.tasks:
+        if t.expected is not None:
+            t.expected = match_task(t.task, current.get(t.recording_id, []))
 
 
 def sure_and_wrong(asked_by_backend: dict[str, list[Asked]], tasks: list[BenchTask]) -> list[str]:
@@ -833,6 +889,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--rotation-conditions", default=None,
                         help="with --render-from: the run conditions to state for the carried rotation, "
                              "instead of those its file recorded")
+    parser.add_argument("--out", type=Path, default=RESULTS,
+                        help="write the report here instead of bench/RESULTS.md (a development run, ruling 39)")
+    parser.add_argument("--note", action="append", default=[],
+                        help="with --render-from: a line to add to the report's notes (repeatable)")
     parser.add_argument("--as-measured", default=None, metavar="NOTE",
                         help="with --render-from: label the numbers [as measured], with NOTE, until a re-measure")
     args = parser.parse_args(argv)
@@ -875,6 +935,7 @@ def main(argv: list[str] | None = None) -> int:
         "Jev": f"`jev-latest` via typesafe-sdk {_version('typesafe-sdk')}" if jev else "skipped (no TYPESAFE_API_KEY)",
         "prices": f"Bedrock ${settings.model.price_in_per_m}/M in, ${settings.model.price_out_per_m}/M out "
                   f"(read {settings.model.docs_read_on}); Jev ${JEV_PRICE_IN_PER_M}/M in, output free; Decider $0",
+        "questions": f"`ratatoskr_demo/prompts/route.toml` at git blob `{git_blob_hash(ROUTE_TOML)}`",
         "machine": "the build laptop's CPU (16 logical cores), Decider capped at 4 threads at below-normal "
                    f"priority, {BENCH_DECIDER_TIMEOUT:.0f} s per read at most"
                    + (f"; {args.conditions}" if args.conditions else ""),
@@ -883,11 +944,11 @@ def main(argv: list[str] | None = None) -> int:
                     rotation_from=args.rotation_from, rotation_note=args.rotation_note,
                     option_descriptions=args.option_descriptions, real_tasks=load_real_tasks(args.real_tasks))
     when = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
-    RESULTS.write_bytes(render(run, settings=settings, spend=spend.summary(), versions=versions,
+    args.out.write_bytes(render(run, settings=settings, spend=spend.summary(), versions=versions,
                                when=when).encode("utf-8"))
     write_raw(run, when)
     state = save_state(run, versions=versions, spend=spend.summary(), when=when)
-    print(f"wrote {RESULTS.relative_to(REPO)} and {state.relative_to(REPO)}; Bedrock ledger total "
+    print(f"wrote {args.out} and {state.relative_to(REPO)}; Bedrock ledger total "
           f"${spend.total_usd():.6f}")
     return 1 if run.stopped else 0
 
@@ -916,14 +977,16 @@ def rerender(args: argparse.Namespace, settings: Settings) -> int:
         run.prior_rotation_from = args.prior_rotation_from.name
         run.prior_rotation_note = " ".join(s for s in (rotation_wording(args.prior_rotation_from, questions),
                                                        args.prior_rotation_note) if s)
+    labels_now(run)
+    run.notes = list(run.notes) + list(args.note)
     run.rerendered = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     run.as_measured = args.as_measured or ""
     versions = dict(saved["versions"])
     if args.conditions and "machine" in versions:  # the run's conditions, worded for the public report
         versions["machine"] = versions["machine"].split("; ", 1)[0] + f"; {args.conditions}"
-    RESULTS.write_bytes(render(run, settings=settings, spend=saved["spend"], versions=versions,
+    args.out.write_bytes(render(run, settings=settings, spend=saved["spend"], versions=versions,
                                when=saved["when"]).encode("utf-8"))
-    print(f"re-rendered {RESULTS.name} from {args.render_from.name}")
+    print(f"re-rendered {args.out.name} from {args.render_from.name}")
     return 0
 
 

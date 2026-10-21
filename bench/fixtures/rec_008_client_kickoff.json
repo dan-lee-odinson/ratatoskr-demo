@@ -44,10 +44,18 @@
         "project": "work",
         "priority": "high",
         "someone_waiting": true,
-        "hard_deadline": true,
+        "hard_deadline": false,
         "worth_researching_soon": null,
         "real_commitment": true,
-        "sensitive": false
+        "sensitive": false,
+        "corrections": [
+          {
+            "label": "hard_deadline",
+            "was": true,
+            "on": "2026-10-20",
+            "reason": "Dan's ruling 40, convention (i): a date the owner picked for themself is not a hard deadline."
+          }
+        ]
       },
       {
         "match": [

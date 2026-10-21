@@ -29,9 +29,11 @@ client never reads it.
          "someone_waiting": true, "hard_deadline": true,   the three priority Nouls, labelled
          "worth_researching_soon": null,                  (null: not scored; the rule never
                                                            reaches soon when priority is high)
-         "real_commitment": true, "sensitive": false}
-      ]
-    }
+         "real_commitment": true, "sensitive": false,
+         "corrections": [                        a label changed after the bench ran (Dan's ruling 40):
+           {"label": "hard_deadline", "was": true, "on": "2026-10-20", "reason": "..."}]}
+      ]                                          the value above is the corrected one; "was" keeps
+    }                                            the original, so both label states can be counted
 
 The canonical tasks let the option-order test and the Decider check run
 without any Bedrock call. The bench matches each extracted task to the one
@@ -43,7 +45,7 @@ canonical task, or more than one, is reported as unmatched.
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import date
 from pathlib import Path
 from typing import Any, Iterable
@@ -67,6 +69,24 @@ class ExpectedTask:
     someone_waiting: bool | None = None  # None: not labelled, not scored
     hard_deadline: bool | None = None
     worth_researching_soon: bool | None = None
+    corrections: tuple[Correction, ...] = ()  # labels changed after the bench ran; the values above are corrected
+
+
+@dataclass(frozen=True)
+class Correction:
+    label: str  # the field corrected, e.g. "hard_deadline"
+    was: Any  # the label as first written
+    on: str  # the date of the correction
+    reason: str
+
+
+CORRECTABLE = ("project", "priority", "real_commitment", "sensitive", "someone_waiting", "hard_deadline",
+               "worth_researching_soon")
+
+
+def as_first_labelled(expected: ExpectedTask) -> ExpectedTask:
+    """The same task with every corrected label put back as it was first written."""
+    return replace(expected, corrections=(), **{c.label: c.was for c in expected.corrections})
 
 
 @dataclass(frozen=True)
@@ -109,6 +129,12 @@ def _has(word: str, text: str, words: set[str]) -> bool:
     return needle in words if " " not in needle else needle in text
 
 
+def _correction(c: dict[str, Any]) -> Correction:
+    if c.get("label") not in CORRECTABLE or "was" not in c or not c.get("on") or not c.get("reason"):
+        raise ValueError(f"a label correction needs a known label, the original value, a date and a reason: {c}")
+    return Correction(label=c["label"], was=c["was"], on=str(c["on"]), reason=str(c["reason"]))
+
+
 def _recording(rid: str, block: dict[str, Any], recorded_on: date | None = None) -> ExpectedRecording:
     contact = block.get("contact")
     return ExpectedRecording(
@@ -121,7 +147,8 @@ def _recording(rid: str, block: dict[str, Any], recorded_on: date | None = None)
                                                              notes=t.get("notes")),
                          project=t["project"], priority=t["priority"], real_commitment=bool(t["real_commitment"]),
                          sensitive=bool(t["sensitive"]), someone_waiting=t.get("someone_waiting"),
-                         hard_deadline=t.get("hard_deadline"), worth_researching_soon=t.get("worth_researching_soon"))
+                         hard_deadline=t.get("hard_deadline"), worth_researching_soon=t.get("worth_researching_soon"),
+                         corrections=tuple(_correction(c) for c in t.get("corrections", [])))
             for t in block.get("tasks", [])
         ),
         recorded_on=recorded_on,

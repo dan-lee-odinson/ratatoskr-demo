@@ -54,7 +54,7 @@ other = "low"
 [someone_waiting]
 type = "noul"
 min_confidence = 0.70
-instructions = "Is a specific person — named, or identified by relationship or role (your sister, my boss, the client) — expecting a reply or a deliverable from the owner, whether or not a date was given?"
+instructions = "Is a specific person — named, or identified by relationship or role — expecting a reply or a deliverable from the owner, whether or not a date was given? It is not enough that the owner is waiting on someone else."
 
 [someone_waiting.criteria]
 true = "A specific person, named or identified by relationship or role, asked the owner for something, or the owner promised it to them: a reply, a document, an introduction, the owner's attendance. They will notice if it never comes."
@@ -63,11 +63,11 @@ false = "Nobody is expecting anything from the owner: the task is the owner's ow
 [hard_deadline]
 type = "noul"
 min_confidence = 0.70
-instructions = "Is there a stated date, time or event by which this must be done, after which it is late or the chance is gone?"
+instructions = "Is there a date, time, or event set by someone other than the owner, or agreed with them, by which this must be done, after which it is late or the chance is gone? A date the owner picked for themself is not one."
 
 [hard_deadline.criteria]
-true = "A date, a time or an event is stated (a session, a closing date, a submission time, a meeting), and after it the task is late or pointless."
-false = "No date, time or event is stated by which it must be done; it could be done later without being late."
+true = "A date, a time or an event set by someone other than the owner, or agreed with them, is stated (a session, a closing date, a submission time, a meeting), and after it the task is late or pointless."
+false = "No such date, time or event is stated, or the only date is one the owner picked for themself; it could be done later without being late."
 
 [worth_researching_soon]
 type = "noul"

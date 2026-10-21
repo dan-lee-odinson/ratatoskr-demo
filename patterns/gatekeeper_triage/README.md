@@ -22,8 +22,8 @@ the model, decide whether the action may proceed. Gate the source text first, wh
    | question | type | answers |
    |---|---|---|
    | `project` | choice | which area it belongs to |
-   | `someone_waiting` | noul | is a specific person (named, or by relationship or role) expecting a reply or a deliverable, date or not? |
-   | `hard_deadline` | noul | is there a stated date, time or event after which it is late? |
+   | `someone_waiting` | noul | is a specific person (named, or by relationship or role) expecting a reply or a deliverable from the owner, date or not? (not the owner waiting on someone) |
+   | `hard_deadline` | noul | is there a date, time or event set by someone else, or agreed with them, after which it is late? (not a date the owner picked) |
    | `worth_researching_soon` | noul | worth following up in the next few weeks, with nobody waiting? |
    | `real_commitment` | noul | a concrete commitment, or a pleasantry |
    | `sensitive` | noul | should a person review it first? |

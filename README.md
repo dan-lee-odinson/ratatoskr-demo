@@ -144,9 +144,10 @@ flowchart LR
 ```
 
 **Priority by a rule.** Decider answers three yes/no questions: is a specific person (named, or
-known by relationship or role: your sister, the client) expecting a reply or a deliverable
-(`someone_waiting`), is there a stated date, time or event after which it is late
-(`hard_deadline`), and is it worth following up in the next few weeks (`worth_researching_soon`).
+known by relationship or role) expecting a reply or a deliverable from the owner, not merely the
+owner waiting on someone else (`someone_waiting`); is there a date, time or event set by someone
+else, or agreed with them, after which it is late (`hard_deadline`; a date the owner picked for
+themself is not one); and is it worth following up in the next few weeks (`worth_researching_soon`).
 Code decides, in order: waiting → high; else a deadline within 30 days of the recording → high (a
 later one does not count); else worth it → medium; else low. If the step that would decide rests
 on an answer Decider is unsure of, the project's default applies. The due date is read by code
@@ -268,7 +269,8 @@ sensitivity judgment being made on the machine that holds the transcript.
 The bench is thirty labeled fixture tasks and five tasks from live recordings. On those, Decider's
 project sort misfiled nothing: it was sure on 18 of the 30 fixtures, right on all 18, and left the
 other 12 unsorted; on the five live tasks it was sure of none and left all five unsorted. The
-hard-deadline question was wrong on 12 of the 21 answers it was sure about. The priority rule takes
+hard-deadline question was wrong on 12 of the 21 answers it was sure about against the labels as first
+written (5 of 21 against the labels as corrected on 20 Oct, Dan's ruling 40). The priority rule takes
 a sure "deadline: yes" at face value and reads the date in code only to decide whether it falls
 within thirty days, so a wrong yes costs a priority level and never a task. Priority and project are
 filing decisions and fail safe (the task lands on the list unsorted, and the wrist says so).
@@ -498,7 +500,8 @@ description and with the names alone, side by side; `--real-tasks` adds tasks sa
 recordings (reported as counts, never their text).
 
 On the 30 canonical tasks (19 Oct 2026, the laptop otherwise idle), with each project option's
-one-line description, as the courier asks:
+one-line description, as the courier asks, against the labels as first written on 18 Oct (RESULTS.md
+also counts them as corrected on 20 Oct; only the priority row moves, to 50% / 70% / 63%):
 
 | | Strands Decider (laptop CPU, 4 threads) | gpt-oss-20b on Bedrock | Jev |
 |---|---|---|---|
@@ -534,7 +537,9 @@ call, and cleared the other ten. The deadline question is the exception: Decider
 date after which it is late" more strictly than the labels and was confidently "no" on 12 tasks
 labelled yes, so its floor does not protect that question, and it was confidently "yes" on 4
 `someone_waiting` tasks labelled no (two where the owner is the one waiting); its priority agrees
-16 of 30 against 22 and 20. Decider is the slowest of the three on a laptop CPU; it is also the
+16 of 30 against 22 and 20. Those counts are against the labels as first written; Dan's ruling 40
+corrected twelve labels on 20 Oct, after which the deadline question is wrong on 5 of its 21 sure
+answers, waiting on 3 of 15, and priority agrees 15, 21 and 19 of 30. Decider is the slowest of the three on a laptop CPU; it is also the
 only one that costs nothing and never leaves the machine. Rotating the order of the project
 options seven ways changed the answer for 2 of 30 tasks, each between `work` and `other`: the
 same two with the same counts as on 18 Oct (3 of 30 on 17 Oct, with an older wording). The

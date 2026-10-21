@@ -489,6 +489,24 @@ MUTATIONS = [
      "    pid_file.parent.mkdir(parents=True, exist_ok=True)\n", "",
      ["tests/test_rotation_run.py::test_the_pid_file_is_written_on_a_fresh_clone_with_no_ledger_folder"]),
 
+    # --- label corrections kept beside the originals (Dan's ruling 40, 20 Oct 2026) ---
+    ("Ruling 40: as_first_labelled keeps the corrected labels", "ratatoskr_demo/expected.py",
+     "    return replace(expected, corrections=(), **{c.label: c.was for c in expected.corrections})\n",
+     "    return replace(expected, corrections=())\n",
+     ["tests/test_label_corrections.py::test_as_first_labelled_puts_every_corrected_label_back_and_changes_nothing_else"]),
+    ("Ruling 40: a correction without its original, date or reason accepted", "ratatoskr_demo/expected.py",
+     '    if c.get("label") not in CORRECTABLE or "was" not in c or not c.get("on") or not c.get("reason"):\n',
+     '    if c.get("label") not in CORRECTABLE:\n',
+     ["tests/test_label_corrections.py"]),
+    ("Ruling 40: a re-render keeps the labels it was saved with", "bench/run_bench.py",
+     "    labels_now(run)\n    run.notes = list(run.notes) + list(args.note)\n",
+     "    run.notes = list(run.notes) + list(args.note)\n",
+     ["tests/test_label_corrections.py::test_a_re_render_reads_the_labels_as_they_stand_now_and_writes_where_it_is_told"]),
+    ("Ruling 40: --out ignored on a re-render", "bench/run_bench.py",
+     '    args.out.write_bytes(render(run, settings=settings, spend=saved["spend"]',
+     '    RESULTS.write_bytes(render(run, settings=settings, spend=saved["spend"]',
+     ["tests/test_label_corrections.py::test_a_re_render_reads_the_labels_as_they_stand_now_and_writes_where_it_is_told"]),
+
     # --- backend "none" says it is ungated (Dan's ruling 37, 20 Oct 2026) ---
     ("Ruling 37: the ungated label dropped", "ratatoskr_demo/todoist.py",
      '        labels.append(UNGATED)  # ruling 37: backend "none", no sensitivity check ran\n', "",

@@ -119,12 +119,17 @@ def test_route_toml_loads_and_each_entry_has_instructions_criteria_min_confidenc
         "personal": "medium", "other": "low"}
     for name in names[1:]:
         assert set(questions[name].criteria) == {"true", "false"}
-    assert questions["someone_waiting"].instructions == (  # Dan's ruling 7, word for word
-        "Is a specific person — named, or identified by relationship or role (your sister, my boss, the client) — "
-        "expecting a reply or a deliverable from the owner, whether or not a date was given?")
+    assert questions["someone_waiting"].instructions == (  # Dan's ruling 40, word for word
+        "Is a specific person — named, or identified by relationship or role — expecting a reply or a deliverable "
+        "from the owner, whether or not a date was given? It is not enough that the owner is waiting on someone "
+        "else.")
     assert questions["hard_deadline"].instructions == (
-        "Is there a stated date, time or event by which this must be done, after which it is late or the chance "
-        "is gone?")
+        "Is there a date, time, or event set by someone other than the owner, or agreed with them, by which this "
+        "must be done, after which it is late or the chance is gone? A date the owner picked for themself is not "
+        "one.")
+    assert "the owner picked for themself" in questions["hard_deadline"].criteria["false"]  # convention (i)
+    assert "someone other than the owner, or agreed with them" in questions["hard_deadline"].criteria["true"]
+    assert "the owner is the one waiting on someone else" in questions["someone_waiting"].criteria["false"]
     assert questions["worth_researching_soon"].instructions == (
         "Is this worth investigating or following up on in the next few weeks even though nobody is waiting on a "
         "reply by a date?")

@@ -267,7 +267,8 @@ def test_results_can_be_re_rendered_from_the_saved_state_with_a_prior_rotation_b
         return argparse.Namespace(render_from=state, rotation_from=raw, rotation_note="", prior_rotation_from=prior_path,
                                   prior_rotation_note="measured with the pre-7b wording", rotation_conditions=None,
                                   conditions="another job paused; the laptop otherwise idle",
-                                  as_measured="on 18 Oct; the re-measure replaces these numbers.")
+                                  as_measured="on 18 Oct; the re-measure replaces these numbers.",
+                                  out=bench.RESULTS, note=["asked with the questions of 18 Oct"])
 
     assert bench.rerender(args(raw), settings) == 0
     text = (tmp_path / "RESULTS.md").read_text(encoding="utf-8")
@@ -277,6 +278,7 @@ def test_results_can_be_re_rendered_from_the_saved_state_with_a_prior_rotation_b
     assert "## Sure and wrong (canonical tasks)" in text  # ruling 8: computed, question by question
     assert "| machine | the laptop's CPU, 4 threads; another job paused; the laptop otherwise idle |" in text
     assert "an old wording" not in text  # ruling 10: the conditions are restated, not appended
+    assert "- asked with the questions of 18 Oct\n" in text  # --note (ruling 40)
     assert bench.rerender(args(prior), settings) == 0
     assert "The flip rate moved from" in (tmp_path / "RESULTS.md").read_text(encoding="utf-8")
     # and through the command line, as the overnight chain runs it (no --rotations: the default must not refuse)

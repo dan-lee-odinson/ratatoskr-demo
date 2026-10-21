@@ -71,12 +71,32 @@
         "due_string": "tomorrow",
         "notes": null,
         "project": "school",
-        "priority": "high",
+        "priority": "medium",
         "someone_waiting": false,
-        "hard_deadline": true,
-        "worth_researching_soon": null,
+        "hard_deadline": false,
+        "worth_researching_soon": true,
         "real_commitment": true,
-        "sensitive": false
+        "sensitive": false,
+        "corrections": [
+          {
+            "label": "hard_deadline",
+            "was": true,
+            "on": "2026-10-20",
+            "reason": "Dan's ruling 40, convention (i): a date the owner picked for themself is not a hard deadline."
+          },
+          {
+            "label": "worth_researching_soon",
+            "was": null,
+            "on": "2026-10-20",
+            "reason": "Dan's ruling 40 (his answer of 20 Oct): with nobody waiting and, under convention (i), no hard deadline, the rule cannot reach high; the registration hold is worth following up soon, so medium."
+          },
+          {
+            "label": "priority",
+            "was": "high",
+            "on": "2026-10-20",
+            "reason": "Dan's ruling 40 (his answer of 20 Oct): with nobody waiting and, under convention (i), no hard deadline, the rule cannot reach high; the registration hold is worth following up soon, so medium."
+          }
+        ]
       },
       {
         "match": [
