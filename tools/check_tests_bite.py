@@ -489,6 +489,15 @@ MUTATIONS = [
      "    pid_file.parent.mkdir(parents=True, exist_ok=True)\n", "",
      ["tests/test_rotation_run.py::test_the_pid_file_is_written_on_a_fresh_clone_with_no_ledger_folder"]),
 
+    # --- the fresh evaluation, replayable from its export (Dan's ruling 43, Part B) ---
+    ("Ruling 43B: the replay asks git now instead of the run's record", "bench/replay_fresh.py",
+     '        with _as_recorded(data["header"]):\n', "        if True:\n",
+     ["tests/test_replay_fresh.py::test_the_export_regenerates_every_table_of_the_committed_report_byte_for_byte"]),
+    ("Ruling 43B: an export with changed labels replayed", "bench/replay_fresh.py",
+     '    if hashlib.sha256(data["labels_json"].encode("utf-8")).hexdigest() != _plain(data["labels_sha256"]):\n',
+     "    if False:\n",
+     ["tests/test_replay_fresh.py::test_an_export_whose_labels_were_changed_is_refused"]),
+
     # --- the owner files an unsorted task from Telegram (Dan's ruling 43, 21 Oct 2026) ---
     ("Ruling 43: a repeat tap files the task again", "ratatoskr_demo/resolve.py",
      '        if record.get("project_by"):  # resolved already: the first answer stands\n',

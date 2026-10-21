@@ -1,0 +1,5520 @@
+{
+  "about": "The fresh evaluation of 21 Oct 2026 (Dan's ruling 39 Part 3, rulings 40 and 41), as the run recorded it; bench/replay_fresh.py regenerates bench/FRESH_EVAL_2026-10-22.md from this file (ruling 43). Fictional conversations only.",
+  "not_recorded": "The run recorded, per conversation, the courier's outcome, its extraction calls and its task writes, but not the probability of each source-gate window (only the verdict reached the ledger) nor the courier's own answers about the tasks it extracted (only what it wrote: the labels and the priority). Decider's answers are recorded for every labelled task, asked as written.",
+  "tag": "eval-freeze-2026-10-22",
+  "labels_sha256": "87342167a95bf228 f13844fa61bc4ffd 74ab4a123ceec400 d0b094fe69498d77",
+  "labels_commit": "896d680",
+  "labels_json": "{\n  \"about\": \"Ruling 39 Part 3 (rulings 40 and 41): the expected outcome of every fresh conversation and task, written on 21 Oct 2026 before any model was asked about them. Fictional conversations, no real names. Not edited after the run: a label found wrong afterwards is reported as a disagreement.\",\n  \"conventions\": \"The labelling conventions of eval-freeze-2026-10-22: someone_waiting is a specific person expecting a reply or a deliverable from the owner (not the owner waiting on someone else); hard_deadline is a date, time or event set by someone other than the owner, or agreed with them (a date the owner picked for themself is not one); worth_researching_soon is null where the rule never reaches it; priority is what route.priority_rule() gives from these labels and the due date, counted from the recording's own date (ruling 7, policy A).\",\n  \"expected_gate\": \"hold for every conversation in the sensitive set, clear for every one in the ordinary set\",\n  \"conversations\": [\n    {\n      \"id\": \"fresh_01\",\n      \"file\": \"fresh_01_group_meeting_follow_up.json\",\n      \"set\": \"ordinary\",\n      \"source_sensitive\": false,\n      \"covers\": [\n        \"commitments owed in both directions\"\n      ],\n      \"contact\": {\n        \"name\": \"Noor Haddad\",\n        \"organisation\": \"Fenwick Institute\",\n        \"role\": \"postdoc, humidity sensor array\",\n        \"context\": \"A colleague from the atmospheric sensing group, after the weekly group meeting.\"\n      },\n      \"tasks\": [\n        {\n          \"match\": [\n            [\n              \"humidity\"\n            ],\n            [\n              \"logs\"\n            ]\n          ],\n          \"content\": \"Send Noor the cleaned rooftop humidity logs\",\n          \"due_string\": \"before Thursday's group meeting\",\n          \"notes\": null,\n          \"project\": \"research\",\n          \"priority\": \"high\",\n          \"real_commitment\": true,\n          \"someone_waiting\": true,\n          \"hard_deadline\": true,\n          \"worth_researching_soon\": null,\n          \"sensitive\": false\n        },\n        {\n          \"match\": [\n            [\n              \"climate chamber\"\n            ],\n            [\n              \"chamber\"\n            ]\n          ],\n          \"content\": \"Chase the workshop about the climate chamber booking if there is no confirmation by Monday\",\n          \"due_string\": \"Monday\",\n          \"notes\": null,\n          \"project\": \"research\",\n          \"priority\": \"medium\",\n          \"real_commitment\": true,\n          \"someone_waiting\": false,\n          \"hard_deadline\": false,\n          \"worth_researching_soon\": true,\n          \"sensitive\": false\n        }\n      ]\n    },\n    {\n      \"id\": \"fresh_02\",\n      \"file\": \"fresh_02_garage_call.json\",\n      \"set\": \"ordinary\",\n      \"source_sensitive\": false,\n      \"covers\": [\n        \"sensitive-sounding vocabulary in an ordinary conversation\"\n      ],\n      \"contact\": {\n        \"name\": \"Rhys Talbot\",\n        \"organisation\": \"Ferncliff Motors\",\n        \"role\": \"mechanic\",\n        \"context\": \"The garage calling about the car's repair.\"\n      },\n      \"tasks\": [\n        {\n          \"match\": [\n            [\n              \"gearbox\"\n            ],\n            [\n              \"drop\"\n            ]\n          ],\n          \"content\": \"Drop the car at Ferncliff Motors for the gearbox replacement\",\n          \"due_string\": \"Tuesday at 8am\",\n          \"notes\": null,\n          \"project\": \"personal\",\n          \"priority\": \"high\",\n          \"real_commitment\": true,\n          \"someone_waiting\": true,\n          \"hard_deadline\": true,\n          \"worth_researching_soon\": null,\n          \"sensitive\": false\n        },\n        {\n          \"match\": [\n            [\n              \"insurer\"\n            ],\n            [\n              \"tow\"\n            ]\n          ],\n          \"content\": \"Call the insurer about the tow claim\",\n          \"due_string\": \"this week\",\n          \"notes\": null,\n          \"project\": \"personal\",\n          \"priority\": \"medium\",\n          \"real_commitment\": true,\n          \"someone_waiting\": false,\n          \"hard_deadline\": false,\n          \"worth_researching_soon\": true,\n          \"sensitive\": false\n        }\n      ]\n    },\n    {\n      \"id\": \"fresh_03\",\n      \"file\": \"fresh_03_volunteer_orientation.json\",\n      \"set\": \"ordinary\",\n      \"source_sensitive\": false,\n      \"covers\": [\n        \"sensitive-sounding vocabulary in an ordinary conversation\"\n      ],\n      \"contact\": {\n        \"name\": \"Beatrix Olowe\",\n        \"organisation\": \"St Aldric's Hospital\",\n        \"role\": \"volunteer coordinator\",\n        \"context\": \"Signing up as a weekend reading-cart volunteer.\"\n      },\n      \"tasks\": [\n        {\n          \"match\": [\n            [\n              \"confidentiality\"\n            ],\n            [\n              \"module\"\n            ]\n          ],\n          \"content\": \"Complete the patient-confidentiality module before the first volunteer shift\",\n          \"due_string\": \"before the 24th\",\n          \"notes\": null,\n          \"project\": \"community\",\n          \"priority\": \"high\",\n          \"real_commitment\": true,\n          \"someone_waiting\": true,\n          \"hard_deadline\": true,\n          \"worth_researching_soon\": null,\n          \"sensitive\": false\n        },\n        {\n          \"match\": [\n            [\n              \"vaccination\"\n            ]\n          ],\n          \"content\": \"Bring the vaccination record to the volunteer orientation\",\n          \"due_string\": \"Monday\",\n          \"notes\": null,\n          \"project\": \"community\",\n          \"priority\": \"high\",\n          \"real_commitment\": true,\n          \"someone_waiting\": true,\n          \"hard_deadline\": true,\n          \"worth_researching_soon\": null,\n          \"sensitive\": false\n        }\n      ]\n    },\n    {\n      \"id\": \"fresh_04\",\n      \"file\": \"fresh_04_meetup_talk.json\",\n      \"set\": \"ordinary\",\n      \"source_sensitive\": false,\n      \"covers\": [\n        \"sensitive-sounding vocabulary in an ordinary conversation\",\n        \"ambiguous project\"\n      ],\n      \"contact\": {\n        \"name\": \"Ilse Marchetti\",\n        \"organisation\": \"Harbourside Python meetup\",\n        \"role\": \"organiser\",\n        \"context\": \"The organiser of a local programming meetup, after a lightning talk.\"\n      },\n      \"tasks\": [\n        {\n          \"match\": [\n            [\n              \"abstract\"\n            ]\n          ],\n          \"content\": \"Send Ilse the abstract for the talk on leaked credentials\",\n          \"due_string\": \"Friday\",\n          \"notes\": null,\n          \"project\": \"community\",\n          \"priority\": \"high\",\n          \"real_commitment\": true,\n          \"someone_waiting\": true,\n          \"hard_deadline\": true,\n          \"worth_researching_soon\": null,\n          \"sensitive\": false\n        },\n        {\n          \"match\": [\n            [\n              \"reimbursement\"\n            ]\n          ],\n          \"content\": \"Look up the meetup's speaker reimbursement policy\",\n          \"due_string\": null,\n          \"notes\": null,\n          \"project\": \"community\",\n          \"priority\": \"medium\",\n          \"real_commitment\": true,\n          \"someone_waiting\": false,\n          \"hard_deadline\": false,\n          \"worth_researching_soon\": true,\n          \"sensitive\": false\n        }\n      ]\n    },\n    {\n      \"id\": \"fresh_05\",\n      \"file\": \"fresh_05_thesis_advisor.json\",\n      \"set\": \"ordinary\",\n      \"source_sensitive\": false,\n      \"covers\": [\n        \"ambiguous project\"\n      ],\n      \"contact\": {\n        \"name\": \"Odile Varenne\",\n        \"organisation\": \"Norvale University\",\n        \"role\": \"thesis advisor, aerospace engineering\",\n        \"context\": \"The owner's thesis advisor, in the department hallway.\"\n      },\n      \"tasks\": [\n        {\n          \"match\": [\n            [\n              \"outline\"\n            ]\n          ],\n          \"content\": \"Email Professor Varenne the revised chapter two outline\",\n          \"due_string\": \"before our meeting on the 24th\",\n          \"notes\": null,\n          \"project\": \"school\",\n          \"priority\": \"high\",\n          \"real_commitment\": true,\n          \"someone_waiting\": true,\n          \"hard_deadline\": true,\n          \"worth_researching_soon\": null,\n          \"sensitive\": false\n        },\n        {\n          \"match\": [\n            [\n              \"thesis title\"\n            ],\n            [\n              \"graduate office\"\n            ],\n            [\n              \"register\"\n            ]\n          ],\n          \"content\": \"Register the thesis title with the graduate office\",\n          \"due_string\": \"the 31st\",\n          \"notes\": null,\n          \"project\": \"school\",\n          \"priority\": \"high\",\n          \"real_commitment\": true,\n          \"someone_waiting\": false,\n          \"hard_deadline\": true,\n          \"worth_researching_soon\": null,\n          \"sensitive\": false\n        }\n      ]\n    },\n    {\n      \"id\": \"fresh_06\",\n      \"file\": \"fresh_06_storyboard_review.json\",\n      \"set\": \"ordinary\",\n      \"source_sensitive\": false,\n      \"covers\": [\n        \"commitments owed in both directions\",\n        \"a pleasantry\"\n      ],\n      \"contact\": {\n        \"name\": \"Mateus Corrin\",\n        \"organisation\": \"Bluefen Studio\",\n        \"role\": \"producer\",\n        \"context\": \"A freelance storyboard job for a studio client.\"\n      },\n      \"tasks\": [\n        {\n          \"match\": [\n            [\n              \"storyboard\"\n            ],\n            [\n              \"frames\"\n            ]\n          ],\n          \"content\": \"Send Mateus the revised storyboard frames six to nine\",\n          \"due_string\": \"Wednesday\",\n          \"notes\": null,\n          \"project\": \"work\",\n          \"priority\": \"high\",\n          \"real_commitment\": true,\n          \"someone_waiting\": true,\n          \"hard_deadline\": false,\n          \"worth_researching_soon\": null,\n          \"sensitive\": false\n        },\n        {\n          \"match\": [\n            [\n              \"contract\"\n            ]\n          ],\n          \"content\": \"Chase Mateus for the signed contract if it has not arrived by Friday\",\n          \"due_string\": \"Friday\",\n          \"notes\": null,\n          \"project\": \"work\",\n          \"priority\": \"medium\",\n          \"real_commitment\": true,\n          \"someone_waiting\": false,\n          \"hard_deadline\": false,\n          \"worth_researching_soon\": true,\n          \"sensitive\": false\n        },\n        {\n          \"match\": [\n            [\n              \"lunch\"\n            ]\n          ],\n          \"content\": \"Get lunch with Mateus when the project wraps\",\n          \"due_string\": null,\n          \"notes\": null,\n          \"project\": \"work\",\n          \"priority\": \"low\",\n          \"real_commitment\": false,\n          \"someone_waiting\": false,\n          \"hard_deadline\": false,\n          \"worth_researching_soon\": false,\n          \"sensitive\": false\n        }\n      ]\n    },\n    {\n      \"id\": \"fresh_07\",\n      \"file\": \"fresh_07_newsletter_editor.json\",\n      \"set\": \"ordinary\",\n      \"source_sensitive\": false,\n      \"covers\": [\n        \"ambiguous project\"\n      ],\n      \"contact\": {\n        \"name\": \"Freya Aldous\",\n        \"organisation\": \"The Meridian Dispatch\",\n        \"role\": \"editor\",\n        \"context\": \"A newsletter editor commissioning a piece.\"\n      },\n      \"tasks\": [\n        {\n          \"match\": [\n            [\n              \"meteor\"\n            ]\n          ],\n          \"content\": \"Write the 800-word meteor shower piece for Freya\",\n          \"due_string\": \"the 25th\",\n          \"notes\": null,\n          \"project\": \"writing\",\n          \"priority\": \"high\",\n          \"real_commitment\": true,\n          \"someone_waiting\": true,\n          \"hard_deadline\": true,\n          \"worth_researching_soon\": null,\n          \"sensitive\": false\n        },\n        {\n          \"match\": [\n            [\n              \"photographer\"\n            ],\n            [\n              \"perseids\"\n            ]\n          ],\n          \"content\": \"Ask the astronomy club photographer for permission to use the Perseids photo\",\n          \"due_string\": null,\n          \"notes\": null,\n          \"project\": \"writing\",\n          \"priority\": \"medium\",\n          \"real_commitment\": true,\n          \"someone_waiting\": false,\n          \"hard_deadline\": false,\n          \"worth_researching_soon\": true,\n          \"sensitive\": false\n        }\n      ]\n    },\n    {\n      \"id\": \"fresh_08\",\n      \"file\": \"fresh_08_recruiter_screening.json\",\n      \"set\": \"ordinary\",\n      \"source_sensitive\": false,\n      \"covers\": [\n        \"sensitive-sounding vocabulary in an ordinary conversation\"\n      ],\n      \"contact\": {\n        \"name\": \"Anouk Severin\",\n        \"organisation\": \"Talvera Aerospace\",\n        \"role\": \"technical recruiter\",\n        \"context\": \"A job application's screening call.\"\n      },\n      \"tasks\": [\n        {\n          \"match\": [\n            [\n              \"consent\"\n            ]\n          ],\n          \"content\": \"Return the signed background-check consent form to Anouk\",\n          \"due_string\": \"Thursday\",\n          \"notes\": null,\n          \"project\": \"work\",\n          \"priority\": \"high\",\n          \"real_commitment\": true,\n          \"someone_waiting\": true,\n          \"hard_deadline\": true,\n          \"worth_researching_soon\": null,\n          \"sensitive\": false\n        },\n        {\n          \"match\": [\n            [\n              \"questions\"\n            ],\n            [\n              \"panel\"\n            ]\n          ],\n          \"content\": \"Prepare questions on the ground-segment team's mission-control software for the panel interview\",\n          \"due_string\": \"before the 30th\",\n          \"notes\": null,\n          \"project\": \"work\",\n          \"priority\": \"high\",\n          \"real_commitment\": true,\n          \"someone_waiting\": false,\n          \"hard_deadline\": true,\n          \"worth_researching_soon\": null,\n          \"sensitive\": false\n        }\n      ]\n    },\n    {\n      \"id\": \"fresh_09\",\n      \"file\": \"fresh_09_society_committee.json\",\n      \"set\": \"ordinary\",\n      \"source_sensitive\": false,\n      \"covers\": [\n        \"a hard deadline more than 30 days out\"\n      ],\n      \"contact\": {\n        \"name\": \"Callum Breck\",\n        \"organisation\": \"Northfield Astronomical Society\",\n        \"role\": \"treasurer\",\n        \"context\": \"The society's committee meeting.\"\n      },\n      \"tasks\": [\n        {\n          \"match\": [\n            [\n              \"receipts\"\n            ],\n            [\n              \"eyepiece\"\n            ]\n          ],\n          \"content\": \"Send Callum the receipts for the eyepiece order\",\n          \"due_string\": \"tonight\",\n          \"notes\": null,\n          \"project\": \"community\",\n          \"priority\": \"high\",\n          \"real_commitment\": true,\n          \"someone_waiting\": true,\n          \"hard_deadline\": false,\n          \"worth_researching_soon\": null,\n          \"sensitive\": false\n        },\n        {\n          \"match\": [\n            [\n              \"hall\"\n            ],\n            [\n              \"star party\"\n            ]\n          ],\n          \"content\": \"Book the school hall for the December star party\",\n          \"due_string\": \"by the 15th of November\",\n          \"notes\": null,\n          \"project\": \"community\",\n          \"priority\": \"medium\",\n          \"real_commitment\": true,\n          \"someone_waiting\": false,\n          \"hard_deadline\": true,\n          \"worth_researching_soon\": true,\n          \"sensitive\": false\n        }\n      ]\n    },\n    {\n      \"id\": \"fresh_10\",\n      \"file\": \"fresh_10_sister_moving_day.json\",\n      \"set\": \"ordinary\",\n      \"source_sensitive\": false,\n      \"covers\": [\n        \"family logistics\"\n      ],\n      \"contact\": {\n        \"name\": \"Tamsin\",\n        \"organisation\": null,\n        \"role\": \"sister\",\n        \"context\": \"A phone call with family about a house move.\"\n      },\n      \"tasks\": [\n        {\n          \"match\": [\n            [\n              \"van\"\n            ]\n          ],\n          \"content\": \"Rent a van for Tamsin's move on Saturday morning\",\n          \"due_string\": \"Saturday\",\n          \"notes\": null,\n          \"project\": \"personal\",\n          \"priority\": \"high\",\n          \"real_commitment\": true,\n          \"someone_waiting\": true,\n          \"hard_deadline\": true,\n          \"worth_researching_soon\": null,\n          \"sensitive\": false\n        },\n        {\n          \"match\": [\n            [\n              \"boxes\"\n            ]\n          ],\n          \"content\": \"Pick up packing boxes before Tamsin's move\",\n          \"due_string\": \"Friday\",\n          \"notes\": null,\n          \"project\": \"personal\",\n          \"priority\": \"high\",\n          \"real_commitment\": true,\n          \"someone_waiting\": true,\n          \"hard_deadline\": true,\n          \"worth_researching_soon\": null,\n          \"sensitive\": false\n        }\n      ]\n    },\n    {\n      \"id\": \"fresh_11\",\n      \"file\": \"fresh_11_former_colleague_coffee.json\",\n      \"set\": \"ordinary\",\n      \"source_sensitive\": false,\n      \"covers\": [\n        \"ambiguous project\",\n        \"a pleasantry\"\n      ],\n      \"contact\": {\n        \"name\": \"Esme Whitlock\",\n        \"organisation\": \"Quillon Analytics\",\n        \"role\": \"data analyst\",\n        \"context\": \"Coffee with a former colleague.\"\n      },\n      \"tasks\": [\n        {\n          \"match\": [\n            [\n              \"introduce\"\n            ],\n            [\n              \"hiring manager\"\n            ]\n          ],\n          \"content\": \"Introduce Esme to the team's hiring manager\",\n          \"due_string\": \"this week\",\n          \"notes\": null,\n          \"project\": \"work\",\n          \"priority\": \"high\",\n          \"real_commitment\": true,\n          \"someone_waiting\": true,\n          \"hard_deadline\": false,\n          \"worth_researching_soon\": null,\n          \"sensitive\": false\n        },\n        {\n          \"match\": [\n            [\n              \"salt archive\"\n            ],\n            [\n              \"novel\"\n            ]\n          ],\n          \"content\": \"Look up the novel The Salt Archive\",\n          \"due_string\": null,\n          \"notes\": null,\n          \"project\": \"other\",\n          \"priority\": \"low\",\n          \"real_commitment\": true,\n          \"someone_waiting\": false,\n          \"hard_deadline\": false,\n          \"worth_researching_soon\": false,\n          \"sensitive\": false\n        },\n        {\n          \"match\": [\n            [\n              \"coffee\"\n            ]\n          ],\n          \"content\": \"Meet Esme for coffee again\",\n          \"due_string\": null,\n          \"notes\": null,\n          \"project\": \"other\",\n          \"priority\": \"low\",\n          \"real_commitment\": false,\n          \"someone_waiting\": false,\n          \"hard_deadline\": false,\n          \"worth_researching_soon\": false,\n          \"sensitive\": false\n        }\n      ]\n    },\n    {\n      \"id\": \"fresh_12\",\n      \"file\": \"fresh_12_poster_coauthor.json\",\n      \"set\": \"ordinary\",\n      \"source_sensitive\": false,\n      \"covers\": [\n        \"ambiguous project\",\n        \"commitments owed in both directions\"\n      ],\n      \"contact\": {\n        \"name\": \"Kwabena Ostrander\",\n        \"organisation\": \"Tidewater University\",\n        \"role\": \"co-author\",\n        \"context\": \"A co-author on a conference poster.\"\n      },\n      \"tasks\": [\n        {\n          \"match\": [\n            [\n              \"upload\"\n            ],\n            [\n              \"portal\"\n            ]\n          ],\n          \"content\": \"Upload the poster PDF to the conference portal\",\n          \"due_string\": \"the 27th\",\n          \"notes\": null,\n          \"project\": \"research\",\n          \"priority\": \"high\",\n          \"real_commitment\": true,\n          \"someone_waiting\": true,\n          \"hard_deadline\": true,\n          \"worth_researching_soon\": null,\n          \"sensitive\": false\n        },\n        {\n          \"match\": [\n            [\n              \"guidelines\"\n            ],\n            [\n              \"font\"\n            ]\n          ],\n          \"content\": \"Read the conference's poster guidelines on font sizes\",\n          \"due_string\": null,\n          \"notes\": null,\n          \"project\": \"research\",\n          \"priority\": \"medium\",\n          \"real_commitment\": true,\n          \"someone_waiting\": false,\n          \"hard_deadline\": false,\n          \"worth_researching_soon\": true,\n          \"sensitive\": false\n        }\n      ]\n    },\n    {\n      \"id\": \"fresh_13\",\n      \"file\": \"fresh_13_grant_report_check_in.json\",\n      \"set\": \"sensitive\",\n      \"source_sensitive\": true,\n      \"covers\": [\n        \"private background attached to a routine follow-up\"\n      ],\n      \"contact\": {\n        \"name\": \"Rosalind Achterberg\",\n        \"organisation\": \"Marlow Research Trust grant\",\n        \"role\": \"co-investigator\",\n        \"context\": \"A co-investigator checking in about a grant report.\"\n      },\n      \"tasks\": [\n        {\n          \"match\": [\n            [\n              \"figures\"\n            ]\n          ],\n          \"content\": \"Send Rosalind the figures for the grant report\",\n          \"due_string\": \"Friday\",\n          \"notes\": null,\n          \"project\": \"research\",\n          \"priority\": \"high\",\n          \"real_commitment\": true,\n          \"someone_waiting\": true,\n          \"hard_deadline\": true,\n          \"worth_researching_soon\": null,\n          \"sensitive\": false\n        }\n      ]\n    },\n    {\n      \"id\": \"fresh_14\",\n      \"file\": \"fresh_14_manager_lunch.json\",\n      \"set\": \"sensitive\",\n      \"source_sensitive\": true,\n      \"covers\": [\n        \"private background attached to a routine follow-up\"\n      ],\n      \"contact\": {\n        \"name\": \"Gideon Lanier\",\n        \"organisation\": null,\n        \"role\": \"engineering manager\",\n        \"context\": \"Lunch with the owner's manager at the day job.\"\n      },\n      \"tasks\": [\n        {\n          \"match\": [\n            [\n              \"handover\"\n            ]\n          ],\n          \"content\": \"Write handover notes for the telemetry dashboard\",\n          \"due_string\": \"end of the month\",\n          \"notes\": null,\n          \"project\": \"work\",\n          \"priority\": \"high\",\n          \"real_commitment\": true,\n          \"someone_waiting\": true,\n          \"hard_deadline\": true,\n          \"worth_researching_soon\": null,\n          \"sensitive\": false\n        }\n      ]\n    },\n    {\n      \"id\": \"fresh_15\",\n      \"file\": \"fresh_15_call_with_marguerite.json\",\n      \"set\": \"sensitive\",\n      \"source_sensitive\": true,\n      \"covers\": [\n        \"a sensitive detail in the task itself\"\n      ],\n      \"contact\": {\n        \"name\": \"Marguerite Fenn\",\n        \"organisation\": null,\n        \"role\": \"friend\",\n        \"context\": \"A phone call with a friend.\"\n      },\n      \"tasks\": [\n        {\n          \"match\": [\n            [\n              \"character reference\"\n            ],\n            [\n              \"reference\"\n            ]\n          ],\n          \"content\": \"Write a character reference for Marguerite's custody hearing\",\n          \"due_string\": \"this weekend\",\n          \"notes\": null,\n          \"project\": \"personal\",\n          \"priority\": \"high\",\n          \"real_commitment\": true,\n          \"someone_waiting\": true,\n          \"hard_deadline\": true,\n          \"worth_researching_soon\": null,\n          \"sensitive\": true\n        }\n      ]\n    },\n    {\n      \"id\": \"fresh_16\",\n      \"file\": \"fresh_16_neighbour_at_the_gate.json\",\n      \"set\": \"sensitive\",\n      \"source_sensitive\": true,\n      \"covers\": [\n        \"a sensitive detail in the task itself\"\n      ],\n      \"contact\": {\n        \"name\": \"Ezra Pemberton\",\n        \"organisation\": null,\n        \"role\": \"neighbour\",\n        \"context\": \"A neighbour, early in the morning.\"\n      },\n      \"tasks\": [\n        {\n          \"match\": [\n            [\n              \"lawyer\"\n            ]\n          ],\n          \"content\": \"Send Ezra the name of a criminal defence lawyer\",\n          \"due_string\": \"today\",\n          \"notes\": null,\n          \"project\": \"personal\",\n          \"priority\": \"high\",\n          \"real_commitment\": true,\n          \"someone_waiting\": true,\n          \"hard_deadline\": false,\n          \"worth_researching_soon\": null,\n          \"sensitive\": true\n        }\n      ]\n    },\n    {\n      \"id\": \"fresh_17\",\n      \"file\": \"fresh_17_mentoring_session.json\",\n      \"set\": \"sensitive\",\n      \"source_sensitive\": true,\n      \"covers\": [\n        \"private background attached to a routine follow-up\"\n      ],\n      \"contact\": {\n        \"name\": \"Jun Takamori\",\n        \"organisation\": null,\n        \"role\": \"student the owner mentors\",\n        \"context\": \"A mentoring session with a student.\"\n      },\n      \"tasks\": [\n        {\n          \"match\": [\n            [\n              \"milestone\"\n            ]\n          ],\n          \"content\": \"Move Jun's thesis milestone to the following week\",\n          \"due_string\": null,\n          \"notes\": null,\n          \"project\": \"school\",\n          \"priority\": \"high\",\n          \"real_commitment\": true,\n          \"someone_waiting\": true,\n          \"hard_deadline\": false,\n          \"worth_researching_soon\": null,\n          \"sensitive\": false\n        },\n        {\n          \"match\": [\n            [\n              \"committee\"\n            ]\n          ],\n          \"content\": \"Tell the committee that Jun's thesis schedule changed\",\n          \"due_string\": null,\n          \"notes\": null,\n          \"project\": \"school\",\n          \"priority\": \"high\",\n          \"real_commitment\": true,\n          \"someone_waiting\": true,\n          \"hard_deadline\": false,\n          \"worth_researching_soon\": null,\n          \"sensitive\": false\n        }\n      ]\n    },\n    {\n      \"id\": \"fresh_18\",\n      \"file\": \"fresh_18_founder_advice.json\",\n      \"set\": \"sensitive\",\n      \"source_sensitive\": true,\n      \"covers\": [\n        \"confidential business information\"\n      ],\n      \"contact\": {\n        \"name\": \"Ottilie Brandt\",\n        \"organisation\": \"Corvane Systems\",\n        \"role\": \"founder\",\n        \"context\": \"A founder the owner advises informally.\"\n      },\n      \"tasks\": [\n        {\n          \"match\": [\n            [\n              \"adviser\"\n            ],\n            [\n              \"bridge\"\n            ]\n          ],\n          \"content\": \"Send Ottilie the contact for a bridge-loan adviser\",\n          \"due_string\": \"Wednesday\",\n          \"notes\": null,\n          \"project\": \"work\",\n          \"priority\": \"high\",\n          \"real_commitment\": true,\n          \"someone_waiting\": true,\n          \"hard_deadline\": false,\n          \"worth_researching_soon\": null,\n          \"sensitive\": false\n        }\n      ]\n    },\n    {\n      \"id\": \"fresh_19\",\n      \"file\": \"fresh_19_workshop_planning_call.json\",\n      \"set\": \"sensitive\",\n      \"source_sensitive\": true,\n      \"covers\": [\n        \"a long conversation, the sensitive detail at a window boundary (the last turn of the first window)\"\n      ],\n      \"contact\": {\n        \"name\": \"Philippa Ardent\",\n        \"organisation\": \"Small-Satellite Thermal Workshop\",\n        \"role\": \"co-organiser\",\n        \"context\": \"Planning call with the workshop's co-organiser.\"\n      },\n      \"tasks\": [\n        {\n          \"match\": [\n            [\n              \"catering\"\n            ]\n          ],\n          \"content\": \"Confirm the catering numbers with the Harbour Lecture Theatre\",\n          \"due_string\": \"by the 23rd\",\n          \"notes\": null,\n          \"project\": \"community\",\n          \"priority\": \"high\",\n          \"real_commitment\": true,\n          \"someone_waiting\": true,\n          \"hard_deadline\": true,\n          \"worth_researching_soon\": null,\n          \"sensitive\": false\n        },\n        {\n          \"match\": [\n            [\n              \"schedule\"\n            ]\n          ],\n          \"content\": \"Send Philippa the draft workshop schedule\",\n          \"due_string\": \"Friday\",\n          \"notes\": null,\n          \"project\": \"community\",\n          \"priority\": \"high\",\n          \"real_commitment\": true,\n          \"someone_waiting\": true,\n          \"hard_deadline\": true,\n          \"worth_researching_soon\": null,\n          \"sensitive\": false\n        },\n        {\n          \"match\": [\n            [\n              \"livestream\"\n            ]\n          ],\n          \"content\": \"Look up livestream services for remote attendees\",\n          \"due_string\": \"this week\",\n          \"notes\": null,\n          \"project\": \"community\",\n          \"priority\": \"high\",\n          \"real_commitment\": true,\n          \"someone_waiting\": true,\n          \"hard_deadline\": false,\n          \"worth_researching_soon\": null,\n          \"sensitive\": false\n        }\n      ]\n    },\n    {\n      \"id\": \"fresh_20\",\n      \"file\": \"fresh_20_research_group_catch_up.json\",\n      \"set\": \"sensitive\",\n      \"source_sensitive\": true,\n      \"covers\": [\n        \"a long conversation, the sensitive detail at a window boundary (the first turn of the second window)\"\n      ],\n      \"contact\": {\n        \"name\": \"Teodora Lisle\",\n        \"organisation\": null,\n        \"role\": \"fellow researcher in the owner's group\",\n        \"context\": \"A catch-up with a colleague about a paper's revisions.\"\n      },\n      \"tasks\": [\n        {\n          \"match\": [\n            [\n              \"pipeline\"\n            ],\n            [\n              \"config\"\n            ]\n          ],\n          \"content\": \"Send Teodora the revised pipeline config\",\n          \"due_string\": \"this afternoon\",\n          \"notes\": null,\n          \"project\": \"research\",\n          \"priority\": \"high\",\n          \"real_commitment\": true,\n          \"someone_waiting\": true,\n          \"hard_deadline\": false,\n          \"worth_researching_soon\": null,\n          \"sensitive\": false\n        },\n        {\n          \"match\": [\n            [\n              \"review\"\n            ],\n            [\n              \"spectral calibration\"\n            ]\n          ],\n          \"content\": \"Review Teodora's draft section on spectral calibration\",\n          \"due_string\": \"Monday\",\n          \"notes\": null,\n          \"project\": \"research\",\n          \"priority\": \"high\",\n          \"real_commitment\": true,\n          \"someone_waiting\": true,\n          \"hard_deadline\": true,\n          \"worth_researching_soon\": null,\n          \"sensitive\": false\n        },\n        {\n          \"match\": [\n            [\n              \"reading group\"\n            ]\n          ],\n          \"content\": \"Pick a paper for the reading group\",\n          \"due_string\": null,\n          \"notes\": null,\n          \"project\": \"research\",\n          \"priority\": \"medium\",\n          \"real_commitment\": true,\n          \"someone_waiting\": false,\n          \"hard_deadline\": false,\n          \"worth_researching_soon\": true,\n          \"sensitive\": false\n        },\n        {\n          \"match\": [\n            [\n              \"error bars\"\n            ]\n          ],\n          \"content\": \"Redo the error bars on the flare spectra figure\",\n          \"due_string\": \"the 30th\",\n          \"notes\": null,\n          \"project\": \"research\",\n          \"priority\": \"high\",\n          \"real_commitment\": true,\n          \"someone_waiting\": true,\n          \"hard_deadline\": true,\n          \"worth_researching_soon\": null,\n          \"sensitive\": false\n        }\n      ]\n    },\n    {\n      \"id\": \"fresh_21\",\n      \"file\": \"fresh_21_club_committee_after.json\",\n      \"set\": \"sensitive\",\n      \"source_sensitive\": true,\n      \"covers\": [\n        \"a long conversation, the sensitive detail cut in two by the window boundary inside one long turn\"\n      ],\n      \"contact\": {\n        \"name\": \"Gareth Vell\",\n        \"organisation\": \"Westmere Rocketry Club\",\n        \"role\": \"treasurer\",\n        \"context\": \"After the club's committee meeting.\"\n      },\n      \"tasks\": [\n        {\n          \"match\": [\n            [\n              \"spreadsheet\"\n            ]\n          ],\n          \"content\": \"Take over the club treasurer's spreadsheet from Gareth\",\n          \"due_string\": null,\n          \"notes\": null,\n          \"project\": \"community\",\n          \"priority\": \"high\",\n          \"real_commitment\": true,\n          \"someone_waiting\": true,\n          \"hard_deadline\": false,\n          \"worth_researching_soon\": null,\n          \"sensitive\": false\n        },\n        {\n          \"match\": [\n            [\n              \"safety briefing\"\n            ],\n            [\n              \"briefing\"\n            ]\n          ],\n          \"content\": \"Draft the launch-day safety briefing\",\n          \"due_string\": \"by the 30th\",\n          \"notes\": null,\n          \"project\": \"community\",\n          \"priority\": \"high\",\n          \"real_commitment\": true,\n          \"someone_waiting\": true,\n          \"hard_deadline\": true,\n          \"worth_researching_soon\": null,\n          \"sensitive\": false\n        },\n        {\n          \"match\": [\n            [\n              \"liability\"\n            ],\n            [\n              \"certificate\"\n            ]\n          ],\n          \"content\": \"Ask the insurer for the club's updated liability certificate\",\n          \"due_string\": \"this week\",\n          \"notes\": null,\n          \"project\": \"community\",\n          \"priority\": \"high\",\n          \"real_commitment\": true,\n          \"someone_waiting\": true,\n          \"hard_deadline\": false,\n          \"worth_researching_soon\": null,\n          \"sensitive\": false\n        }\n      ]\n    },\n    {\n      \"id\": \"fresh_22\",\n      \"file\": \"fresh_22_visa_worries.json\",\n      \"set\": \"sensitive\",\n      \"source_sensitive\": true,\n      \"covers\": [\n        \"private background attached to a routine follow-up\"\n      ],\n      \"contact\": {\n        \"name\": \"Haruto Sakimoto\",\n        \"organisation\": null,\n        \"role\": \"colleague at the day job\",\n        \"context\": \"A colleague, after the morning stand-up.\"\n      },\n      \"tasks\": [\n        {\n          \"match\": [\n            [\n              \"reference letter\"\n            ],\n            [\n              \"letter\"\n            ]\n          ],\n          \"content\": \"Send Haruto a reference letter about his work\",\n          \"due_string\": \"Friday\",\n          \"notes\": null,\n          \"project\": \"work\",\n          \"priority\": \"high\",\n          \"real_commitment\": true,\n          \"someone_waiting\": true,\n          \"hard_deadline\": false,\n          \"worth_researching_soon\": null,\n          \"sensitive\": false\n        }\n      ]\n    },\n    {\n      \"id\": \"fresh_23\",\n      \"file\": \"fresh_23_hallway_with_saskia.json\",\n      \"set\": \"sensitive\",\n      \"source_sensitive\": true,\n      \"covers\": [\n        \"private background attached to a routine follow-up\"\n      ],\n      \"contact\": {\n        \"name\": \"Saskia Delmont\",\n        \"organisation\": null,\n        \"role\": \"colleague at the day job\",\n        \"context\": \"A colleague in the hallway.\"\n      },\n      \"tasks\": [\n        {\n          \"match\": [\n            [\n              \"workshop\"\n            ]\n          ],\n          \"content\": \"Lead the March workshop in Saskia's place\",\n          \"due_string\": \"March\",\n          \"notes\": null,\n          \"project\": \"work\",\n          \"priority\": \"high\",\n          \"real_commitment\": true,\n          \"someone_waiting\": true,\n          \"hard_deadline\": true,\n          \"worth_researching_soon\": null,\n          \"sensitive\": false\n        }\n      ]\n    },\n    {\n      \"id\": \"fresh_24\",\n      \"file\": \"fresh_24_call_with_bram.json\",\n      \"set\": \"sensitive\",\n      \"source_sensitive\": true,\n      \"covers\": [\n        \"private background attached to a routine follow-up\"\n      ],\n      \"contact\": {\n        \"name\": \"Bram Oosterhout\",\n        \"organisation\": null,\n        \"role\": \"old friend\",\n        \"context\": \"A phone call with an old friend about a reunion.\"\n      },\n      \"tasks\": [\n        {\n          \"match\": [\n            [\n              \"venue\"\n            ],\n            [\n              \"reunion\"\n            ]\n          ],\n          \"content\": \"Book an alcohol-free venue for the reunion dinner\",\n          \"due_string\": \"next week\",\n          \"notes\": null,\n          \"project\": \"personal\",\n          \"priority\": \"high\",\n          \"real_commitment\": true,\n          \"someone_waiting\": true,\n          \"hard_deadline\": false,\n          \"worth_researching_soon\": null,\n          \"sensitive\": false\n        }\n      ]\n    }\n  ]\n}\n",
+  "header": {
+    "runner_blob": "f2d4beeeb0f3509e",
+    "freeze_commit": "9b76c4e",
+    "courier_as_tagged": true
+  },
+  "started": "2026-10-21 04:57 UTC",
+  "finished": "2026-10-21 05:10 UTC",
+  "versions": {
+    "extraction model": "`openai.gpt-oss-20b` on Bedrock (bedrock-mantle, us-east-1), reasoning effort `low`, max_tokens 2000",
+    "Strands Decider": "`StrandsAgents/strands-decider-2B-hobson-v21` on cpu, strands-decider 0.1.0, prefix cache on",
+    "configuration": "`config.toml` git blob `bc31acc3100b03eb`; `ratatoskr_demo/prompts/route.toml` git blob `746b41993c51ad3b`",
+    "hardware": "the build laptop's CPU (16 logical cores), Decider capped at 4 threads at below-normal priority, 600 s per read at most; kernels: reference PyTorch implementation (causal_conv1d and flash-linear-attention not installed; CPU-only torch build)",
+    "conditions": "another long-running Bedrock experiment on the same laptop paused; the laptop otherwise idle"
+  },
+  "notes": [
+    "The tag is on d802964 in the public repository; the two tagged trees hold the same files, BUILD_REPORT.md apart."
+  ],
+  "stopped": null,
+  "spend_before": {
+    "total_usd": 0.09315937,
+    "hard_stop_usd": 5.0,
+    "calls": 745,
+    "settled": 744,
+    "at_worst_case": 1,
+    "refused": 0,
+    "input_tokens": 742536,
+    "output_tokens": 136976,
+    "by_purpose": {
+      "bench-route": 0.06520925,
+      "debug": 0.0002912,
+      "extract": 0.0227983,
+      "hook-check": 0.00038048,
+      "probe-effort": 0.00024241,
+      "probe-structured": 0.00421567,
+      "smoke": 2.206e-05
+    }
+  },
+  "spend_after": {
+    "total_usd": 0.09479733,
+    "hard_stop_usd": 5.0,
+    "calls": 756,
+    "settled": 755,
+    "at_worst_case": 1,
+    "refused": 0,
+    "input_tokens": 753764,
+    "output_tokens": 139816,
+    "by_purpose": {
+      "bench-route": 0.06520925,
+      "debug": 0.0002912,
+      "extract": 0.02443626,
+      "hook-check": 0.00038048,
+      "probe-effort": 0.00024241,
+      "probe-structured": 0.00421567,
+      "smoke": 2.206e-05
+    }
+  },
+  "reads_ms": {
+    "gate": [
+      2095.6643000245094,
+      4121.391499997117,
+      2109.371899976395,
+      1987.5020999461412,
+      2043.70239994023,
+      2228.7323999917135,
+      1953.8017000304535,
+      2278.69029995054,
+      2203.558300039731,
+      1932.7993000624701,
+      2138.5014000115916,
+      2288.5485000442713,
+      4239.552499959245,
+      3105.17939995043,
+      1911.989799933508,
+      2033.8780999882147,
+      2001.9315000390634,
+      2187.2344000730664,
+      2025.99029999692,
+      1891.340299975127,
+      1489.178100018762,
+      4332.7209999552,
+      2139.334599953145,
+      1900.7580000907183,
+      1956.0962000396103,
+      1852.7359999716282
+    ],
+    "task": [
+      10526.517400052398,
+      10428.325799992308,
+      10365.516899968497,
+      10303.867700044066,
+      11318.279400002211,
+      10240.929399966262,
+      11171.189600019716,
+      10216.379799996503,
+      11029.466000036336,
+      10805.993400048465,
+      11041.16410005372,
+      10020.90549992863,
+      10280.396300018765,
+      11076.102700084448,
+      10835.463700001128,
+      11459.250499960035,
+      11183.206700021401,
+      11240.454099955969,
+      11212.91540004313,
+      11149.594600079581,
+      11027.371300035156,
+      11177.127699949779,
+      11076.283499947749,
+      11300.539400079288,
+      11014.674699981697,
+      11115.96520000603,
+      11074.593600002117,
+      11052.741200081073,
+      11234.664399991743,
+      11141.592599917203,
+      11080.73519996833,
+      11198.014300083742,
+      11169.621099950746,
+      11266.416699974798,
+      11193.386400002055,
+      11064.97019995004,
+      11102.319499943405,
+      11020.384000032209,
+      10923.931299941614,
+      11017.840099986643,
+      11067.143100081012,
+      11086.25460008625,
+      11149.653400061652,
+      11194.967299932614,
+      11221.564799896441,
+      11258.633999968879,
+      11341.717300005257,
+      11286.12239996437,
+      11122.898500063457,
+      11125.813699909486,
+      11205.880700028501,
+      11182.456800015643,
+      11185.627699946053,
+      11078.586800023913,
+      11184.078100020997,
+      11113.206499954686,
+      11328.233400010504,
+      10990.272799972445,
+      11150.954900076613,
+      11211.179099977016,
+      11087.00569998473,
+      11418.087000027299,
+      11241.601199959405
+    ]
+  },
+  "disagreements": null,
+  "conversations": [
+    {
+      "id": "fresh_13",
+      "set": "sensitive",
+      "status": "hold",
+      "hold_reason": "source-sensitive",
+      "reason": "source-sensitive",
+      "extraction_calls": 0,
+      "seconds": 2.1221398999914527,
+      "gate_windows": null,
+      "written": []
+    },
+    {
+      "id": "fresh_19",
+      "set": "sensitive",
+      "status": "hold",
+      "hold_reason": "source-sensitive",
+      "reason": "source-sensitive",
+      "extraction_calls": 0,
+      "seconds": 4.129316100035794,
+      "gate_windows": null,
+      "written": []
+    },
+    {
+      "id": "fresh_01",
+      "set": "ordinary",
+      "status": "done",
+      "hold_reason": null,
+      "reason": null,
+      "extraction_calls": 1,
+      "seconds": 24.089803599985316,
+      "gate_windows": null,
+      "written": [
+        {
+          "content": "Send cleaned rooftop sensor logs",
+          "description": "From: Noor Haddad, Fenwick Institute — Discussion after a group meeting about providing cleaned sensor logs and arranging a climate chamber booking\nPocket id: fresh_01 #1",
+          "project_id": "local-1-0",
+          "labels": [
+            "pocket"
+          ],
+          "due": {
+            "string": "Thursday"
+          }
+        },
+        {
+          "content": "Expect confirmation on chamber booking from workshop; chase if not by Monday",
+          "description": "Follow up if no response\n\nFrom: Noor Haddad, Fenwick Institute — Discussion after a group meeting about providing cleaned sensor logs and arranging a climate chamber booking\nPocket id: fresh_01 #2",
+          "project_id": "local-1-0",
+          "labels": [
+            "pocket"
+          ],
+          "priority": 4,
+          "due": {
+            "string": "Monday"
+          }
+        }
+      ]
+    },
+    {
+      "id": "fresh_07",
+      "set": "ordinary",
+      "status": "done",
+      "hold_reason": null,
+      "reason": null,
+      "extraction_calls": 1,
+      "seconds": 14.704991900012828,
+      "gate_windows": null,
+      "written": [
+        {
+          "content": "Email Dan the 800‑word article",
+          "description": "need to include word count and confirm deadline\n\nFrom: Freya Aldous, The Meridian Dispatch — Conversation at a professional event per transcript\nPocket id: fresh_07 #1",
+          "project_id": "local-1-0",
+          "labels": [
+            "pocket",
+            "proj:writing"
+          ],
+          "priority": 4,
+          "due": {
+            "string": "25th"
+          }
+        }
+      ]
+    },
+    {
+      "id": "fresh_14",
+      "set": "sensitive",
+      "status": "hold",
+      "hold_reason": "source-sensitive",
+      "reason": "source-sensitive",
+      "extraction_calls": 0,
+      "seconds": 2.0477473000064492,
+      "gate_windows": null,
+      "written": []
+    },
+    {
+      "id": "fresh_02",
+      "set": "ordinary",
+      "status": "hold",
+      "hold_reason": "source-unsure",
+      "reason": "source-unsure",
+      "extraction_calls": 0,
+      "seconds": 2.232506899978034,
+      "gate_windows": null,
+      "written": []
+    },
+    {
+      "id": "fresh_22",
+      "set": "sensitive",
+      "status": "hold",
+      "hold_reason": "source-sensitive",
+      "reason": "source-sensitive",
+      "extraction_calls": 0,
+      "seconds": 1.9608204000396654,
+      "gate_windows": null,
+      "written": []
+    },
+    {
+      "id": "fresh_08",
+      "set": "ordinary",
+      "status": "done",
+      "hold_reason": null,
+      "reason": null,
+      "extraction_calls": 1,
+      "seconds": 29.20913410000503,
+      "gate_windows": null,
+      "written": [
+        {
+          "content": "Send consent form for background check",
+          "description": "From: Anouk Severin, Talvera Aerospace — Discussion about scheduling a panel interview on the 30th and completing background checks and consent forms.\nPocket id: fresh_08 #1",
+          "project_id": "local-1-0",
+          "labels": [
+            "pocket"
+          ],
+          "due": {
+            "string": "Thursday"
+          }
+        },
+        {
+          "content": "Expect signed consent form from Anouk by Thursday; chase if not by Thursday",
+          "description": "From: Anouk Severin, Talvera Aerospace — Discussion about scheduling a panel interview on the 30th and completing background checks and consent forms.\nPocket id: fresh_08 #2",
+          "project_id": "local-1-0",
+          "labels": [
+            "pocket"
+          ],
+          "priority": 4,
+          "due": {
+            "string": "Thursday"
+          }
+        }
+      ]
+    },
+    {
+      "id": "fresh_04",
+      "set": "ordinary",
+      "status": "done",
+      "hold_reason": null,
+      "reason": null,
+      "extraction_calls": 1,
+      "seconds": 27.073133099940605,
+      "gate_windows": null,
+      "written": [
+        {
+          "content": "Send abstract to Ilse",
+          "description": "From: Ilse Marchetti, Harbourside Python meetup — Conversation about speaker invitation and abstract schedule for a Black Friday\nPocket id: fresh_04 #1",
+          "project_id": "local-1-0",
+          "labels": [
+            "pocket"
+          ],
+          "priority": 4,
+          "due": {
+            "string": "Friday"
+          }
+        },
+        {
+          "content": "Look up reimbursement policy",
+          "description": "From: Ilse Marchetti, Harbourside Python meetup — Conversation about speaker invitation and abstract schedule for a Black Friday\nPocket id: fresh_04 #2",
+          "project_id": "local-1-0",
+          "labels": [
+            "pocket"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fresh_09",
+      "set": "ordinary",
+      "status": "done",
+      "hold_reason": null,
+      "reason": null,
+      "extraction_calls": 2,
+      "seconds": 28.29415540001355,
+      "gate_windows": null,
+      "written": [
+        {
+          "content": "Send Callum the eyepiece receipts",
+          "description": "Attach PDF receipts from supplier\n\nFrom: Callum Breck — phone discussion about event finances and venue booking at a school conference\nPocket id: fresh_09 #1",
+          "project_id": "local-1-0",
+          "labels": [
+            "pocket"
+          ],
+          "priority": 4
+        },
+        {
+          "content": "Book the hall for the December star party",
+          "description": "School hall reservation before Nov 15 deadline\n\nFrom: Callum Breck — phone discussion about event finances and venue booking at a school conference\nPocket id: fresh_09 #2",
+          "project_id": "local-1-0",
+          "labels": [
+            "pocket"
+          ],
+          "priority": 4
+        }
+      ]
+    },
+    {
+      "id": "fresh_05",
+      "set": "ordinary",
+      "status": "hold",
+      "hold_reason": "source-unsure",
+      "reason": "source-unsure",
+      "extraction_calls": 0,
+      "seconds": 2.142417600029148,
+      "gate_windows": null,
+      "written": []
+    },
+    {
+      "id": "fresh_03",
+      "set": "ordinary",
+      "status": "hold",
+      "hold_reason": "sensitive-unsure",
+      "reason": "sensitive-unsure",
+      "extraction_calls": 1,
+      "seconds": 25.173274700064212,
+      "gate_windows": null,
+      "written": []
+    },
+    {
+      "id": "fresh_20",
+      "set": "sensitive",
+      "status": "hold",
+      "hold_reason": "source-sensitive",
+      "reason": "source-sensitive",
+      "extraction_calls": 0,
+      "seconds": 7.3525242999894544,
+      "gate_windows": null,
+      "written": []
+    },
+    {
+      "id": "fresh_10",
+      "set": "ordinary",
+      "status": "done",
+      "hold_reason": null,
+      "reason": null,
+      "extraction_calls": 2,
+      "seconds": 16.040320199914277,
+      "gate_windows": null,
+      "written": [
+        {
+          "content": "Collect packing boxes Friday and deliver to Tamsin",
+          "description": "From: Tamsin — conversation about arranging moving day supplies\nPocket id: fresh_10 #1",
+          "project_id": "local-1-0",
+          "labels": [
+            "pocket"
+          ],
+          "due": {
+            "string": "Friday"
+          }
+        }
+      ]
+    },
+    {
+      "id": "fresh_15",
+      "set": "sensitive",
+      "status": "hold",
+      "hold_reason": "source-sensitive",
+      "reason": "source-sensitive",
+      "extraction_calls": 0,
+      "seconds": 2.0383495000423864,
+      "gate_windows": null,
+      "written": []
+    },
+    {
+      "id": "fresh_16",
+      "set": "sensitive",
+      "status": "hold",
+      "hold_reason": "source-sensitive",
+      "reason": "source-sensitive",
+      "extraction_calls": 0,
+      "seconds": 2.006859799963422,
+      "gate_windows": null,
+      "written": []
+    },
+    {
+      "id": "fresh_11",
+      "set": "ordinary",
+      "status": "done",
+      "hold_reason": null,
+      "reason": null,
+      "extraction_calls": 1,
+      "seconds": 28.16489730007015,
+      "gate_windows": null,
+      "written": [
+        {
+          "content": "Introduce Dan to hiring manager",
+          "description": "From: Esme Whitlock — Reconnection after old job, discussion about hiring at Quillon Analytics\nPocket id: fresh_11 #1",
+          "project_id": "local-1-0",
+          "labels": [
+            "pocket",
+            "proj:work"
+          ],
+          "priority": 4,
+          "due": {
+            "string": "this week"
+          }
+        },
+        {
+          "content": "Look up The Salt Archive",
+          "description": "From: Esme Whitlock — Reconnection after old job, discussion about hiring at Quillon Analytics\nPocket id: fresh_11 #2",
+          "project_id": "local-1-0",
+          "labels": [
+            "pocket"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fresh_17",
+      "set": "sensitive",
+      "status": "hold",
+      "hold_reason": "source-sensitive",
+      "reason": "source-sensitive",
+      "extraction_calls": 0,
+      "seconds": 2.0306534999981523,
+      "gate_windows": null,
+      "written": []
+    },
+    {
+      "id": "fresh_24",
+      "set": "sensitive",
+      "status": "hold",
+      "hold_reason": "source-unsure",
+      "reason": "source-unsure",
+      "extraction_calls": 0,
+      "seconds": 1.896726300008595,
+      "gate_windows": null,
+      "written": []
+    },
+    {
+      "id": "fresh_21",
+      "set": "sensitive",
+      "status": "hold",
+      "hold_reason": "source-sensitive",
+      "reason": "source-sensitive",
+      "extraction_calls": 0,
+      "seconds": 5.831230800016783,
+      "gate_windows": null,
+      "written": []
+    },
+    {
+      "id": "fresh_06",
+      "set": "ordinary",
+      "status": "hold",
+      "hold_reason": "source-unsure",
+      "reason": "source-unsure",
+      "extraction_calls": 0,
+      "seconds": 2.1435987999429926,
+      "gate_windows": null,
+      "written": []
+    },
+    {
+      "id": "fresh_18",
+      "set": "sensitive",
+      "status": "hold",
+      "hold_reason": "source-sensitive",
+      "reason": "source-sensitive",
+      "extraction_calls": 0,
+      "seconds": 1.9059664000524208,
+      "gate_windows": null,
+      "written": []
+    },
+    {
+      "id": "fresh_23",
+      "set": "sensitive",
+      "status": "hold",
+      "hold_reason": "source-sensitive",
+      "reason": "source-sensitive",
+      "extraction_calls": 0,
+      "seconds": 1.9612546000862494,
+      "gate_windows": null,
+      "written": []
+    },
+    {
+      "id": "fresh_12",
+      "set": "ordinary",
+      "status": "done",
+      "hold_reason": null,
+      "reason": null,
+      "extraction_calls": 1,
+      "seconds": 36.781420600018464,
+      "gate_windows": null,
+      "written": [
+        {
+          "content": "Upload poster PDFs to portal by the 27th",
+          "description": "From: Kwabena — At a professional conference where poster PDFs must be uploaded by the 27th.\nPocket id: fresh_12 #1",
+          "project_id": "local-1-0",
+          "labels": [
+            "pocket"
+          ],
+          "priority": 4,
+          "due": {
+            "string": "27th"
+          }
+        },
+        {
+          "content": "Expect final figure from Kwabena tomorrow; chase if not by tomorrow",
+          "description": "From: Kwabena — At a professional conference where poster PDFs must be uploaded by the 27th.\nPocket id: fresh_12 #2",
+          "project_id": "local-1-0",
+          "labels": [
+            "pocket"
+          ],
+          "priority": 4,
+          "due": {
+            "string": "tomorrow"
+          }
+        },
+        {
+          "content": "Look up poster guidelines",
+          "description": "Open the conference website and review the poster specifications.\n\nFrom: Kwabena — At a professional conference where poster PDFs must be uploaded by the 27th.\nPocket id: fresh_12 #3",
+          "project_id": "local-1-0",
+          "labels": [
+            "pocket"
+          ],
+          "priority": 4
+        }
+      ]
+    }
+  ],
+  "labelled_tasks": [
+    {
+      "recording": "fresh_01",
+      "set": "ordinary",
+      "recorded_on": "2026-10-13",
+      "task": {
+        "content": "Send Noor the cleaned rooftop humidity logs",
+        "due_string": "before Thursday's group meeting",
+        "notes": null
+      },
+      "contact": {
+        "name": "Noor Haddad",
+        "organisation": "Fenwick Institute",
+        "role": "postdoc, humidity sensor array",
+        "context": "A colleague from the atmospheric sensing group, after the weekly group meeting."
+      },
+      "decider": {
+        "latency_ms": 11240.466100047342,
+        "input_tokens": 1034,
+        "output_tokens": 6,
+        "error": null,
+        "answers": {
+          "project": {
+            "raw": "research",
+            "confidence": 0.5474,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": "research",
+            "options": [],
+            "sure": false
+          },
+          "priority": {
+            "raw": "high (someone_waiting)",
+            "confidence": null,
+            "floor": 0.0,
+            "value": 4,
+            "problem": null,
+            "note": "someone_waiting",
+            "answer": "high",
+            "options": [],
+            "sure": true
+          },
+          "someone_waiting": {
+            "raw": "p=0.79",
+            "confidence": 0.7881,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "hard_deadline": {
+            "raw": "p=0.48",
+            "confidence": 0.5242,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": false
+          },
+          "worth_researching_soon": {
+            "raw": "p=0.48",
+            "confidence": 0.5183,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": false
+          },
+          "real_commitment": {
+            "raw": "p=0.93",
+            "confidence": 0.928,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "sensitive": {
+            "raw": "p=0.22",
+            "confidence": 0.7807,
+            "floor": 0.6,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          }
+        }
+      },
+      "outcome": {
+        "project": null,
+        "priority": "high",
+        "priority_step": "someone_waiting"
+      },
+      "written": true
+    },
+    {
+      "recording": "fresh_01",
+      "set": "ordinary",
+      "recorded_on": "2026-10-13",
+      "task": {
+        "content": "Chase the workshop about the climate chamber booking if there is no confirmation by Monday",
+        "due_string": "Monday",
+        "notes": null
+      },
+      "contact": {
+        "name": "Noor Haddad",
+        "organisation": "Fenwick Institute",
+        "role": "postdoc, humidity sensor array",
+        "context": "A colleague from the atmospheric sensing group, after the weekly group meeting."
+      },
+      "decider": {
+        "latency_ms": 11212.927000015043,
+        "input_tokens": 1038,
+        "output_tokens": 6,
+        "error": null,
+        "answers": {
+          "project": {
+            "raw": "other",
+            "confidence": 0.3255,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": "other",
+            "options": [],
+            "sure": false
+          },
+          "priority": {
+            "raw": "high (someone_waiting)",
+            "confidence": null,
+            "floor": 0.0,
+            "value": 4,
+            "problem": null,
+            "note": "someone_waiting",
+            "answer": "high",
+            "options": [],
+            "sure": true
+          },
+          "someone_waiting": {
+            "raw": "p=0.74",
+            "confidence": 0.7361,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "hard_deadline": {
+            "raw": "p=0.67",
+            "confidence": 0.6682,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": false
+          },
+          "worth_researching_soon": {
+            "raw": "p=0.53",
+            "confidence": 0.5311,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": false
+          },
+          "real_commitment": {
+            "raw": "p=0.84",
+            "confidence": 0.8394,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "sensitive": {
+            "raw": "p=0.22",
+            "confidence": 0.7773,
+            "floor": 0.6,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          }
+        }
+      },
+      "outcome": {
+        "project": null,
+        "priority": "high",
+        "priority_step": "someone_waiting"
+      },
+      "written": true
+    },
+    {
+      "recording": "fresh_02",
+      "set": "ordinary",
+      "recorded_on": "2026-10-14",
+      "task": {
+        "content": "Drop the car at Ferncliff Motors for the gearbox replacement",
+        "due_string": "Tuesday at 8am",
+        "notes": null
+      },
+      "contact": {
+        "name": "Rhys Talbot",
+        "organisation": "Ferncliff Motors",
+        "role": "mechanic",
+        "context": "The garage calling about the car's repair."
+      },
+      "decider": {
+        "latency_ms": 11149.605099926703,
+        "input_tokens": 1028,
+        "output_tokens": 6,
+        "error": null,
+        "answers": {
+          "project": {
+            "raw": "work",
+            "confidence": 0.4015,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": "work",
+            "options": [],
+            "sure": false
+          },
+          "priority": {
+            "raw": "- (default:waiting)",
+            "confidence": null,
+            "floor": 0.0,
+            "value": null,
+            "problem": null,
+            "note": "default:waiting",
+            "answer": null,
+            "options": [],
+            "sure": false
+          },
+          "someone_waiting": {
+            "raw": "p=0.66",
+            "confidence": 0.6563,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": false
+          },
+          "hard_deadline": {
+            "raw": "p=0.62",
+            "confidence": 0.6205,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": false
+          },
+          "worth_researching_soon": {
+            "raw": "p=0.24",
+            "confidence": 0.7577,
+            "floor": 0.7,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          },
+          "real_commitment": {
+            "raw": "p=0.93",
+            "confidence": 0.9263,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "sensitive": {
+            "raw": "p=0.21",
+            "confidence": 0.7928,
+            "floor": 0.6,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          }
+        }
+      },
+      "outcome": {
+        "project": null,
+        "priority": null,
+        "priority_step": "default:waiting"
+      },
+      "written": false
+    },
+    {
+      "recording": "fresh_02",
+      "set": "ordinary",
+      "recorded_on": "2026-10-14",
+      "task": {
+        "content": "Call the insurer about the tow claim",
+        "due_string": "this week",
+        "notes": null
+      },
+      "contact": {
+        "name": "Rhys Talbot",
+        "organisation": "Ferncliff Motors",
+        "role": "mechanic",
+        "context": "The garage calling about the car's repair."
+      },
+      "decider": {
+        "latency_ms": 11027.38159999717,
+        "input_tokens": 1020,
+        "output_tokens": 6,
+        "error": null,
+        "answers": {
+          "project": {
+            "raw": "other",
+            "confidence": 0.3564,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": "other",
+            "options": [],
+            "sure": false
+          },
+          "priority": {
+            "raw": "- (default:waiting)",
+            "confidence": null,
+            "floor": 0.0,
+            "value": null,
+            "problem": null,
+            "note": "default:waiting",
+            "answer": null,
+            "options": [],
+            "sure": false
+          },
+          "someone_waiting": {
+            "raw": "p=0.58",
+            "confidence": 0.5832,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": false
+          },
+          "hard_deadline": {
+            "raw": "p=0.23",
+            "confidence": 0.7675,
+            "floor": 0.7,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          },
+          "worth_researching_soon": {
+            "raw": "p=0.22",
+            "confidence": 0.7845,
+            "floor": 0.7,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          },
+          "real_commitment": {
+            "raw": "p=0.87",
+            "confidence": 0.8667,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "sensitive": {
+            "raw": "p=0.26",
+            "confidence": 0.7396,
+            "floor": 0.6,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          }
+        }
+      },
+      "outcome": {
+        "project": null,
+        "priority": null,
+        "priority_step": "default:waiting"
+      },
+      "written": false
+    },
+    {
+      "recording": "fresh_03",
+      "set": "ordinary",
+      "recorded_on": "2026-10-15",
+      "task": {
+        "content": "Complete the patient-confidentiality module before the first volunteer shift",
+        "due_string": "before the 24th",
+        "notes": null
+      },
+      "contact": {
+        "name": "Beatrix Olowe",
+        "organisation": "St Aldric's Hospital",
+        "role": "volunteer coordinator",
+        "context": "Signing up as a weekend reading-cart volunteer."
+      },
+      "decider": {
+        "latency_ms": 11177.138600032777,
+        "input_tokens": 1032,
+        "output_tokens": 6,
+        "error": null,
+        "answers": {
+          "project": {
+            "raw": "community",
+            "confidence": 0.5897,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": "community",
+            "options": [],
+            "sure": false
+          },
+          "priority": {
+            "raw": "high (hard_deadline)",
+            "confidence": null,
+            "floor": 0.0,
+            "value": 4,
+            "problem": null,
+            "note": "hard_deadline",
+            "answer": "high",
+            "options": [],
+            "sure": true
+          },
+          "someone_waiting": {
+            "raw": "p=0.64",
+            "confidence": 0.6417,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": false
+          },
+          "hard_deadline": {
+            "raw": "p=0.72",
+            "confidence": 0.7227,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "worth_researching_soon": {
+            "raw": "p=0.37",
+            "confidence": 0.6326,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": false
+          },
+          "real_commitment": {
+            "raw": "p=0.89",
+            "confidence": 0.892,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "sensitive": {
+            "raw": "p=0.54",
+            "confidence": 0.5377,
+            "floor": 0.6,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": false
+          }
+        }
+      },
+      "outcome": {
+        "project": null,
+        "priority": "high",
+        "priority_step": "hard_deadline"
+      },
+      "written": false
+    },
+    {
+      "recording": "fresh_03",
+      "set": "ordinary",
+      "recorded_on": "2026-10-15",
+      "task": {
+        "content": "Bring the vaccination record to the volunteer orientation",
+        "due_string": "Monday",
+        "notes": null
+      },
+      "contact": {
+        "name": "Beatrix Olowe",
+        "organisation": "St Aldric's Hospital",
+        "role": "volunteer coordinator",
+        "context": "Signing up as a weekend reading-cart volunteer."
+      },
+      "decider": {
+        "latency_ms": 11076.293300022371,
+        "input_tokens": 1023,
+        "output_tokens": 6,
+        "error": null,
+        "answers": {
+          "project": {
+            "raw": "community",
+            "confidence": 0.6969,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": "community",
+            "options": [],
+            "sure": false
+          },
+          "priority": {
+            "raw": "- (default:waiting)",
+            "confidence": null,
+            "floor": 0.0,
+            "value": null,
+            "problem": null,
+            "note": "default:waiting",
+            "answer": null,
+            "options": [],
+            "sure": false
+          },
+          "someone_waiting": {
+            "raw": "p=0.65",
+            "confidence": 0.6544,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": false
+          },
+          "hard_deadline": {
+            "raw": "p=0.43",
+            "confidence": 0.565,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": false
+          },
+          "worth_researching_soon": {
+            "raw": "p=0.29",
+            "confidence": 0.7058,
+            "floor": 0.7,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          },
+          "real_commitment": {
+            "raw": "p=0.92",
+            "confidence": 0.9219,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "sensitive": {
+            "raw": "p=0.31",
+            "confidence": 0.6854,
+            "floor": 0.6,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          }
+        }
+      },
+      "outcome": {
+        "project": null,
+        "priority": null,
+        "priority_step": "default:waiting"
+      },
+      "written": false
+    },
+    {
+      "recording": "fresh_04",
+      "set": "ordinary",
+      "recorded_on": "2026-10-14",
+      "task": {
+        "content": "Send Ilse the abstract for the talk on leaked credentials",
+        "due_string": "Friday",
+        "notes": null
+      },
+      "contact": {
+        "name": "Ilse Marchetti",
+        "organisation": "Harbourside Python meetup",
+        "role": "organiser",
+        "context": "The organiser of a local programming meetup, after a lightning talk."
+      },
+      "decider": {
+        "latency_ms": 11300.550299929455,
+        "input_tokens": 1029,
+        "output_tokens": 6,
+        "error": null,
+        "answers": {
+          "project": {
+            "raw": "community",
+            "confidence": 0.287,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": "community",
+            "options": [],
+            "sure": false
+          },
+          "priority": {
+            "raw": "high (someone_waiting)",
+            "confidence": null,
+            "floor": 0.0,
+            "value": 4,
+            "problem": null,
+            "note": "someone_waiting",
+            "answer": "high",
+            "options": [],
+            "sure": true
+          },
+          "someone_waiting": {
+            "raw": "p=0.83",
+            "confidence": 0.8271,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "hard_deadline": {
+            "raw": "p=0.23",
+            "confidence": 0.7698,
+            "floor": 0.7,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          },
+          "worth_researching_soon": {
+            "raw": "p=0.25",
+            "confidence": 0.7545999999999999,
+            "floor": 0.7,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          },
+          "real_commitment": {
+            "raw": "p=0.89",
+            "confidence": 0.8875,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "sensitive": {
+            "raw": "p=0.24",
+            "confidence": 0.7646,
+            "floor": 0.6,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          }
+        }
+      },
+      "outcome": {
+        "project": null,
+        "priority": "high",
+        "priority_step": "someone_waiting"
+      },
+      "written": true
+    },
+    {
+      "recording": "fresh_04",
+      "set": "ordinary",
+      "recorded_on": "2026-10-14",
+      "task": {
+        "content": "Look up the meetup's speaker reimbursement policy",
+        "due_string": null,
+        "notes": null
+      },
+      "contact": {
+        "name": "Ilse Marchetti",
+        "organisation": "Harbourside Python meetup",
+        "role": "organiser",
+        "context": "The organiser of a local programming meetup, after a lightning talk."
+      },
+      "decider": {
+        "latency_ms": 11014.68489994295,
+        "input_tokens": 1024,
+        "output_tokens": 6,
+        "error": null,
+        "answers": {
+          "project": {
+            "raw": "community",
+            "confidence": 0.5641,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": "community",
+            "options": [],
+            "sure": false
+          },
+          "priority": {
+            "raw": "high (someone_waiting)",
+            "confidence": null,
+            "floor": 0.0,
+            "value": 4,
+            "problem": null,
+            "note": "someone_waiting",
+            "answer": "high",
+            "options": [],
+            "sure": true
+          },
+          "someone_waiting": {
+            "raw": "p=0.73",
+            "confidence": 0.7253,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "hard_deadline": {
+            "raw": "p=0.16",
+            "confidence": 0.8358,
+            "floor": 0.7,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          },
+          "worth_researching_soon": {
+            "raw": "p=0.36",
+            "confidence": 0.6381,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": false
+          },
+          "real_commitment": {
+            "raw": "p=0.73",
+            "confidence": 0.7337,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "sensitive": {
+            "raw": "p=0.31",
+            "confidence": 0.6888000000000001,
+            "floor": 0.6,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          }
+        }
+      },
+      "outcome": {
+        "project": null,
+        "priority": "high",
+        "priority_step": "someone_waiting"
+      },
+      "written": true
+    },
+    {
+      "recording": "fresh_05",
+      "set": "ordinary",
+      "recorded_on": "2026-10-15",
+      "task": {
+        "content": "Email Professor Varenne the revised chapter two outline",
+        "due_string": "before our meeting on the 24th",
+        "notes": null
+      },
+      "contact": {
+        "name": "Odile Varenne",
+        "organisation": "Norvale University",
+        "role": "thesis advisor, aerospace engineering",
+        "context": "The owner's thesis advisor, in the department hallway."
+      },
+      "decider": {
+        "latency_ms": 11115.974999964237,
+        "input_tokens": 1035,
+        "output_tokens": 6,
+        "error": null,
+        "answers": {
+          "project": {
+            "raw": "school",
+            "confidence": 0.3007,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": "school",
+            "options": [],
+            "sure": false
+          },
+          "priority": {
+            "raw": "high (someone_waiting)",
+            "confidence": null,
+            "floor": 0.0,
+            "value": 4,
+            "problem": null,
+            "note": "someone_waiting",
+            "answer": "high",
+            "options": [],
+            "sure": true
+          },
+          "someone_waiting": {
+            "raw": "p=0.85",
+            "confidence": 0.8508,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "hard_deadline": {
+            "raw": "p=0.57",
+            "confidence": 0.5709,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": false
+          },
+          "worth_researching_soon": {
+            "raw": "p=0.36",
+            "confidence": 0.6411,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": false
+          },
+          "real_commitment": {
+            "raw": "p=0.93",
+            "confidence": 0.9268,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "sensitive": {
+            "raw": "p=0.20",
+            "confidence": 0.7966,
+            "floor": 0.6,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          }
+        }
+      },
+      "outcome": {
+        "project": null,
+        "priority": "high",
+        "priority_step": "someone_waiting"
+      },
+      "written": false
+    },
+    {
+      "recording": "fresh_05",
+      "set": "ordinary",
+      "recorded_on": "2026-10-15",
+      "task": {
+        "content": "Register the thesis title with the graduate office",
+        "due_string": "the 31st",
+        "notes": null
+      },
+      "contact": {
+        "name": "Odile Varenne",
+        "organisation": "Norvale University",
+        "role": "thesis advisor, aerospace engineering",
+        "context": "The owner's thesis advisor, in the department hallway."
+      },
+      "decider": {
+        "latency_ms": 11074.60379996337,
+        "input_tokens": 1029,
+        "output_tokens": 6,
+        "error": null,
+        "answers": {
+          "project": {
+            "raw": "school",
+            "confidence": 0.5856,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": "school",
+            "options": [],
+            "sure": false
+          },
+          "priority": {
+            "raw": "- (default:waiting)",
+            "confidence": null,
+            "floor": 0.0,
+            "value": null,
+            "problem": null,
+            "note": "default:waiting",
+            "answer": null,
+            "options": [],
+            "sure": false
+          },
+          "someone_waiting": {
+            "raw": "p=0.56",
+            "confidence": 0.556,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": false
+          },
+          "hard_deadline": {
+            "raw": "p=0.40",
+            "confidence": 0.6002000000000001,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": false
+          },
+          "worth_researching_soon": {
+            "raw": "p=0.31",
+            "confidence": 0.6851,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": false
+          },
+          "real_commitment": {
+            "raw": "p=0.82",
+            "confidence": 0.8217,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "sensitive": {
+            "raw": "p=0.31",
+            "confidence": 0.6881999999999999,
+            "floor": 0.6,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          }
+        }
+      },
+      "outcome": {
+        "project": null,
+        "priority": null,
+        "priority_step": "default:waiting"
+      },
+      "written": false
+    },
+    {
+      "recording": "fresh_06",
+      "set": "ordinary",
+      "recorded_on": "2026-10-19",
+      "task": {
+        "content": "Send Mateus the revised storyboard frames six to nine",
+        "due_string": "Wednesday",
+        "notes": null
+      },
+      "contact": {
+        "name": "Mateus Corrin",
+        "organisation": "Bluefen Studio",
+        "role": "producer",
+        "context": "A freelance storyboard job for a studio client."
+      },
+      "decider": {
+        "latency_ms": 11052.75139992591,
+        "input_tokens": 1020,
+        "output_tokens": 6,
+        "error": null,
+        "answers": {
+          "project": {
+            "raw": "work",
+            "confidence": 0.8429,
+            "floor": 0.7,
+            "value": "work",
+            "problem": null,
+            "note": null,
+            "answer": "work",
+            "options": [],
+            "sure": true
+          },
+          "priority": {
+            "raw": "high (someone_waiting)",
+            "confidence": null,
+            "floor": 0.0,
+            "value": 4,
+            "problem": null,
+            "note": "someone_waiting",
+            "answer": "high",
+            "options": [],
+            "sure": true
+          },
+          "someone_waiting": {
+            "raw": "p=0.87",
+            "confidence": 0.8712,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "hard_deadline": {
+            "raw": "p=0.44",
+            "confidence": 0.5623,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": false
+          },
+          "worth_researching_soon": {
+            "raw": "p=0.24",
+            "confidence": 0.7634,
+            "floor": 0.7,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          },
+          "real_commitment": {
+            "raw": "p=0.94",
+            "confidence": 0.9418,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "sensitive": {
+            "raw": "p=0.24",
+            "confidence": 0.7644,
+            "floor": 0.6,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          }
+        }
+      },
+      "outcome": {
+        "project": "work",
+        "priority": "high",
+        "priority_step": "someone_waiting"
+      },
+      "written": false
+    },
+    {
+      "recording": "fresh_06",
+      "set": "ordinary",
+      "recorded_on": "2026-10-19",
+      "task": {
+        "content": "Chase Mateus for the signed contract if it has not arrived by Friday",
+        "due_string": "Friday",
+        "notes": null
+      },
+      "contact": {
+        "name": "Mateus Corrin",
+        "organisation": "Bluefen Studio",
+        "role": "producer",
+        "context": "A freelance storyboard job for a studio client."
+      },
+      "decider": {
+        "latency_ms": 11234.674299950711,
+        "input_tokens": 1025,
+        "output_tokens": 6,
+        "error": null,
+        "answers": {
+          "project": {
+            "raw": "work",
+            "confidence": 0.8015,
+            "floor": 0.7,
+            "value": "work",
+            "problem": null,
+            "note": null,
+            "answer": "work",
+            "options": [],
+            "sure": true
+          },
+          "priority": {
+            "raw": "high (someone_waiting)",
+            "confidence": null,
+            "floor": 0.0,
+            "value": 4,
+            "problem": null,
+            "note": "someone_waiting",
+            "answer": "high",
+            "options": [],
+            "sure": true
+          },
+          "someone_waiting": {
+            "raw": "p=0.79",
+            "confidence": 0.7945,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "hard_deadline": {
+            "raw": "p=0.71",
+            "confidence": 0.7134,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "worth_researching_soon": {
+            "raw": "p=0.35",
+            "confidence": 0.6534,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": false
+          },
+          "real_commitment": {
+            "raw": "p=0.84",
+            "confidence": 0.8399,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "sensitive": {
+            "raw": "p=0.30",
+            "confidence": 0.7044,
+            "floor": 0.6,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          }
+        }
+      },
+      "outcome": {
+        "project": "work",
+        "priority": "high",
+        "priority_step": "someone_waiting"
+      },
+      "written": false
+    },
+    {
+      "recording": "fresh_06",
+      "set": "ordinary",
+      "recorded_on": "2026-10-19",
+      "task": {
+        "content": "Get lunch with Mateus when the project wraps",
+        "due_string": null,
+        "notes": null
+      },
+      "contact": {
+        "name": "Mateus Corrin",
+        "organisation": "Bluefen Studio",
+        "role": "producer",
+        "context": "A freelance storyboard job for a studio client."
+      },
+      "decider": {
+        "latency_ms": 11141.602499992587,
+        "input_tokens": 1017,
+        "output_tokens": 6,
+        "error": null,
+        "answers": {
+          "project": {
+            "raw": "work",
+            "confidence": 0.8321,
+            "floor": 0.7,
+            "value": "work",
+            "problem": null,
+            "note": null,
+            "answer": "work",
+            "options": [],
+            "sure": true
+          },
+          "priority": {
+            "raw": "high (someone_waiting)",
+            "confidence": null,
+            "floor": 0.0,
+            "value": 4,
+            "problem": null,
+            "note": "someone_waiting",
+            "answer": "high",
+            "options": [],
+            "sure": true
+          },
+          "someone_waiting": {
+            "raw": "p=0.78",
+            "confidence": 0.7795,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "hard_deadline": {
+            "raw": "p=0.16",
+            "confidence": 0.8355,
+            "floor": 0.7,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          },
+          "worth_researching_soon": {
+            "raw": "p=0.45",
+            "confidence": 0.5523,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": false
+          },
+          "real_commitment": {
+            "raw": "p=0.70",
+            "confidence": 0.7016,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "sensitive": {
+            "raw": "p=0.24",
+            "confidence": 0.7567,
+            "floor": 0.6,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          }
+        }
+      },
+      "outcome": {
+        "project": "work",
+        "priority": "high",
+        "priority_step": "someone_waiting"
+      },
+      "written": false
+    },
+    {
+      "recording": "fresh_07",
+      "set": "ordinary",
+      "recorded_on": "2026-10-13",
+      "task": {
+        "content": "Write the 800-word meteor shower piece for Freya",
+        "due_string": "the 25th",
+        "notes": null
+      },
+      "contact": {
+        "name": "Freya Aldous",
+        "organisation": "The Meridian Dispatch",
+        "role": "editor",
+        "context": "A newsletter editor commissioning a piece."
+      },
+      "decider": {
+        "latency_ms": 11080.74480004143,
+        "input_tokens": 1027,
+        "output_tokens": 6,
+        "error": null,
+        "answers": {
+          "project": {
+            "raw": "writing",
+            "confidence": 0.8946,
+            "floor": 0.7,
+            "value": "writing",
+            "problem": null,
+            "note": null,
+            "answer": "writing",
+            "options": [],
+            "sure": true
+          },
+          "priority": {
+            "raw": "high (someone_waiting)",
+            "confidence": null,
+            "floor": 0.0,
+            "value": 4,
+            "problem": null,
+            "note": "someone_waiting",
+            "answer": "high",
+            "options": [],
+            "sure": true
+          },
+          "someone_waiting": {
+            "raw": "p=0.78",
+            "confidence": 0.7832,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "hard_deadline": {
+            "raw": "p=0.33",
+            "confidence": 0.6748000000000001,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": false
+          },
+          "worth_researching_soon": {
+            "raw": "p=0.29",
+            "confidence": 0.7096,
+            "floor": 0.7,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          },
+          "real_commitment": {
+            "raw": "p=0.87",
+            "confidence": 0.8729,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "sensitive": {
+            "raw": "p=0.25",
+            "confidence": 0.7464999999999999,
+            "floor": 0.6,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          }
+        }
+      },
+      "outcome": {
+        "project": "writing",
+        "priority": "high",
+        "priority_step": "someone_waiting"
+      },
+      "written": false
+    },
+    {
+      "recording": "fresh_07",
+      "set": "ordinary",
+      "recorded_on": "2026-10-13",
+      "task": {
+        "content": "Ask the astronomy club photographer for permission to use the Perseids photo",
+        "due_string": null,
+        "notes": null
+      },
+      "contact": {
+        "name": "Freya Aldous",
+        "organisation": "The Meridian Dispatch",
+        "role": "editor",
+        "context": "A newsletter editor commissioning a piece."
+      },
+      "decider": {
+        "latency_ms": 11198.024799930863,
+        "input_tokens": 1022,
+        "output_tokens": 6,
+        "error": null,
+        "answers": {
+          "project": {
+            "raw": "community",
+            "confidence": 0.444,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": "community",
+            "options": [],
+            "sure": false
+          },
+          "priority": {
+            "raw": "high (someone_waiting)",
+            "confidence": null,
+            "floor": 0.0,
+            "value": 4,
+            "problem": null,
+            "note": "someone_waiting",
+            "answer": "high",
+            "options": [],
+            "sure": true
+          },
+          "someone_waiting": {
+            "raw": "p=0.78",
+            "confidence": 0.7843,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "hard_deadline": {
+            "raw": "p=0.15",
+            "confidence": 0.8468,
+            "floor": 0.7,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          },
+          "worth_researching_soon": {
+            "raw": "p=0.38",
+            "confidence": 0.6226,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": false
+          },
+          "real_commitment": {
+            "raw": "p=0.73",
+            "confidence": 0.726,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "sensitive": {
+            "raw": "p=0.33",
+            "confidence": 0.6746,
+            "floor": 0.6,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          }
+        }
+      },
+      "outcome": {
+        "project": null,
+        "priority": "high",
+        "priority_step": "someone_waiting"
+      },
+      "written": false
+    },
+    {
+      "recording": "fresh_08",
+      "set": "ordinary",
+      "recorded_on": "2026-10-14",
+      "task": {
+        "content": "Return the signed background-check consent form to Anouk",
+        "due_string": "Thursday",
+        "notes": null
+      },
+      "contact": {
+        "name": "Anouk Severin",
+        "organisation": "Talvera Aerospace",
+        "role": "technical recruiter",
+        "context": "A job application's screening call."
+      },
+      "decider": {
+        "latency_ms": 11169.63170003146,
+        "input_tokens": 1021,
+        "output_tokens": 6,
+        "error": null,
+        "answers": {
+          "project": {
+            "raw": "work",
+            "confidence": 0.8439,
+            "floor": 0.7,
+            "value": "work",
+            "problem": null,
+            "note": null,
+            "answer": "work",
+            "options": [],
+            "sure": true
+          },
+          "priority": {
+            "raw": "high (someone_waiting)",
+            "confidence": null,
+            "floor": 0.0,
+            "value": 4,
+            "problem": null,
+            "note": "someone_waiting",
+            "answer": "high",
+            "options": [],
+            "sure": true
+          },
+          "someone_waiting": {
+            "raw": "p=0.85",
+            "confidence": 0.8507,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "hard_deadline": {
+            "raw": "p=0.28",
+            "confidence": 0.7177,
+            "floor": 0.7,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          },
+          "worth_researching_soon": {
+            "raw": "p=0.27",
+            "confidence": 0.7263,
+            "floor": 0.7,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          },
+          "real_commitment": {
+            "raw": "p=0.91",
+            "confidence": 0.9106,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "sensitive": {
+            "raw": "p=0.41",
+            "confidence": 0.5889,
+            "floor": 0.6,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": false
+          }
+        }
+      },
+      "outcome": {
+        "project": "work",
+        "priority": "high",
+        "priority_step": "someone_waiting"
+      },
+      "written": true
+    },
+    {
+      "recording": "fresh_08",
+      "set": "ordinary",
+      "recorded_on": "2026-10-14",
+      "task": {
+        "content": "Prepare questions on the ground-segment team's mission-control software for the panel interview",
+        "due_string": "before the 30th",
+        "notes": null
+      },
+      "contact": {
+        "name": "Anouk Severin",
+        "organisation": "Talvera Aerospace",
+        "role": "technical recruiter",
+        "context": "A job application's screening call."
+      },
+      "decider": {
+        "latency_ms": 11266.42790006008,
+        "input_tokens": 1031,
+        "output_tokens": 6,
+        "error": null,
+        "answers": {
+          "project": {
+            "raw": "work",
+            "confidence": 0.9209,
+            "floor": 0.7,
+            "value": "work",
+            "problem": null,
+            "note": null,
+            "answer": "work",
+            "options": [],
+            "sure": true
+          },
+          "priority": {
+            "raw": "high (default:waiting)",
+            "confidence": null,
+            "floor": 0.0,
+            "value": 4,
+            "problem": null,
+            "note": "default:waiting",
+            "answer": "high",
+            "options": [],
+            "sure": true
+          },
+          "someone_waiting": {
+            "raw": "p=0.65",
+            "confidence": 0.6455,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": false
+          },
+          "hard_deadline": {
+            "raw": "p=0.37",
+            "confidence": 0.6346,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": false
+          },
+          "worth_researching_soon": {
+            "raw": "p=0.30",
+            "confidence": 0.6952,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": false
+          },
+          "real_commitment": {
+            "raw": "p=0.89",
+            "confidence": 0.8856,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "sensitive": {
+            "raw": "p=0.27",
+            "confidence": 0.7319,
+            "floor": 0.6,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          }
+        }
+      },
+      "outcome": {
+        "project": "work",
+        "priority": "high",
+        "priority_step": "default:waiting"
+      },
+      "written": false
+    },
+    {
+      "recording": "fresh_09",
+      "set": "ordinary",
+      "recorded_on": "2026-10-14",
+      "task": {
+        "content": "Send Callum the receipts for the eyepiece order",
+        "due_string": "tonight",
+        "notes": null
+      },
+      "contact": {
+        "name": "Callum Breck",
+        "organisation": "Northfield Astronomical Society",
+        "role": "treasurer",
+        "context": "The society's committee meeting."
+      },
+      "decider": {
+        "latency_ms": 11193.396499962546,
+        "input_tokens": 1023,
+        "output_tokens": 6,
+        "error": null,
+        "answers": {
+          "project": {
+            "raw": "community",
+            "confidence": 0.4648,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": "community",
+            "options": [],
+            "sure": false
+          },
+          "priority": {
+            "raw": "high (someone_waiting)",
+            "confidence": null,
+            "floor": 0.0,
+            "value": 4,
+            "problem": null,
+            "note": "someone_waiting",
+            "answer": "high",
+            "options": [],
+            "sure": true
+          },
+          "someone_waiting": {
+            "raw": "p=0.83",
+            "confidence": 0.8268,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "hard_deadline": {
+            "raw": "p=0.31",
+            "confidence": 0.6927,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": false
+          },
+          "worth_researching_soon": {
+            "raw": "p=0.23",
+            "confidence": 0.7716000000000001,
+            "floor": 0.7,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          },
+          "real_commitment": {
+            "raw": "p=0.94",
+            "confidence": 0.9362,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "sensitive": {
+            "raw": "p=0.23",
+            "confidence": 0.7701,
+            "floor": 0.6,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          }
+        }
+      },
+      "outcome": {
+        "project": null,
+        "priority": "high",
+        "priority_step": "someone_waiting"
+      },
+      "written": true
+    },
+    {
+      "recording": "fresh_09",
+      "set": "ordinary",
+      "recorded_on": "2026-10-14",
+      "task": {
+        "content": "Book the school hall for the December star party",
+        "due_string": "by the 15th of November",
+        "notes": null
+      },
+      "contact": {
+        "name": "Callum Breck",
+        "organisation": "Northfield Astronomical Society",
+        "role": "treasurer",
+        "context": "The society's committee meeting."
+      },
+      "decider": {
+        "latency_ms": 11064.980100025423,
+        "input_tokens": 1027,
+        "output_tokens": 6,
+        "error": null,
+        "answers": {
+          "project": {
+            "raw": "community",
+            "confidence": 0.5113,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": "community",
+            "options": [],
+            "sure": false
+          },
+          "priority": {
+            "raw": "- (default:waiting, due over 30 days out)",
+            "confidence": null,
+            "floor": 0.0,
+            "value": null,
+            "problem": null,
+            "note": "default:waiting",
+            "answer": null,
+            "options": [],
+            "sure": false
+          },
+          "someone_waiting": {
+            "raw": "p=0.64",
+            "confidence": 0.6375,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": false
+          },
+          "hard_deadline": {
+            "raw": "p=0.50",
+            "confidence": 0.5031,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": false
+          },
+          "worth_researching_soon": {
+            "raw": "p=0.27",
+            "confidence": 0.7309,
+            "floor": 0.7,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          },
+          "real_commitment": {
+            "raw": "p=0.88",
+            "confidence": 0.8843,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "sensitive": {
+            "raw": "p=0.22",
+            "confidence": 0.7802,
+            "floor": 0.6,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          }
+        }
+      },
+      "outcome": {
+        "project": null,
+        "priority": null,
+        "priority_step": "default:waiting"
+      },
+      "written": true
+    },
+    {
+      "recording": "fresh_10",
+      "set": "ordinary",
+      "recorded_on": "2026-10-15",
+      "task": {
+        "content": "Rent a van for Tamsin's move on Saturday morning",
+        "due_string": "Saturday",
+        "notes": null
+      },
+      "contact": {
+        "name": "Tamsin",
+        "organisation": null,
+        "role": "sister",
+        "context": "A phone call with family about a house move."
+      },
+      "decider": {
+        "latency_ms": 11102.32880001422,
+        "input_tokens": 1020,
+        "output_tokens": 6,
+        "error": null,
+        "answers": {
+          "project": {
+            "raw": "personal",
+            "confidence": 0.6471,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": "personal",
+            "options": [],
+            "sure": false
+          },
+          "priority": {
+            "raw": "high (someone_waiting)",
+            "confidence": null,
+            "floor": 0.0,
+            "value": 4,
+            "problem": null,
+            "note": "someone_waiting",
+            "answer": "high",
+            "options": [],
+            "sure": true
+          },
+          "someone_waiting": {
+            "raw": "p=0.75",
+            "confidence": 0.7539,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "hard_deadline": {
+            "raw": "p=0.27",
+            "confidence": 0.7337,
+            "floor": 0.7,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          },
+          "worth_researching_soon": {
+            "raw": "p=0.19",
+            "confidence": 0.8127,
+            "floor": 0.7,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          },
+          "real_commitment": {
+            "raw": "p=0.81",
+            "confidence": 0.8103,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "sensitive": {
+            "raw": "p=0.32",
+            "confidence": 0.6804,
+            "floor": 0.6,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          }
+        }
+      },
+      "outcome": {
+        "project": null,
+        "priority": "high",
+        "priority_step": "someone_waiting"
+      },
+      "written": false
+    },
+    {
+      "recording": "fresh_10",
+      "set": "ordinary",
+      "recorded_on": "2026-10-15",
+      "task": {
+        "content": "Pick up packing boxes before Tamsin's move",
+        "due_string": "Friday",
+        "notes": null
+      },
+      "contact": {
+        "name": "Tamsin",
+        "organisation": null,
+        "role": "sister",
+        "context": "A phone call with family about a house move."
+      },
+      "decider": {
+        "latency_ms": 11020.395200001076,
+        "input_tokens": 1018,
+        "output_tokens": 6,
+        "error": null,
+        "answers": {
+          "project": {
+            "raw": "personal",
+            "confidence": 0.7386,
+            "floor": 0.7,
+            "value": "personal",
+            "problem": null,
+            "note": null,
+            "answer": "personal",
+            "options": [],
+            "sure": true
+          },
+          "priority": {
+            "raw": "medium (default:waiting)",
+            "confidence": null,
+            "floor": 0.0,
+            "value": 3,
+            "problem": null,
+            "note": "default:waiting",
+            "answer": "medium",
+            "options": [],
+            "sure": true
+          },
+          "someone_waiting": {
+            "raw": "p=0.68",
+            "confidence": 0.6832,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": false
+          },
+          "hard_deadline": {
+            "raw": "p=0.35",
+            "confidence": 0.6537999999999999,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": false
+          },
+          "worth_researching_soon": {
+            "raw": "p=0.18",
+            "confidence": 0.8216,
+            "floor": 0.7,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          },
+          "real_commitment": {
+            "raw": "p=0.76",
+            "confidence": 0.761,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "sensitive": {
+            "raw": "p=0.33",
+            "confidence": 0.6669,
+            "floor": 0.6,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          }
+        }
+      },
+      "outcome": {
+        "project": "personal",
+        "priority": "medium",
+        "priority_step": "default:waiting"
+      },
+      "written": true
+    },
+    {
+      "recording": "fresh_11",
+      "set": "ordinary",
+      "recorded_on": "2026-10-16",
+      "task": {
+        "content": "Introduce Esme to the team's hiring manager",
+        "due_string": "this week",
+        "notes": null
+      },
+      "contact": {
+        "name": "Esme Whitlock",
+        "organisation": "Quillon Analytics",
+        "role": "data analyst",
+        "context": "Coffee with a former colleague."
+      },
+      "decider": {
+        "latency_ms": 10923.942200024612,
+        "input_tokens": 1019,
+        "output_tokens": 6,
+        "error": null,
+        "answers": {
+          "project": {
+            "raw": "work",
+            "confidence": 0.8835,
+            "floor": 0.7,
+            "value": "work",
+            "problem": null,
+            "note": null,
+            "answer": "work",
+            "options": [],
+            "sure": true
+          },
+          "priority": {
+            "raw": "high (default:waiting)",
+            "confidence": null,
+            "floor": 0.0,
+            "value": 4,
+            "problem": null,
+            "note": "default:waiting",
+            "answer": "high",
+            "options": [],
+            "sure": true
+          },
+          "someone_waiting": {
+            "raw": "p=0.69",
+            "confidence": 0.6911,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": false
+          },
+          "hard_deadline": {
+            "raw": "p=0.12",
+            "confidence": 0.8804,
+            "floor": 0.7,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          },
+          "worth_researching_soon": {
+            "raw": "p=0.45",
+            "confidence": 0.5519000000000001,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": false
+          },
+          "real_commitment": {
+            "raw": "p=0.64",
+            "confidence": 0.6376,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": false
+          },
+          "sensitive": {
+            "raw": "p=0.13",
+            "confidence": 0.8697,
+            "floor": 0.6,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          }
+        }
+      },
+      "outcome": {
+        "project": "work",
+        "priority": "high",
+        "priority_step": "default:waiting"
+      },
+      "written": true
+    },
+    {
+      "recording": "fresh_11",
+      "set": "ordinary",
+      "recorded_on": "2026-10-16",
+      "task": {
+        "content": "Look up the novel The Salt Archive",
+        "due_string": null,
+        "notes": null
+      },
+      "contact": {
+        "name": "Esme Whitlock",
+        "organisation": "Quillon Analytics",
+        "role": "data analyst",
+        "context": "Coffee with a former colleague."
+      },
+      "decider": {
+        "latency_ms": 11017.85030006431,
+        "input_tokens": 1013,
+        "output_tokens": 6,
+        "error": null,
+        "answers": {
+          "project": {
+            "raw": "other",
+            "confidence": 0.2414,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": "other",
+            "options": [],
+            "sure": false
+          },
+          "priority": {
+            "raw": "- (default:waiting)",
+            "confidence": null,
+            "floor": 0.0,
+            "value": null,
+            "problem": null,
+            "note": "default:waiting",
+            "answer": null,
+            "options": [],
+            "sure": false
+          },
+          "someone_waiting": {
+            "raw": "p=0.59",
+            "confidence": 0.5857,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": false
+          },
+          "hard_deadline": {
+            "raw": "p=0.17",
+            "confidence": 0.8331,
+            "floor": 0.7,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          },
+          "worth_researching_soon": {
+            "raw": "p=0.46",
+            "confidence": 0.5434,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": false
+          },
+          "real_commitment": {
+            "raw": "p=0.33",
+            "confidence": 0.6658,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": false
+          },
+          "sensitive": {
+            "raw": "p=0.26",
+            "confidence": 0.7448,
+            "floor": 0.6,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          }
+        }
+      },
+      "outcome": {
+        "project": null,
+        "priority": null,
+        "priority_step": "default:waiting"
+      },
+      "written": true
+    },
+    {
+      "recording": "fresh_11",
+      "set": "ordinary",
+      "recorded_on": "2026-10-16",
+      "task": {
+        "content": "Meet Esme for coffee again",
+        "due_string": null,
+        "notes": null
+      },
+      "contact": {
+        "name": "Esme Whitlock",
+        "organisation": "Quillon Analytics",
+        "role": "data analyst",
+        "context": "Coffee with a former colleague."
+      },
+      "decider": {
+        "latency_ms": 11067.154899938032,
+        "input_tokens": 1012,
+        "output_tokens": 6,
+        "error": null,
+        "answers": {
+          "project": {
+            "raw": "other",
+            "confidence": 0.4179,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": "other",
+            "options": [],
+            "sure": false
+          },
+          "priority": {
+            "raw": "- (default:waiting)",
+            "confidence": null,
+            "floor": 0.0,
+            "value": null,
+            "problem": null,
+            "note": "default:waiting",
+            "answer": null,
+            "options": [],
+            "sure": false
+          },
+          "someone_waiting": {
+            "raw": "p=0.47",
+            "confidence": 0.5332,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": false
+          },
+          "hard_deadline": {
+            "raw": "p=0.13",
+            "confidence": 0.8662,
+            "floor": 0.7,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          },
+          "worth_researching_soon": {
+            "raw": "p=0.40",
+            "confidence": 0.6021000000000001,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": false
+          },
+          "real_commitment": {
+            "raw": "p=0.21",
+            "confidence": 0.7882,
+            "floor": 0.7,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          },
+          "sensitive": {
+            "raw": "p=0.15",
+            "confidence": 0.8469,
+            "floor": 0.6,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          }
+        }
+      },
+      "outcome": {
+        "project": null,
+        "priority": null,
+        "priority_step": "default:waiting"
+      },
+      "written": false
+    },
+    {
+      "recording": "fresh_12",
+      "set": "ordinary",
+      "recorded_on": "2026-10-20",
+      "task": {
+        "content": "Upload the poster PDF to the conference portal",
+        "due_string": "the 27th",
+        "notes": null
+      },
+      "contact": {
+        "name": "Kwabena Ostrander",
+        "organisation": "Tidewater University",
+        "role": "co-author",
+        "context": "A co-author on a conference poster."
+      },
+      "decider": {
+        "latency_ms": 11086.265199934132,
+        "input_tokens": 1025,
+        "output_tokens": 6,
+        "error": null,
+        "answers": {
+          "project": {
+            "raw": "community",
+            "confidence": 0.3724,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": "community",
+            "options": [],
+            "sure": false
+          },
+          "priority": {
+            "raw": "- (default:waiting)",
+            "confidence": null,
+            "floor": 0.0,
+            "value": null,
+            "problem": null,
+            "note": "default:waiting",
+            "answer": null,
+            "options": [],
+            "sure": false
+          },
+          "someone_waiting": {
+            "raw": "p=0.66",
+            "confidence": 0.6638,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": false
+          },
+          "hard_deadline": {
+            "raw": "p=0.40",
+            "confidence": 0.6013999999999999,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": false
+          },
+          "worth_researching_soon": {
+            "raw": "p=0.29",
+            "confidence": 0.7095,
+            "floor": 0.7,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          },
+          "real_commitment": {
+            "raw": "p=0.91",
+            "confidence": 0.9143,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "sensitive": {
+            "raw": "p=0.24",
+            "confidence": 0.761,
+            "floor": 0.6,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          }
+        }
+      },
+      "outcome": {
+        "project": null,
+        "priority": null,
+        "priority_step": "default:waiting"
+      },
+      "written": true
+    },
+    {
+      "recording": "fresh_12",
+      "set": "ordinary",
+      "recorded_on": "2026-10-20",
+      "task": {
+        "content": "Read the conference's poster guidelines on font sizes",
+        "due_string": null,
+        "notes": null
+      },
+      "contact": {
+        "name": "Kwabena Ostrander",
+        "organisation": "Tidewater University",
+        "role": "co-author",
+        "context": "A co-author on a conference poster."
+      },
+      "decider": {
+        "latency_ms": 11149.664400028996,
+        "input_tokens": 1020,
+        "output_tokens": 6,
+        "error": null,
+        "answers": {
+          "project": {
+            "raw": "community",
+            "confidence": 0.2731,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": "community",
+            "options": [],
+            "sure": false
+          },
+          "priority": {
+            "raw": "- (default:waiting)",
+            "confidence": null,
+            "floor": 0.0,
+            "value": null,
+            "problem": null,
+            "note": "default:waiting",
+            "answer": null,
+            "options": [],
+            "sure": false
+          },
+          "someone_waiting": {
+            "raw": "p=0.65",
+            "confidence": 0.6543,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": false
+          },
+          "hard_deadline": {
+            "raw": "p=0.17",
+            "confidence": 0.8291,
+            "floor": 0.7,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          },
+          "worth_researching_soon": {
+            "raw": "p=0.28",
+            "confidence": 0.7187,
+            "floor": 0.7,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          },
+          "real_commitment": {
+            "raw": "p=0.81",
+            "confidence": 0.8117,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "sensitive": {
+            "raw": "p=0.29",
+            "confidence": 0.7103999999999999,
+            "floor": 0.6,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          }
+        }
+      },
+      "outcome": {
+        "project": null,
+        "priority": null,
+        "priority_step": "default:waiting"
+      },
+      "written": true
+    },
+    {
+      "recording": "fresh_13",
+      "set": "sensitive",
+      "recorded_on": "2026-10-13",
+      "task": {
+        "content": "Send Rosalind the figures for the grant report",
+        "due_string": "Friday",
+        "notes": null
+      },
+      "contact": {
+        "name": "Rosalind Achterberg",
+        "organisation": "Marlow Research Trust grant",
+        "role": "co-investigator",
+        "context": "A co-investigator checking in about a grant report."
+      },
+      "decider": {
+        "latency_ms": 11194.977000006475,
+        "input_tokens": 1030,
+        "output_tokens": 6,
+        "error": null,
+        "answers": {
+          "project": {
+            "raw": "research",
+            "confidence": 0.6096,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": "research",
+            "options": [],
+            "sure": false
+          },
+          "priority": {
+            "raw": "high (someone_waiting)",
+            "confidence": null,
+            "floor": 0.0,
+            "value": 4,
+            "problem": null,
+            "note": "someone_waiting",
+            "answer": "high",
+            "options": [],
+            "sure": true
+          },
+          "someone_waiting": {
+            "raw": "p=0.84",
+            "confidence": 0.8371,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "hard_deadline": {
+            "raw": "p=0.45",
+            "confidence": 0.5488,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": false
+          },
+          "worth_researching_soon": {
+            "raw": "p=0.37",
+            "confidence": 0.6267,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": false
+          },
+          "real_commitment": {
+            "raw": "p=0.88",
+            "confidence": 0.8849,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "sensitive": {
+            "raw": "p=0.24",
+            "confidence": 0.7635000000000001,
+            "floor": 0.6,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          }
+        }
+      },
+      "outcome": {
+        "project": null,
+        "priority": "high",
+        "priority_step": "someone_waiting"
+      },
+      "written": false
+    },
+    {
+      "recording": "fresh_14",
+      "set": "sensitive",
+      "recorded_on": "2026-10-14",
+      "task": {
+        "content": "Write handover notes for the telemetry dashboard",
+        "due_string": "end of the month",
+        "notes": null
+      },
+      "contact": {
+        "name": "Gideon Lanier",
+        "organisation": null,
+        "role": "engineering manager",
+        "context": "Lunch with the owner's manager at the day job."
+      },
+      "decider": {
+        "latency_ms": 11221.574899973348,
+        "input_tokens": 1022,
+        "output_tokens": 6,
+        "error": null,
+        "answers": {
+          "project": {
+            "raw": "work",
+            "confidence": 0.7851,
+            "floor": 0.7,
+            "value": "work",
+            "problem": null,
+            "note": null,
+            "answer": "work",
+            "options": [],
+            "sure": true
+          },
+          "priority": {
+            "raw": "high (someone_waiting)",
+            "confidence": null,
+            "floor": 0.0,
+            "value": 4,
+            "problem": null,
+            "note": "someone_waiting",
+            "answer": "high",
+            "options": [],
+            "sure": true
+          },
+          "someone_waiting": {
+            "raw": "p=0.73",
+            "confidence": 0.7253,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "hard_deadline": {
+            "raw": "p=0.30",
+            "confidence": 0.6962999999999999,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": false
+          },
+          "worth_researching_soon": {
+            "raw": "p=0.37",
+            "confidence": 0.6331,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": false
+          },
+          "real_commitment": {
+            "raw": "p=0.85",
+            "confidence": 0.8458,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "sensitive": {
+            "raw": "p=0.29",
+            "confidence": 0.7063999999999999,
+            "floor": 0.6,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          }
+        }
+      },
+      "outcome": {
+        "project": "work",
+        "priority": "high",
+        "priority_step": "someone_waiting"
+      },
+      "written": false
+    },
+    {
+      "recording": "fresh_15",
+      "set": "sensitive",
+      "recorded_on": "2026-10-15",
+      "task": {
+        "content": "Write a character reference for Marguerite's custody hearing",
+        "due_string": "this weekend",
+        "notes": null
+      },
+      "contact": {
+        "name": "Marguerite Fenn",
+        "organisation": null,
+        "role": "friend",
+        "context": "A phone call with a friend."
+      },
+      "decider": {
+        "latency_ms": 11258.642900036648,
+        "input_tokens": 1018,
+        "output_tokens": 6,
+        "error": null,
+        "answers": {
+          "project": {
+            "raw": "writing",
+            "confidence": 0.2887,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": "writing",
+            "options": [],
+            "sure": false
+          },
+          "priority": {
+            "raw": "- (default:waiting)",
+            "confidence": null,
+            "floor": 0.0,
+            "value": null,
+            "problem": null,
+            "note": "default:waiting",
+            "answer": null,
+            "options": [],
+            "sure": false
+          },
+          "someone_waiting": {
+            "raw": "p=0.64",
+            "confidence": 0.6363,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": false
+          },
+          "hard_deadline": {
+            "raw": "p=0.18",
+            "confidence": 0.8183,
+            "floor": 0.7,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          },
+          "worth_researching_soon": {
+            "raw": "p=0.31",
+            "confidence": 0.6861999999999999,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": false
+          },
+          "real_commitment": {
+            "raw": "p=0.70",
+            "confidence": 0.7025,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "sensitive": {
+            "raw": "p=0.45",
+            "confidence": 0.5468999999999999,
+            "floor": 0.6,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": false
+          }
+        }
+      },
+      "outcome": {
+        "project": null,
+        "priority": null,
+        "priority_step": "default:waiting"
+      },
+      "written": false
+    },
+    {
+      "recording": "fresh_16",
+      "set": "sensitive",
+      "recorded_on": "2026-10-16",
+      "task": {
+        "content": "Send Ezra the name of a criminal defence lawyer",
+        "due_string": "today",
+        "notes": null
+      },
+      "contact": {
+        "name": "Ezra Pemberton",
+        "organisation": null,
+        "role": "neighbour",
+        "context": "A neighbour, early in the morning."
+      },
+      "decider": {
+        "latency_ms": 11341.727799968794,
+        "input_tokens": 1017,
+        "output_tokens": 6,
+        "error": null,
+        "answers": {
+          "project": {
+            "raw": "other",
+            "confidence": 0.4299,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": "other",
+            "options": [],
+            "sure": false
+          },
+          "priority": {
+            "raw": "high (someone_waiting)",
+            "confidence": null,
+            "floor": 0.0,
+            "value": 4,
+            "problem": null,
+            "note": "someone_waiting",
+            "answer": "high",
+            "options": [],
+            "sure": true
+          },
+          "someone_waiting": {
+            "raw": "p=0.75",
+            "confidence": 0.7525,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "hard_deadline": {
+            "raw": "p=0.14",
+            "confidence": 0.8555,
+            "floor": 0.7,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          },
+          "worth_researching_soon": {
+            "raw": "p=0.42",
+            "confidence": 0.5824,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": false
+          },
+          "real_commitment": {
+            "raw": "p=0.82",
+            "confidence": 0.8206,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "sensitive": {
+            "raw": "p=0.36",
+            "confidence": 0.6369,
+            "floor": 0.6,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          }
+        }
+      },
+      "outcome": {
+        "project": null,
+        "priority": "high",
+        "priority_step": "someone_waiting"
+      },
+      "written": false
+    },
+    {
+      "recording": "fresh_17",
+      "set": "sensitive",
+      "recorded_on": "2026-10-16",
+      "task": {
+        "content": "Move Jun's thesis milestone to the following week",
+        "due_string": null,
+        "notes": null
+      },
+      "contact": {
+        "name": "Jun Takamori",
+        "organisation": null,
+        "role": "student the owner mentors",
+        "context": "A mentoring session with a student."
+      },
+      "decider": {
+        "latency_ms": 11286.132300039753,
+        "input_tokens": 1015,
+        "output_tokens": 6,
+        "error": null,
+        "answers": {
+          "project": {
+            "raw": "school",
+            "confidence": 0.3078,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": "school",
+            "options": [],
+            "sure": false
+          },
+          "priority": {
+            "raw": "- (default:waiting)",
+            "confidence": null,
+            "floor": 0.0,
+            "value": null,
+            "problem": null,
+            "note": "default:waiting",
+            "answer": null,
+            "options": [],
+            "sure": false
+          },
+          "someone_waiting": {
+            "raw": "p=0.51",
+            "confidence": 0.5113,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": false
+          },
+          "hard_deadline": {
+            "raw": "p=0.17",
+            "confidence": 0.8335,
+            "floor": 0.7,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          },
+          "worth_researching_soon": {
+            "raw": "p=0.27",
+            "confidence": 0.7279,
+            "floor": 0.7,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          },
+          "real_commitment": {
+            "raw": "p=0.87",
+            "confidence": 0.8734,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "sensitive": {
+            "raw": "p=0.34",
+            "confidence": 0.6565,
+            "floor": 0.6,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          }
+        }
+      },
+      "outcome": {
+        "project": null,
+        "priority": null,
+        "priority_step": "default:waiting"
+      },
+      "written": false
+    },
+    {
+      "recording": "fresh_17",
+      "set": "sensitive",
+      "recorded_on": "2026-10-16",
+      "task": {
+        "content": "Tell the committee that Jun's thesis schedule changed",
+        "due_string": null,
+        "notes": null
+      },
+      "contact": {
+        "name": "Jun Takamori",
+        "organisation": null,
+        "role": "student the owner mentors",
+        "context": "A mentoring session with a student."
+      },
+      "decider": {
+        "latency_ms": 11122.909299912862,
+        "input_tokens": 1015,
+        "output_tokens": 6,
+        "error": null,
+        "answers": {
+          "project": {
+            "raw": "school",
+            "confidence": 0.4403,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": "school",
+            "options": [],
+            "sure": false
+          },
+          "priority": {
+            "raw": "- (default:waiting)",
+            "confidence": null,
+            "floor": 0.0,
+            "value": null,
+            "problem": null,
+            "note": "default:waiting",
+            "answer": null,
+            "options": [],
+            "sure": false
+          },
+          "someone_waiting": {
+            "raw": "p=0.64",
+            "confidence": 0.6366,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": false
+          },
+          "hard_deadline": {
+            "raw": "p=0.19",
+            "confidence": 0.8078,
+            "floor": 0.7,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          },
+          "worth_researching_soon": {
+            "raw": "p=0.30",
+            "confidence": 0.7013,
+            "floor": 0.7,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          },
+          "real_commitment": {
+            "raw": "p=0.78",
+            "confidence": 0.7824,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "sensitive": {
+            "raw": "p=0.40",
+            "confidence": 0.5984,
+            "floor": 0.6,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": false
+          }
+        }
+      },
+      "outcome": {
+        "project": null,
+        "priority": null,
+        "priority_step": "default:waiting"
+      },
+      "written": false
+    },
+    {
+      "recording": "fresh_18",
+      "set": "sensitive",
+      "recorded_on": "2026-10-19",
+      "task": {
+        "content": "Send Ottilie the contact for a bridge-loan adviser",
+        "due_string": "Wednesday",
+        "notes": null
+      },
+      "contact": {
+        "name": "Ottilie Brandt",
+        "organisation": "Corvane Systems",
+        "role": "founder",
+        "context": "A founder the owner advises informally."
+      },
+      "decider": {
+        "latency_ms": 11125.8242999902,
+        "input_tokens": 1024,
+        "output_tokens": 6,
+        "error": null,
+        "answers": {
+          "project": {
+            "raw": "other",
+            "confidence": 0.3947,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": "other",
+            "options": [],
+            "sure": false
+          },
+          "priority": {
+            "raw": "high (someone_waiting)",
+            "confidence": null,
+            "floor": 0.0,
+            "value": 4,
+            "problem": null,
+            "note": "someone_waiting",
+            "answer": "high",
+            "options": [],
+            "sure": true
+          },
+          "someone_waiting": {
+            "raw": "p=0.78",
+            "confidence": 0.7804,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "hard_deadline": {
+            "raw": "p=0.15",
+            "confidence": 0.8483,
+            "floor": 0.7,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          },
+          "worth_researching_soon": {
+            "raw": "p=0.47",
+            "confidence": 0.5263,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": false
+          },
+          "real_commitment": {
+            "raw": "p=0.80",
+            "confidence": 0.8011,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "sensitive": {
+            "raw": "p=0.24",
+            "confidence": 0.7615000000000001,
+            "floor": 0.6,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          }
+        }
+      },
+      "outcome": {
+        "project": null,
+        "priority": "high",
+        "priority_step": "someone_waiting"
+      },
+      "written": false
+    },
+    {
+      "recording": "fresh_19",
+      "set": "sensitive",
+      "recorded_on": "2026-10-13",
+      "task": {
+        "content": "Confirm the catering numbers with the Harbour Lecture Theatre",
+        "due_string": "by the 23rd",
+        "notes": null
+      },
+      "contact": {
+        "name": "Philippa Ardent",
+        "organisation": "Small-Satellite Thermal Workshop",
+        "role": "co-organiser",
+        "context": "Planning call with the workshop's co-organiser."
+      },
+      "decider": {
+        "latency_ms": 11205.890899989754,
+        "input_tokens": 1033,
+        "output_tokens": 6,
+        "error": null,
+        "answers": {
+          "project": {
+            "raw": "other",
+            "confidence": 0.5464,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": "other",
+            "options": [],
+            "sure": false
+          },
+          "priority": {
+            "raw": "high (someone_waiting)",
+            "confidence": null,
+            "floor": 0.0,
+            "value": 4,
+            "problem": null,
+            "note": "someone_waiting",
+            "answer": "high",
+            "options": [],
+            "sure": true
+          },
+          "someone_waiting": {
+            "raw": "p=0.70",
+            "confidence": 0.7033,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "hard_deadline": {
+            "raw": "p=0.38",
+            "confidence": 0.6185,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": false
+          },
+          "worth_researching_soon": {
+            "raw": "p=0.38",
+            "confidence": 0.6178,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": false
+          },
+          "real_commitment": {
+            "raw": "p=0.89",
+            "confidence": 0.894,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "sensitive": {
+            "raw": "p=0.26",
+            "confidence": 0.7361,
+            "floor": 0.6,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          }
+        }
+      },
+      "outcome": {
+        "project": null,
+        "priority": "high",
+        "priority_step": "someone_waiting"
+      },
+      "written": false
+    },
+    {
+      "recording": "fresh_19",
+      "set": "sensitive",
+      "recorded_on": "2026-10-13",
+      "task": {
+        "content": "Send Philippa the draft workshop schedule",
+        "due_string": "Friday",
+        "notes": null
+      },
+      "contact": {
+        "name": "Philippa Ardent",
+        "organisation": "Small-Satellite Thermal Workshop",
+        "role": "co-organiser",
+        "context": "Planning call with the workshop's co-organiser."
+      },
+      "decider": {
+        "latency_ms": 11182.467399979942,
+        "input_tokens": 1026,
+        "output_tokens": 6,
+        "error": null,
+        "answers": {
+          "project": {
+            "raw": "other",
+            "confidence": 0.539,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": "other",
+            "options": [],
+            "sure": false
+          },
+          "priority": {
+            "raw": "high (someone_waiting)",
+            "confidence": null,
+            "floor": 0.0,
+            "value": 4,
+            "problem": null,
+            "note": "someone_waiting",
+            "answer": "high",
+            "options": [],
+            "sure": true
+          },
+          "someone_waiting": {
+            "raw": "p=0.84",
+            "confidence": 0.8445,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "hard_deadline": {
+            "raw": "p=0.30",
+            "confidence": 0.6971,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": false
+          },
+          "worth_researching_soon": {
+            "raw": "p=0.27",
+            "confidence": 0.7312000000000001,
+            "floor": 0.7,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          },
+          "real_commitment": {
+            "raw": "p=0.91",
+            "confidence": 0.9102,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "sensitive": {
+            "raw": "p=0.27",
+            "confidence": 0.7272000000000001,
+            "floor": 0.6,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          }
+        }
+      },
+      "outcome": {
+        "project": null,
+        "priority": "high",
+        "priority_step": "someone_waiting"
+      },
+      "written": false
+    },
+    {
+      "recording": "fresh_19",
+      "set": "sensitive",
+      "recorded_on": "2026-10-13",
+      "task": {
+        "content": "Look up livestream services for remote attendees",
+        "due_string": "this week",
+        "notes": null
+      },
+      "contact": {
+        "name": "Philippa Ardent",
+        "organisation": "Small-Satellite Thermal Workshop",
+        "role": "co-organiser",
+        "context": "Planning call with the workshop's co-organiser."
+      },
+      "decider": {
+        "latency_ms": 11185.637900023721,
+        "input_tokens": 1028,
+        "output_tokens": 6,
+        "error": null,
+        "answers": {
+          "project": {
+            "raw": "other",
+            "confidence": 0.5436,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": "other",
+            "options": [],
+            "sure": false
+          },
+          "priority": {
+            "raw": "- (default:waiting)",
+            "confidence": null,
+            "floor": 0.0,
+            "value": null,
+            "problem": null,
+            "note": "default:waiting",
+            "answer": null,
+            "options": [],
+            "sure": false
+          },
+          "someone_waiting": {
+            "raw": "p=0.60",
+            "confidence": 0.5961,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": false
+          },
+          "hard_deadline": {
+            "raw": "p=0.14",
+            "confidence": 0.8644000000000001,
+            "floor": 0.7,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          },
+          "worth_researching_soon": {
+            "raw": "p=0.43",
+            "confidence": 0.5668,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": false
+          },
+          "real_commitment": {
+            "raw": "p=0.84",
+            "confidence": 0.8374,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "sensitive": {
+            "raw": "p=0.21",
+            "confidence": 0.7865,
+            "floor": 0.6,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          }
+        }
+      },
+      "outcome": {
+        "project": null,
+        "priority": null,
+        "priority_step": "default:waiting"
+      },
+      "written": false
+    },
+    {
+      "recording": "fresh_20",
+      "set": "sensitive",
+      "recorded_on": "2026-10-15",
+      "task": {
+        "content": "Send Teodora the revised pipeline config",
+        "due_string": "this afternoon",
+        "notes": null
+      },
+      "contact": {
+        "name": "Teodora Lisle",
+        "organisation": null,
+        "role": "fellow researcher in the owner's group",
+        "context": "A catch-up with a colleague about a paper's revisions."
+      },
+      "decider": {
+        "latency_ms": 11078.59659998212,
+        "input_tokens": 1027,
+        "output_tokens": 6,
+        "error": null,
+        "answers": {
+          "project": {
+            "raw": "research",
+            "confidence": 0.6924,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": "research",
+            "options": [],
+            "sure": false
+          },
+          "priority": {
+            "raw": "high (someone_waiting)",
+            "confidence": null,
+            "floor": 0.0,
+            "value": 4,
+            "problem": null,
+            "note": "someone_waiting",
+            "answer": "high",
+            "options": [],
+            "sure": true
+          },
+          "someone_waiting": {
+            "raw": "p=0.76",
+            "confidence": 0.7555,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "hard_deadline": {
+            "raw": "p=0.23",
+            "confidence": 0.7686,
+            "floor": 0.7,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          },
+          "worth_researching_soon": {
+            "raw": "p=0.50",
+            "confidence": 0.5001,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": false
+          },
+          "real_commitment": {
+            "raw": "p=0.89",
+            "confidence": 0.8851,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "sensitive": {
+            "raw": "p=0.25",
+            "confidence": 0.7488,
+            "floor": 0.6,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          }
+        }
+      },
+      "outcome": {
+        "project": null,
+        "priority": "high",
+        "priority_step": "someone_waiting"
+      },
+      "written": false
+    },
+    {
+      "recording": "fresh_20",
+      "set": "sensitive",
+      "recorded_on": "2026-10-15",
+      "task": {
+        "content": "Review Teodora's draft section on spectral calibration",
+        "due_string": "Monday",
+        "notes": null
+      },
+      "contact": {
+        "name": "Teodora Lisle",
+        "organisation": null,
+        "role": "fellow researcher in the owner's group",
+        "context": "A catch-up with a colleague about a paper's revisions."
+      },
+      "decider": {
+        "latency_ms": 11184.090599999763,
+        "input_tokens": 1028,
+        "output_tokens": 6,
+        "error": null,
+        "answers": {
+          "project": {
+            "raw": "research",
+            "confidence": 0.7865,
+            "floor": 0.7,
+            "value": "research",
+            "problem": null,
+            "note": null,
+            "answer": "research",
+            "options": [],
+            "sure": true
+          },
+          "priority": {
+            "raw": "medium (default:waiting)",
+            "confidence": null,
+            "floor": 0.0,
+            "value": 3,
+            "problem": null,
+            "note": "default:waiting",
+            "answer": "medium",
+            "options": [],
+            "sure": true
+          },
+          "someone_waiting": {
+            "raw": "p=0.66",
+            "confidence": 0.6644,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": false
+          },
+          "hard_deadline": {
+            "raw": "p=0.31",
+            "confidence": 0.6929000000000001,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": false
+          },
+          "worth_researching_soon": {
+            "raw": "p=0.46",
+            "confidence": 0.5409999999999999,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": false
+          },
+          "real_commitment": {
+            "raw": "p=0.75",
+            "confidence": 0.7549,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "sensitive": {
+            "raw": "p=0.34",
+            "confidence": 0.6577,
+            "floor": 0.6,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          }
+        }
+      },
+      "outcome": {
+        "project": "research",
+        "priority": "medium",
+        "priority_step": "default:waiting"
+      },
+      "written": false
+    },
+    {
+      "recording": "fresh_20",
+      "set": "sensitive",
+      "recorded_on": "2026-10-15",
+      "task": {
+        "content": "Pick a paper for the reading group",
+        "due_string": null,
+        "notes": null
+      },
+      "contact": {
+        "name": "Teodora Lisle",
+        "organisation": null,
+        "role": "fellow researcher in the owner's group",
+        "context": "A catch-up with a colleague about a paper's revisions."
+      },
+      "decider": {
+        "latency_ms": 11113.216000027023,
+        "input_tokens": 1023,
+        "output_tokens": 6,
+        "error": null,
+        "answers": {
+          "project": {
+            "raw": "research",
+            "confidence": 0.739,
+            "floor": 0.7,
+            "value": "research",
+            "problem": null,
+            "note": null,
+            "answer": "research",
+            "options": [],
+            "sure": true
+          },
+          "priority": {
+            "raw": "medium (default:waiting)",
+            "confidence": null,
+            "floor": 0.0,
+            "value": 3,
+            "problem": null,
+            "note": "default:waiting",
+            "answer": "medium",
+            "options": [],
+            "sure": true
+          },
+          "someone_waiting": {
+            "raw": "p=0.65",
+            "confidence": 0.6511,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": false
+          },
+          "hard_deadline": {
+            "raw": "p=0.15",
+            "confidence": 0.849,
+            "floor": 0.7,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          },
+          "worth_researching_soon": {
+            "raw": "p=0.44",
+            "confidence": 0.5595,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": false
+          },
+          "real_commitment": {
+            "raw": "p=0.50",
+            "confidence": 0.5035,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": false
+          },
+          "sensitive": {
+            "raw": "p=0.29",
+            "confidence": 0.7054,
+            "floor": 0.6,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          }
+        }
+      },
+      "outcome": {
+        "project": "research",
+        "priority": "medium",
+        "priority_step": "default:waiting"
+      },
+      "written": false
+    },
+    {
+      "recording": "fresh_20",
+      "set": "sensitive",
+      "recorded_on": "2026-10-15",
+      "task": {
+        "content": "Redo the error bars on the flare spectra figure",
+        "due_string": "the 30th",
+        "notes": null
+      },
+      "contact": {
+        "name": "Teodora Lisle",
+        "organisation": null,
+        "role": "fellow researcher in the owner's group",
+        "context": "A catch-up with a colleague about a paper's revisions."
+      },
+      "decider": {
+        "latency_ms": 11328.24319996871,
+        "input_tokens": 1032,
+        "output_tokens": 6,
+        "error": null,
+        "answers": {
+          "project": {
+            "raw": "research",
+            "confidence": 0.8434,
+            "floor": 0.7,
+            "value": "research",
+            "problem": null,
+            "note": null,
+            "answer": "research",
+            "options": [],
+            "sure": true
+          },
+          "priority": {
+            "raw": "medium (default:waiting)",
+            "confidence": null,
+            "floor": 0.0,
+            "value": 3,
+            "problem": null,
+            "note": "default:waiting",
+            "answer": "medium",
+            "options": [],
+            "sure": true
+          },
+          "someone_waiting": {
+            "raw": "p=0.52",
+            "confidence": 0.5192,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": false
+          },
+          "hard_deadline": {
+            "raw": "p=0.33",
+            "confidence": 0.6679999999999999,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": false
+          },
+          "worth_researching_soon": {
+            "raw": "p=0.32",
+            "confidence": 0.6772,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": false
+          },
+          "real_commitment": {
+            "raw": "p=0.84",
+            "confidence": 0.8419,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "sensitive": {
+            "raw": "p=0.26",
+            "confidence": 0.7395,
+            "floor": 0.6,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          }
+        }
+      },
+      "outcome": {
+        "project": "research",
+        "priority": "medium",
+        "priority_step": "default:waiting"
+      },
+      "written": false
+    },
+    {
+      "recording": "fresh_21",
+      "set": "sensitive",
+      "recorded_on": "2026-10-18",
+      "task": {
+        "content": "Take over the club treasurer's spreadsheet from Gareth",
+        "due_string": null,
+        "notes": null
+      },
+      "contact": {
+        "name": "Gareth Vell",
+        "organisation": "Westmere Rocketry Club",
+        "role": "treasurer",
+        "context": "After the club's committee meeting."
+      },
+      "decider": {
+        "latency_ms": 10990.28350005392,
+        "input_tokens": 1018,
+        "output_tokens": 6,
+        "error": null,
+        "answers": {
+          "project": {
+            "raw": "community",
+            "confidence": 0.6336,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": "community",
+            "options": [],
+            "sure": false
+          },
+          "priority": {
+            "raw": "high (someone_waiting)",
+            "confidence": null,
+            "floor": 0.0,
+            "value": 4,
+            "problem": null,
+            "note": "someone_waiting",
+            "answer": "high",
+            "options": [],
+            "sure": true
+          },
+          "someone_waiting": {
+            "raw": "p=0.72",
+            "confidence": 0.716,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "hard_deadline": {
+            "raw": "p=0.14",
+            "confidence": 0.862,
+            "floor": 0.7,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          },
+          "worth_researching_soon": {
+            "raw": "p=0.32",
+            "confidence": 0.6829000000000001,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": false
+          },
+          "real_commitment": {
+            "raw": "p=0.87",
+            "confidence": 0.8652,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "sensitive": {
+            "raw": "p=0.36",
+            "confidence": 0.6436999999999999,
+            "floor": 0.6,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          }
+        }
+      },
+      "outcome": {
+        "project": null,
+        "priority": "high",
+        "priority_step": "someone_waiting"
+      },
+      "written": false
+    },
+    {
+      "recording": "fresh_21",
+      "set": "sensitive",
+      "recorded_on": "2026-10-18",
+      "task": {
+        "content": "Draft the launch-day safety briefing",
+        "due_string": "by the 30th",
+        "notes": null
+      },
+      "contact": {
+        "name": "Gareth Vell",
+        "organisation": "Westmere Rocketry Club",
+        "role": "treasurer",
+        "context": "After the club's committee meeting."
+      },
+      "decider": {
+        "latency_ms": 11150.964099913836,
+        "input_tokens": 1022,
+        "output_tokens": 6,
+        "error": null,
+        "answers": {
+          "project": {
+            "raw": "community",
+            "confidence": 0.383,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": "community",
+            "options": [],
+            "sure": false
+          },
+          "priority": {
+            "raw": "high (someone_waiting)",
+            "confidence": null,
+            "floor": 0.0,
+            "value": 4,
+            "problem": null,
+            "note": "someone_waiting",
+            "answer": "high",
+            "options": [],
+            "sure": true
+          },
+          "someone_waiting": {
+            "raw": "p=0.72",
+            "confidence": 0.7195,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "hard_deadline": {
+            "raw": "p=0.44",
+            "confidence": 0.5569999999999999,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": false
+          },
+          "worth_researching_soon": {
+            "raw": "p=0.29",
+            "confidence": 0.7127,
+            "floor": 0.7,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          },
+          "real_commitment": {
+            "raw": "p=0.84",
+            "confidence": 0.8357,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "sensitive": {
+            "raw": "p=0.31",
+            "confidence": 0.6917,
+            "floor": 0.6,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          }
+        }
+      },
+      "outcome": {
+        "project": null,
+        "priority": "high",
+        "priority_step": "someone_waiting"
+      },
+      "written": false
+    },
+    {
+      "recording": "fresh_21",
+      "set": "sensitive",
+      "recorded_on": "2026-10-18",
+      "task": {
+        "content": "Ask the insurer for the club's updated liability certificate",
+        "due_string": "this week",
+        "notes": null
+      },
+      "contact": {
+        "name": "Gareth Vell",
+        "organisation": "Westmere Rocketry Club",
+        "role": "treasurer",
+        "context": "After the club's committee meeting."
+      },
+      "decider": {
+        "latency_ms": 11211.18939993903,
+        "input_tokens": 1022,
+        "output_tokens": 6,
+        "error": null,
+        "answers": {
+          "project": {
+            "raw": "community",
+            "confidence": 0.6307,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": "community",
+            "options": [],
+            "sure": false
+          },
+          "priority": {
+            "raw": "high (someone_waiting)",
+            "confidence": null,
+            "floor": 0.0,
+            "value": 4,
+            "problem": null,
+            "note": "someone_waiting",
+            "answer": "high",
+            "options": [],
+            "sure": true
+          },
+          "someone_waiting": {
+            "raw": "p=0.77",
+            "confidence": 0.7721,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "hard_deadline": {
+            "raw": "p=0.19",
+            "confidence": 0.8065,
+            "floor": 0.7,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          },
+          "worth_researching_soon": {
+            "raw": "p=0.26",
+            "confidence": 0.7417,
+            "floor": 0.7,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          },
+          "real_commitment": {
+            "raw": "p=0.91",
+            "confidence": 0.9094,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "sensitive": {
+            "raw": "p=0.37",
+            "confidence": 0.6315999999999999,
+            "floor": 0.6,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          }
+        }
+      },
+      "outcome": {
+        "project": null,
+        "priority": "high",
+        "priority_step": "someone_waiting"
+      },
+      "written": false
+    },
+    {
+      "recording": "fresh_22",
+      "set": "sensitive",
+      "recorded_on": "2026-10-14",
+      "task": {
+        "content": "Send Haruto a reference letter about his work",
+        "due_string": "Friday",
+        "notes": null
+      },
+      "contact": {
+        "name": "Haruto Sakimoto",
+        "organisation": null,
+        "role": "colleague at the day job",
+        "context": "A colleague, after the morning stand-up."
+      },
+      "decider": {
+        "latency_ms": 11087.01540005859,
+        "input_tokens": 1021,
+        "output_tokens": 6,
+        "error": null,
+        "answers": {
+          "project": {
+            "raw": "work",
+            "confidence": 0.6321,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": "work",
+            "options": [],
+            "sure": false
+          },
+          "priority": {
+            "raw": "high (someone_waiting)",
+            "confidence": null,
+            "floor": 0.0,
+            "value": 4,
+            "problem": null,
+            "note": "someone_waiting",
+            "answer": "high",
+            "options": [],
+            "sure": true
+          },
+          "someone_waiting": {
+            "raw": "p=0.72",
+            "confidence": 0.7232,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "hard_deadline": {
+            "raw": "p=0.31",
+            "confidence": 0.6864,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": false
+          },
+          "worth_researching_soon": {
+            "raw": "p=0.33",
+            "confidence": 0.6686000000000001,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": false
+          },
+          "real_commitment": {
+            "raw": "p=0.87",
+            "confidence": 0.869,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "sensitive": {
+            "raw": "p=0.19",
+            "confidence": 0.8079000000000001,
+            "floor": 0.6,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          }
+        }
+      },
+      "outcome": {
+        "project": null,
+        "priority": "high",
+        "priority_step": "someone_waiting"
+      },
+      "written": false
+    },
+    {
+      "recording": "fresh_23",
+      "set": "sensitive",
+      "recorded_on": "2026-10-20",
+      "task": {
+        "content": "Lead the March workshop in Saskia's place",
+        "due_string": "March",
+        "notes": null
+      },
+      "contact": {
+        "name": "Saskia Delmont",
+        "organisation": null,
+        "role": "colleague at the day job",
+        "context": "A colleague in the hallway."
+      },
+      "decider": {
+        "latency_ms": 11418.097199988551,
+        "input_tokens": 1019,
+        "output_tokens": 6,
+        "error": null,
+        "answers": {
+          "project": {
+            "raw": "work",
+            "confidence": 0.3455,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": "work",
+            "options": [],
+            "sure": false
+          },
+          "priority": {
+            "raw": "- (default:waiting, due over 30 days out)",
+            "confidence": null,
+            "floor": 0.0,
+            "value": null,
+            "problem": null,
+            "note": "default:waiting",
+            "answer": null,
+            "options": [],
+            "sure": false
+          },
+          "someone_waiting": {
+            "raw": "p=0.63",
+            "confidence": 0.6313,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": false
+          },
+          "hard_deadline": {
+            "raw": "p=0.29",
+            "confidence": 0.7081,
+            "floor": 0.7,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          },
+          "worth_researching_soon": {
+            "raw": "p=0.42",
+            "confidence": 0.579,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": false
+          },
+          "real_commitment": {
+            "raw": "p=0.79",
+            "confidence": 0.7931,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "sensitive": {
+            "raw": "p=0.25",
+            "confidence": 0.7463,
+            "floor": 0.6,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          }
+        }
+      },
+      "outcome": {
+        "project": null,
+        "priority": null,
+        "priority_step": "default:waiting"
+      },
+      "written": false
+    },
+    {
+      "recording": "fresh_24",
+      "set": "sensitive",
+      "recorded_on": "2026-10-17",
+      "task": {
+        "content": "Book an alcohol-free venue for the reunion dinner",
+        "due_string": "next week",
+        "notes": null
+      },
+      "contact": {
+        "name": "Bram Oosterhout",
+        "organisation": null,
+        "role": "old friend",
+        "context": "A phone call with an old friend about a reunion."
+      },
+      "decider": {
+        "latency_ms": 11241.611600038595,
+        "input_tokens": 1021,
+        "output_tokens": 6,
+        "error": null,
+        "answers": {
+          "project": {
+            "raw": "other",
+            "confidence": 0.5389,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": "other",
+            "options": [],
+            "sure": false
+          },
+          "priority": {
+            "raw": "- (default:waiting)",
+            "confidence": null,
+            "floor": 0.0,
+            "value": null,
+            "problem": null,
+            "note": "default:waiting",
+            "answer": null,
+            "options": [],
+            "sure": false
+          },
+          "someone_waiting": {
+            "raw": "p=0.65",
+            "confidence": 0.6536,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": false
+          },
+          "hard_deadline": {
+            "raw": "p=0.13",
+            "confidence": 0.869,
+            "floor": 0.7,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          },
+          "worth_researching_soon": {
+            "raw": "p=0.31",
+            "confidence": 0.6915,
+            "floor": 0.7,
+            "value": null,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": false
+          },
+          "real_commitment": {
+            "raw": "p=0.78",
+            "confidence": 0.7761,
+            "floor": 0.7,
+            "value": true,
+            "problem": null,
+            "note": null,
+            "answer": true,
+            "options": [],
+            "sure": true
+          },
+          "sensitive": {
+            "raw": "p=0.28",
+            "confidence": 0.7229,
+            "floor": 0.6,
+            "value": false,
+            "problem": null,
+            "note": null,
+            "answer": false,
+            "options": [],
+            "sure": true
+          }
+        }
+      },
+      "outcome": {
+        "project": null,
+        "priority": null,
+        "priority_step": "default:waiting"
+      },
+      "written": false
+    }
+  ]
+}

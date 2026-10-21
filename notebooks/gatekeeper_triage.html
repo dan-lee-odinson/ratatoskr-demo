@@ -13496,6 +13496,13 @@ same as the bench's recorded answers for this task: False
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=36ec106b"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The recorded answers are those of the bench pass of 19 Oct 2026, the date <code>bench/recorded_answers.json</code> carries, and the <code>someone_waiting</code> and <code>hard_deadline</code> questions have since been reworded (Dan's ruling 40), so a mismatch here is expected and is not a failure.</p>
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing text_cell rendered" id="cell-id=6c8b5a35"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
@@ -13540,7 +13547,8 @@ someone_waiting forced to p 0.55 (confidence 0.55, under its 0.70 floor): priori
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>With the waiting question under its floor, the rule does not move on to the deadline question as if the answer
-were no. It stops at the step that would have decided, takes the project's default priority, and records which
+were no. A sure near-deadline answer still sets high when the waiting answer is unsure; otherwise an
+unsure answer at the deciding step takes the project default. It stops at the step that would have decided, takes the project's default priority, and records which
 question was unsure: <code>default:waiting</code>. Unsure is a stop, never a no.</p>
 </div>
 </div>
@@ -13988,6 +13996,154 @@ fresh:    Generated 2026-10-21 05:10 UTC by `bench/run_bench.py --fresh` (git bl
 <p>The baseline is the bench pass of 19 Oct on the thirty canonical tasks (labels as corrected on 20 Oct); the fresh
 column is Decider on the labelled tasks of the twelve ordinary conversations, asked as written. Both are Strands
 Decider on the same laptop CPU; the fresh run used the frozen question wording, the baseline the wording of 19 Oct.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=355a08ea">
+<div class="input">
+<div class="prompt input_prompt">In [ ]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">spec</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">spec_from_file_location</span><span class="p">(</span><span class="s2">"replay_fresh"</span><span class="p">,</span> <span class="n">REPO</span> <span class="o">/</span> <span class="s2">"bench"</span> <span class="o">/</span> <span class="s2">"replay_fresh.py"</span><span class="p">)</span>
+<span class="n">replay_fresh</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">module_from_spec</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="s2">"replay_fresh"</span><span class="p">]</span> <span class="o">=</span> <span class="n">replay_fresh</span>
+<span class="n">spec</span><span class="o">.</span><span class="n">loader</span><span class="o">.</span><span class="n">exec_module</span><span class="p">(</span><span class="n">replay_fresh</span><span class="p">)</span>
+<span class="n">export</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">((</span><span class="n">REPO</span> <span class="o">/</span> <span class="s2">"bench"</span> <span class="o">/</span> <span class="s2">"fresh_eval_2026-10-22.json"</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">))</span>
+<span class="n">replayed</span> <span class="o">=</span> <span class="n">replay_fresh</span><span class="o">.</span><span class="n">replay</span><span class="p">(</span><span class="n">export</span><span class="p">)</span>  <span class="c1"># the report drawn again from the export: no server, no model, no key</span>
+<span class="n">table</span> <span class="o">=</span> <span class="n">replay_fresh</span><span class="o">.</span><span class="n">section</span><span class="p">(</span><span class="n">replayed</span><span class="p">,</span> <span class="s2">"## Every question on the labelled tasks"</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">Markdown</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()))</span>
+<span class="n">report</span> <span class="o">=</span> <span class="p">(</span><span class="n">REPO</span> <span class="o">/</span> <span class="s2">"bench"</span> <span class="o">/</span> <span class="s2">"FRESH_EVAL_2026-10-22.md"</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"replayed from bench/fresh_eval_2026-10-22.json; the same as the committed report:"</span><span class="p">,</span> <span class="n">replayed</span> <span class="o">==</span> <span class="n">report</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_markdown rendered_html output_subarea">
+<p>agree / sure / agree when sure, as in RESULTS.md.</p>
+<table>
+<thead>
+<tr>
+<th>tasks</th>
+<th>question</th>
+<th>agree</th>
+<th>sure</th>
+<th>agree when sure</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ordinary (26)</td>
+<td>project</td>
+<td>20/26 (77%)</td>
+<td>8/26 (31%)</td>
+<td>8/8 (100%)</td>
+</tr>
+<tr>
+<td>ordinary (26)</td>
+<td>priority</td>
+<td>11/26 (42%)</td>
+<td>14/26 (54%)</td>
+<td>9/14 (64%)</td>
+</tr>
+<tr>
+<td>ordinary (26)</td>
+<td>someone_waiting</td>
+<td>15/26 (58%)</td>
+<td>13/26 (50%)</td>
+<td>8/13 (62%)</td>
+</tr>
+<tr>
+<td>ordinary (26)</td>
+<td>hard_deadline</td>
+<td>14/26 (54%)</td>
+<td>13/26 (50%)</td>
+<td>9/13 (69%)</td>
+</tr>
+<tr>
+<td>ordinary (26)</td>
+<td>worth_researching_soon</td>
+<td>4/10 (40%)</td>
+<td>3/10 (30%)</td>
+<td>0/3 (0%)</td>
+</tr>
+<tr>
+<td>ordinary (26)</td>
+<td>real_commitment</td>
+<td>24/26 (92%)</td>
+<td>24/26 (92%)</td>
+<td>23/24 (96%)</td>
+</tr>
+<tr>
+<td>ordinary (26)</td>
+<td>sensitive</td>
+<td>25/26 (96%)</td>
+<td>24/26 (92%)</td>
+<td>24/24 (100%)</td>
+</tr>
+<tr>
+<td>sensitive (20)</td>
+<td>project</td>
+<td>13/20 (65%)</td>
+<td>4/20 (20%)</td>
+<td>4/4 (100%)</td>
+</tr>
+<tr>
+<td>sensitive (20)</td>
+<td>priority</td>
+<td>12/20 (60%)</td>
+<td>11/20 (55%)</td>
+<td>11/11 (100%)</td>
+</tr>
+<tr>
+<td>sensitive (20)</td>
+<td>someone_waiting</td>
+<td>19/20 (95%)</td>
+<td>11/20 (55%)</td>
+<td>11/11 (100%)</td>
+</tr>
+<tr>
+<td>sensitive (20)</td>
+<td>hard_deadline</td>
+<td>11/20 (55%)</td>
+<td>12/20 (60%)</td>
+<td>10/12 (83%)</td>
+</tr>
+<tr>
+<td>sensitive (20)</td>
+<td>worth_researching_soon</td>
+<td>0/1 (0%)</td>
+<td>0/1 (0%)</td>
+<td>-</td>
+</tr>
+<tr>
+<td>sensitive (20)</td>
+<td>real_commitment</td>
+<td>20/20 (100%)</td>
+<td>19/20 (95%)</td>
+<td>19/19 (100%)</td>
+</tr>
+<tr>
+<td>sensitive (20)</td>
+<td>sensitive</td>
+<td>18/20 (90%)</td>
+<td>18/20 (90%)</td>
+<td>17/18 (94%)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>replayed from bench/fresh_eval_2026-10-22.json; the same as the committed report: True
+</pre>
+</div>
+</div>
 </div>
 </div>
 </div>

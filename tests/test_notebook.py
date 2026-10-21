@@ -92,6 +92,7 @@ def test_the_notebook_runs_in_recorded_mode_with_no_error_and_prints_the_bench_s
     baseline = {q: v for (name, q), v in results_table().items() if name == "decider"}
     assert shown == {q: (baseline[q], f) for q, f in fresh_table().items()} and len(shown) >= 7
     assert any("labels.json" in m and "eval-freeze-2026-10-22" in m for m in markdown)  # the run's metadata
+    assert "the same as the committed report: True" in text  # section 9's replay cell (ruling 43)
     [gate] = [m for m in markdown if "p(sensitive)" in m]
     assert "| rec_001 |" in gate and "**proceed**" in gate and "**hold** (source-sensitive)" in gate
     print(f"recorded mode: {seconds:.1f} s")

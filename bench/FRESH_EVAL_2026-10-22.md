@@ -6,6 +6,7 @@ Generated 2026-10-21 05:10 UTC by `bench/run_bench.py --fresh` (git blob `f2d4be
 - **Code revision:** tag `eval-freeze-2026-10-22` (commit `9b76c4e`). The courier's code, prompts, floors and rules are those of the tag (no difference under `ratatoskr_demo/` or in `config.toml`).
 - **Questions and labels:** the question wording and the labelling conventions are those of `eval-freeze-2026-10-22`. The 18 Oct bench's original labels are preserved in RESULTS.md's "Label corrections" section.
 - **The fresh labels:** `bench/fixtures/fresh/labels.json`, sha256 `87342167a95bf228 f13844fa61bc4ffd 74ab4a123ceec400 d0b094fe69498d77` (in groups of sixteen: the repository's secret scan reads any longer hex run as a key), committed in `896d680` before the first model call, and not edited after the run.
+- **Replay:** every table here is regenerated from `bench/fresh_eval_2026-10-22.json` by `python bench/replay_fresh.py`, with no network, no model and no key (ruling 43).
 - **Not in this set:** the five recordings made on 21 Oct for the walkthrough video are in no count here.
 
 | | |
