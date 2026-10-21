@@ -24,3 +24,5 @@ media/**/*.csv
 # media/: the animation tool's notes and its archive of earlier revisions (Dan's ruling 26)
 media/**/*.txt
 media/archive/
+# walkthrough captures, voice-over, and Pocket audio; published at https://youtu.be/RGEm62mWekI
+media/walkthrough/

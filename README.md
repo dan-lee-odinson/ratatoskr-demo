@@ -12,6 +12,8 @@
 
 **Demo video (3 min):** https://youtu.be/dl9dS00GEFY
 
+**Walkthrough (2.5 min, screen capture of the courier running):** https://youtu.be/RGEm62mWekI
+
 A conversation ends (on a Pocket wearable
 recorder, or typed to a Telegram bot with `/demo`); each follow-up in it lands in Todoist and as a
 three-line message on a CircuitMess Artemis smartwatch or any phone with Telegram:
