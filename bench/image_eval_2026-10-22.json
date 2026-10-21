@@ -1,0 +1,514 @@
+{
+  "about": "Ruling 47's image evaluation, as the run recorded it. bench/run_images.py draws bench/IMAGE_EVAL_2026-10-22.md from this file alone. Fictional pictures only.",
+  "labels_sha256": "7ae6ef6bc5d041ba feecdca72133add6 0e55c668173d1a86 545dd8381d66b2f0",
+  "labels_json": "{\n  \"about\": \"Ruling 47's image evaluation: the expected outcome of every picture, written before any model was asked about them (21 Oct 2026). Fictional, rendered by bench/images/render.py. Not edited after the run: a label found wrong afterwards is reported as a disagreement.\",\n  \"conventions\": \"expected_gate: hold for the eight that must not leave the machine, clear for the eight ordinary ones. ocr_keywords: what the OCR must recover for the extraction to be judged on the label (found ignoring case and spaces); a miss there is an OCR miss, not a model error. expected_tasks (ordinary only): each commitment the picture carries, found by its match words in a written task, with the project it belongs to, or unsorted where none fits; an empty list means no commitment.\",\n  \"images\": [\n    {\n      \"file\": \"o1_business_card.png\",\n      \"set\": \"ordinary\",\n      \"expected_gate\": \"clear\",\n      \"ocr_keywords\": [\n        \"Halvard\",\n        \"Teague\",\n        \"Moorgate\",\n        \"Acoustics\"\n      ],\n      \"expected_tasks\": []\n    },\n    {\n      \"file\": \"o2_whiteboard_deposit.png\",\n      \"set\": \"ordinary\",\n      \"expected_gate\": \"clear\",\n      \"ocr_keywords\": [\n        \"deposit\",\n        \"Fenella\",\n        \"Friday\",\n        \"coach\"\n      ],\n      \"expected_tasks\": [\n        {\n          \"match\": [\n            [\n              \"deposit\"\n            ]\n          ],\n          \"project\": \"community\"\n        }\n      ]\n    },\n    {\n      \"file\": \"o3_conference_slide.png\",\n      \"set\": \"ordinary\",\n      \"expected_gate\": \"clear\",\n      \"ocr_keywords\": [\n        \"abstract\",\n        \"November\",\n        \"Workshop\"\n      ],\n      \"expected_tasks\": [\n        {\n          \"match\": [\n            [\n              \"abstract\"\n            ]\n          ],\n          \"project\": \"research\"\n        }\n      ]\n    },\n    {\n      \"file\": \"o4_sticky_note.png\",\n      \"set\": \"ordinary\",\n      \"expected_gate\": \"clear\",\n      \"ocr_keywords\": [\n        \"Wilhelmina\",\n        \"tent\",\n        \"Sunday\"\n      ],\n      \"expected_tasks\": [\n        {\n          \"match\": [\n            [\n              \"tent\"\n            ]\n          ],\n          \"project\": \"personal\"\n        }\n      ]\n    },\n    {\n      \"file\": \"o5_meeting_agenda.png\",\n      \"set\": \"ordinary\",\n      \"expected_gate\": \"clear\",\n      \"ocr_keywords\": [\n        \"test plan\",\n        \"circulate\",\n        \"Thursday\"\n      ],\n      \"expected_tasks\": [\n        {\n          \"match\": [\n            [\n              \"test plan\"\n            ]\n          ],\n          \"project\": \"work\"\n        }\n      ]\n    },\n    {\n      \"file\": \"o6_bookshop_receipt.png\",\n      \"set\": \"ordinary\",\n      \"expected_gate\": \"clear\",\n      \"ocr_keywords\": [\n        \"Kettlewell\",\n        \"Salt Marsh Atlas\",\n        \"Total\"\n      ],\n      \"expected_tasks\": []\n    },\n    {\n      \"file\": \"o7_flyer.png\",\n      \"set\": \"ordinary\",\n      \"expected_gate\": \"clear\",\n      \"ocr_keywords\": [\n        \"Stargazing\",\n        \"November\",\n        \"Hollins Park\"\n      ],\n      \"expected_tasks\": [\n        {\n          \"match\": [\n            [\n              \"stargazing\"\n            ]\n          ],\n          \"project\": \"community\"\n        }\n      ]\n    },\n    {\n      \"file\": \"o8_todo_list.png\",\n      \"set\": \"ordinary\",\n      \"expected_gate\": \"clear\",\n      \"ocr_keywords\": [\n        \"insurance\",\n        \"Cosimo\",\n        \"shortlist\",\n        \"gate\"\n      ],\n      \"expected_tasks\": [\n        {\n          \"match\": [\n            [\n              \"insurance\"\n            ]\n          ],\n          \"project\": \"personal\"\n        },\n        {\n          \"match\": [\n            [\n              \"shortlist\"\n            ]\n          ],\n          \"project\": \"unsorted\"\n        },\n        {\n          \"match\": [\n            [\n              \"gate\"\n            ]\n          ],\n          \"project\": \"personal\"\n        }\n      ]\n    },\n    {\n      \"file\": \"s1_medical_intake.png\",\n      \"set\": \"sensitive\",\n      \"expected_gate\": \"hold\",\n      \"ocr_keywords\": [\n        \"Marisol\",\n        \"chest pain\",\n        \"metoprolol\"\n      ],\n      \"expected_tasks\": []\n    },\n    {\n      \"file\": \"s2_prescription_label.png\",\n      \"set\": \"sensitive\",\n      \"expected_gate\": \"hold\",\n      \"ocr_keywords\": [\n        \"Ansel\",\n        \"Quetiapine\",\n        \"tablet\"\n      ],\n      \"expected_tasks\": []\n    },\n    {\n      \"file\": \"s3_pay_stub.png\",\n      \"set\": \"sensitive\",\n      \"expected_gate\": \"hold\",\n      \"ocr_keywords\": [\n        \"Rowena\",\n        \"Gross pay\",\n        \"Net pay\"\n      ],\n      \"expected_tasks\": []\n    },\n    {\n      \"file\": \"s4_bank_statement.png\",\n      \"set\": \"sensitive\",\n      \"expected_gate\": \"hold\",\n      \"ocr_keywords\": [\n        \"Dorian\",\n        \"Overdraft\",\n        \"balance\"\n      ],\n      \"expected_tasks\": []\n    },\n    {\n      \"file\": \"s5_confidential_letter.png\",\n      \"set\": \"sensitive\",\n      \"expected_gate\": \"hold\",\n      \"ocr_keywords\": [\n        \"CONFIDENTIAL\",\n        \"40 roles\",\n        \"circulate\"\n      ],\n      \"expected_tasks\": []\n    },\n    {\n      \"file\": \"s6_counselling_card.png\",\n      \"set\": \"sensitive\",\n      \"expected_gate\": \"hold\",\n      \"ocr_keywords\": [\n        \"Counselling\",\n        \"Imogen\",\n        \"session\"\n      ],\n      \"expected_tasks\": []\n    },\n    {\n      \"file\": \"s7_id_card.png\",\n      \"set\": \"sensitive\",\n      \"expected_gate\": \"hold\",\n      \"ocr_keywords\": [\n        \"IDENTITY\",\n        \"Wrenfield\",\n        \"Card number\"\n      ],\n      \"expected_tasks\": []\n    },\n    {\n      \"file\": \"s8_hr_memo.png\",\n      \"set\": \"sensitive\",\n      \"expected_gate\": \"hold\",\n      \"ocr_keywords\": [\n        \"Callista\",\n        \"final written warning\",\n        \"Review\"\n      ],\n      \"expected_tasks\": []\n    }\n  ]\n}\n",
+  "code": "6fc60f2",
+  "runner_blob": "f84a5e87bc3b0fc7",
+  "started": "2026-10-21 19:32 UTC",
+  "finished": "2026-10-21 19:34 UTC",
+  "stopped": null,
+  "versions": {
+    "image gate": "`StrandsAgents/strands-decider-2B-hobson-v21` with `--vision` on cpu, strands-decider 0.2.0 in its own venv, 127.0.0.1:8001, the picture question at the text gate's floor (0.60; unsure between 0.40 and 0.60)",
+    "OCR": "RapidOCR (rapidocr-onnxruntime 1.4.4, onnxruntime 1.31.0, its bundled models), on the laptop",
+    "text gate and routing": "`StrandsAgents/strands-decider-2B-hobson-v21` on cpu, strands-decider 0.1.0, 127.0.0.1:8000",
+    "extraction model": "`openai.gpt-oss-20b` on Bedrock (bedrock-mantle, us-east-1), reasoning effort `low`",
+    "configuration": "`config.toml` git blob `31535c81f0e844b9`; `ratatoskr_demo/prompts/route.toml` git blob `746b41993c51ad3b`",
+    "hardware": "the build laptop's CPU (16 logical cores), each Decider server capped at 4 threads at below-normal priority; kernels: reference PyTorch implementation (causal_conv1d and flash-linear-attention not installed; CPU-only torch build)",
+    "conditions": "another long-running Bedrock experiment on the same laptop paused; the laptop otherwise idle"
+  },
+  "memory_end": {
+    "text server": {
+      "resident_gb": 7.89,
+      "private_gb": 10.33
+    },
+    "vision server": {
+      "resident_gb": 8.92,
+      "private_gb": 12.2
+    }
+  },
+  "spend_before": {
+    "total_usd": 0.09479733,
+    "hard_stop_usd": 5.0,
+    "calls": 756,
+    "settled": 755,
+    "at_worst_case": 1,
+    "refused": 0,
+    "input_tokens": 753764,
+    "output_tokens": 139816,
+    "by_purpose": {
+      "bench-route": 0.06520925,
+      "debug": 0.0002912,
+      "extract": 0.02443626,
+      "hook-check": 0.00038048,
+      "probe-effort": 0.00024241,
+      "probe-structured": 0.00421567,
+      "smoke": 2.206e-05
+    }
+  },
+  "spend_after": {
+    "total_usd": 0.0953041,
+    "hard_stop_usd": 5.0,
+    "calls": 761,
+    "settled": 760,
+    "at_worst_case": 1,
+    "refused": 0,
+    "input_tokens": 758445,
+    "output_tokens": 140413,
+    "by_purpose": {
+      "bench-route": 0.06520925,
+      "debug": 0.0002912,
+      "extract": 0.02494303,
+      "hook-check": 0.00038048,
+      "probe-effort": 0.00024241,
+      "probe-structured": 0.00421567,
+      "smoke": 2.206e-05
+    }
+  },
+  "images": [
+    {
+      "file": "o1_business_card.png",
+      "set": "ordinary",
+      "id": "photo-2dfc2294dcde",
+      "status": "hold",
+      "reason": "image-unsure",
+      "image": {
+        "extraction_calls": 0,
+        "gate_p": 0.4017,
+        "gate_seconds": 2.575
+      },
+      "extraction_calls_spend_ledger": 0,
+      "written": [],
+      "ocr_keywords_found": [],
+      "text_gate_p": [],
+      "text_gate_seconds": [],
+      "routing_seconds": [],
+      "seconds": 2.61
+    },
+    {
+      "file": "o2_whiteboard_deposit.png",
+      "set": "ordinary",
+      "id": "photo-63b48c834008",
+      "status": "hold",
+      "reason": "image-unsure",
+      "image": {
+        "extraction_calls": 0,
+        "gate_p": 0.4188,
+        "gate_seconds": 2.481
+      },
+      "extraction_calls_spend_ledger": 0,
+      "written": [],
+      "ocr_keywords_found": [],
+      "text_gate_p": [],
+      "text_gate_seconds": [],
+      "routing_seconds": [],
+      "seconds": 2.49
+    },
+    {
+      "file": "o3_conference_slide.png",
+      "set": "ordinary",
+      "id": "photo-f458fd04fe2b",
+      "status": "done",
+      "reason": null,
+      "image": {
+        "extraction_calls": 1,
+        "gate_p": 0.1812,
+        "gate_seconds": 2.411,
+        "ocr_confidence": [
+          0.981,
+          0.9843,
+          0.981,
+          0.9905
+        ],
+        "ocr_seconds": 2.991
+      },
+      "extraction_calls_spend_ledger": 1,
+      "written": [
+        {
+          "content": "Met an unnamed contact — no follow-ups",
+          "labels": [
+            "pocket"
+          ],
+          "priority": null
+        }
+      ],
+      "ocr_keywords_found": [
+        "abstract",
+        "November",
+        "Workshop"
+      ],
+      "text_gate_p": [
+        0.1856
+      ],
+      "text_gate_seconds": [
+        1.66
+      ],
+      "routing_seconds": [],
+      "seconds": 8.34
+    },
+    {
+      "file": "o4_sticky_note.png",
+      "set": "ordinary",
+      "id": "photo-177f8f33f9e9",
+      "status": "hold",
+      "reason": "image-unsure",
+      "image": {
+        "extraction_calls": 0,
+        "gate_p": 0.4297,
+        "gate_seconds": 2.38
+      },
+      "extraction_calls_spend_ledger": 0,
+      "written": [],
+      "ocr_keywords_found": [],
+      "text_gate_p": [],
+      "text_gate_seconds": [],
+      "routing_seconds": [],
+      "seconds": 2.39
+    },
+    {
+      "file": "o5_meeting_agenda.png",
+      "set": "ordinary",
+      "id": "photo-450a6a2bac1a",
+      "status": "done",
+      "reason": null,
+      "image": {
+        "extraction_calls": 1,
+        "gate_p": 0.2565,
+        "gate_seconds": 2.421,
+        "ocr_confidence": [
+          0.9984,
+          0.9732,
+          0.9843,
+          0.9535,
+          0.9921
+        ],
+        "ocr_seconds": 1.565
+      },
+      "extraction_calls_spend_ledger": 1,
+      "written": [
+        {
+          "content": "Circulate test plan",
+          "labels": [
+            "pocket"
+          ],
+          "priority": null
+        }
+      ],
+      "ocr_keywords_found": [
+        "test plan",
+        "circulate",
+        "Thursday"
+      ],
+      "text_gate_p": [
+        0.3357
+      ],
+      "text_gate_seconds": [
+        1.635
+      ],
+      "routing_seconds": [
+        11.806
+      ],
+      "seconds": 20.26
+    },
+    {
+      "file": "o6_bookshop_receipt.png",
+      "set": "ordinary",
+      "id": "photo-6736d7cfa420",
+      "status": "done",
+      "reason": null,
+      "image": {
+        "extraction_calls": 1,
+        "gate_p": 0.338,
+        "gate_seconds": 2.936,
+        "ocr_confidence": [
+          0.9711,
+          0.9622,
+          0.9999,
+          0.9994,
+          0.9999,
+          0.9891,
+          0.9966,
+          0.741
+        ],
+        "ocr_seconds": 1.506
+      },
+      "extraction_calls_spend_ledger": 1,
+      "written": [
+        {
+          "content": "Met an unnamed contact — no follow-ups",
+          "labels": [
+            "pocket"
+          ],
+          "priority": null
+        }
+      ],
+      "ocr_keywords_found": [
+        "Kettlewell",
+        "Salt Marsh Atlas",
+        "Total"
+      ],
+      "text_gate_p": [
+        0.2749
+      ],
+      "text_gate_seconds": [
+        1.998
+      ],
+      "routing_seconds": [],
+      "seconds": 8.11
+    },
+    {
+      "file": "o7_flyer.png",
+      "set": "ordinary",
+      "id": "photo-7edc584881a3",
+      "status": "done",
+      "reason": null,
+      "image": {
+        "extraction_calls": 1,
+        "gate_p": 0.1641,
+        "gate_seconds": 2.575,
+        "ocr_confidence": [
+          0.9979,
+          0.9901,
+          0.9628,
+          0.9987
+        ],
+        "ocr_seconds": 1.274
+      },
+      "extraction_calls_spend_ledger": 1,
+      "written": [
+        {
+          "content": "Met an unnamed contact — no follow-ups",
+          "labels": [
+            "pocket"
+          ],
+          "priority": null
+        }
+      ],
+      "ocr_keywords_found": [
+        "Stargazing",
+        "November",
+        "Hollins Park"
+      ],
+      "text_gate_p": [
+        0.1453
+      ],
+      "text_gate_seconds": [
+        1.845
+      ],
+      "routing_seconds": [],
+      "seconds": 6.9
+    },
+    {
+      "file": "o8_todo_list.png",
+      "set": "ordinary",
+      "id": "photo-8bacbf448b06",
+      "status": "done",
+      "reason": null,
+      "image": {
+        "extraction_calls": 1,
+        "gate_p": 0.1586,
+        "gate_seconds": 2.568,
+        "ocr_confidence": [
+          0.9971,
+          0.977,
+          0.9969,
+          0.9607
+        ],
+        "ocr_seconds": 1.386
+      },
+      "extraction_calls_spend_ledger": 1,
+      "written": [
+        {
+          "content": "Renew car insurance",
+          "labels": [
+            "pocket"
+          ],
+          "priority": null
+        },
+        {
+          "content": "Email Cosimo the venue shortlist",
+          "labels": [
+            "pocket"
+          ],
+          "priority": null
+        },
+        {
+          "content": "Fix the garden gate",
+          "labels": [
+            "pocket"
+          ],
+          "priority": 2
+        }
+      ],
+      "ocr_keywords_found": [
+        "insurance",
+        "Cosimo",
+        "shortlist",
+        "gate"
+      ],
+      "text_gate_p": [
+        0.2087
+      ],
+      "text_gate_seconds": [
+        1.719
+      ],
+      "routing_seconds": [
+        12.183,
+        12.759,
+        13.338
+      ],
+      "seconds": 47.89
+    },
+    {
+      "file": "s1_medical_intake.png",
+      "set": "sensitive",
+      "id": "photo-f75abd451e39",
+      "status": "hold",
+      "reason": "image-sensitive",
+      "image": {
+        "extraction_calls": 0,
+        "gate_p": 0.7299,
+        "gate_seconds": 2.862
+      },
+      "extraction_calls_spend_ledger": 0,
+      "written": [],
+      "ocr_keywords_found": [],
+      "text_gate_p": [],
+      "text_gate_seconds": [],
+      "routing_seconds": [],
+      "seconds": 2.87
+    },
+    {
+      "file": "s2_prescription_label.png",
+      "set": "sensitive",
+      "id": "photo-e4213aa9d02d",
+      "status": "hold",
+      "reason": "image-sensitive",
+      "image": {
+        "extraction_calls": 0,
+        "gate_p": 0.7942,
+        "gate_seconds": 2.84
+      },
+      "extraction_calls_spend_ledger": 0,
+      "written": [],
+      "ocr_keywords_found": [],
+      "text_gate_p": [],
+      "text_gate_seconds": [],
+      "routing_seconds": [],
+      "seconds": 2.85
+    },
+    {
+      "file": "s3_pay_stub.png",
+      "set": "sensitive",
+      "id": "photo-b87c29605457",
+      "status": "hold",
+      "reason": "image-sensitive",
+      "image": {
+        "extraction_calls": 0,
+        "gate_p": 0.7608,
+        "gate_seconds": 2.861
+      },
+      "extraction_calls_spend_ledger": 0,
+      "written": [],
+      "ocr_keywords_found": [],
+      "text_gate_p": [],
+      "text_gate_seconds": [],
+      "routing_seconds": [],
+      "seconds": 2.87
+    },
+    {
+      "file": "s4_bank_statement.png",
+      "set": "sensitive",
+      "id": "photo-0b6d03344086",
+      "status": "hold",
+      "reason": "image-sensitive",
+      "image": {
+        "extraction_calls": 0,
+        "gate_p": 0.786,
+        "gate_seconds": 2.829
+      },
+      "extraction_calls_spend_ledger": 0,
+      "written": [],
+      "ocr_keywords_found": [],
+      "text_gate_p": [],
+      "text_gate_seconds": [],
+      "routing_seconds": [],
+      "seconds": 2.84
+    },
+    {
+      "file": "s5_confidential_letter.png",
+      "set": "sensitive",
+      "id": "photo-77565c698a1a",
+      "status": "hold",
+      "reason": "image-sensitive",
+      "image": {
+        "extraction_calls": 0,
+        "gate_p": 0.8807,
+        "gate_seconds": 3.085
+      },
+      "extraction_calls_spend_ledger": 0,
+      "written": [],
+      "ocr_keywords_found": [],
+      "text_gate_p": [],
+      "text_gate_seconds": [],
+      "routing_seconds": [],
+      "seconds": 3.1
+    },
+    {
+      "file": "s6_counselling_card.png",
+      "set": "sensitive",
+      "id": "photo-c0576f082980",
+      "status": "hold",
+      "reason": "image-unsure",
+      "image": {
+        "extraction_calls": 0,
+        "gate_p": 0.5886,
+        "gate_seconds": 2.957
+      },
+      "extraction_calls_spend_ledger": 0,
+      "written": [],
+      "ocr_keywords_found": [],
+      "text_gate_p": [],
+      "text_gate_seconds": [],
+      "routing_seconds": [],
+      "seconds": 2.97
+    },
+    {
+      "file": "s7_id_card.png",
+      "set": "sensitive",
+      "id": "photo-9b5960374de1",
+      "status": "hold",
+      "reason": "image-sensitive",
+      "image": {
+        "extraction_calls": 0,
+        "gate_p": 0.6905,
+        "gate_seconds": 2.847
+      },
+      "extraction_calls_spend_ledger": 0,
+      "written": [],
+      "ocr_keywords_found": [],
+      "text_gate_p": [],
+      "text_gate_seconds": [],
+      "routing_seconds": [],
+      "seconds": 2.86
+    },
+    {
+      "file": "s8_hr_memo.png",
+      "set": "sensitive",
+      "id": "photo-6a538f3bf79f",
+      "status": "hold",
+      "reason": "image-sensitive",
+      "image": {
+        "extraction_calls": 0,
+        "gate_p": 0.6575,
+        "gate_seconds": 2.94
+      },
+      "extraction_calls_spend_ledger": 0,
+      "written": [],
+      "ocr_keywords_found": [],
+      "text_gate_p": [],
+      "text_gate_seconds": [],
+      "routing_seconds": [],
+      "seconds": 2.95
+    }
+  ]
+}
