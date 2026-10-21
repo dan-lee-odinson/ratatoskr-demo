@@ -83,7 +83,7 @@ from typing import Any, Callable
 from ratatoskr_demo import extract, guard, triage
 from ratatoskr_demo.backoff import RetryBook
 from ratatoskr_demo.config import Settings
-from ratatoskr_demo.devices.envelope import Envelope, Text
+from ratatoskr_demo.devices.envelope import Envelope, ImageRef, Text
 from ratatoskr_demo.devices.registry import InputAdapter, Source
 from ratatoskr_demo.devices.wrist_adapter import first_line, format_task
 from ratatoskr_demo.due import recording_date
@@ -167,6 +167,7 @@ class Cycle:
         # Ruling 47: the photo being handled, if it is one; its gate probability, OCR confidences and
         # extraction call count go in its ledger entry (numbers only)
         self._image: dict[str, Any] | None = None
+        self._photo = False  # ruling 49: a glasses envelope with an ImageRef; its hold notices name the folder
 
     # --- entry points ---
 
@@ -290,6 +291,7 @@ class Cycle:
         rid, title, recording_at = source.item_id, source.title, source.recorded_at
         text = adapter.fetch_text(envelope)  # memory only, from here to the end of this call (C1)
         self._image = (getattr(adapter, "records", None) or {}).get(rid)
+        self._photo = envelope.kind == "glasses" and isinstance(envelope.payload, ImageRef)
         if isinstance(text, PhotoHold):  # ruling 47: unreadable (no model asked) or held by the image gate
             return self._hold(rid, title, recording_at, text.reason, demo=demo,
                               notice=f"Held {rid}: {text.reason}. Nothing was written.")
@@ -309,8 +311,7 @@ class Cycle:
             return Outcome("not-ready")
         if isinstance(decision, triage.Hold):
             return self._hold(rid, title, recording_at, decision.reason, demo=demo,
-                              notice=f"Held {rid}: {notice_reason(decision.reason)}. "
-                                     "Tag it ok in Pocket to release it.")
+                              notice=self._held_notice(rid, notice_reason(decision.reason)))
         if isinstance(decision, (triage.Release, triage.Process)):
             return self._process(rid, recording, title, recording_at,
                                  released=isinstance(decision, triage.Release), demo=demo)
@@ -334,7 +335,7 @@ class Cycle:
             verdict = self._gate_source(rid, text, urgent)
             if verdict is not None and verdict.hold:
                 return self._hold(rid, title, recording_at, verdict.reason, demo=demo,
-                                  notice=f"Held {rid}: {verdict.reason}. Tag it ok in Pocket to release it.")
+                                  notice=self._held_notice(rid, verdict.reason))
         # Routing will need Decider: while it is unreachable, a recording waits with nothing extracted or
         # written (ruling 9), unless it is tagged urgent (ruling 12: written unrouted, below)
         without_decider = not self._decider_usable(rid, urgent)
@@ -385,7 +386,7 @@ class Cycle:
         if verdict in ("sensitive", "sensitive-unsure"):
             log.warning("recording %s: %s; held for review, nothing written", rid, verdict)
             outcome = self._hold(rid, title, recording_at, verdict, demo=demo,
-                                 notice=f"Held {rid}: {verdict}. Tag it ok in Pocket to release it.")
+                                 notice=self._held_notice(rid, verdict))
             outcome.tasks = [TaskOutcome(routed=task, content="") for task in routed.tasks]  # judgments only
             return outcome
         unchecked = verdict == "not-checked"
@@ -558,7 +559,14 @@ class Cycle:
     def _leak_hold(self, rid: str, title: str, recording_at: str, *, demo: bool) -> Outcome:
         log.warning("recording %s: held by the leak guard; nothing written", rid)
         return self._hold(rid, title, recording_at, "leak-guard", demo=demo,
-                          notice=f"Held {rid}: leak-guard. Tag it ok in Pocket to release it.")  # ruling 28
+                          notice=self._held_notice(rid, "leak-guard"))  # ruling 28
+
+    def _held_notice(self, rid: str, reason: str) -> str:
+        """A recording is released by its ok tag in Pocket; a photo has no release yet and stays in the inbox
+        folder (ruling 49)."""
+        if self._photo:
+            return f"Held {rid}: {reason} (photo). It stays in the inbox folder."
+        return f"Held {rid}: {reason}. Tag it ok in Pocket to release it."
 
     def _terminal(self, rid: str, source: Source, exc: TerminalError) -> None:
         keys = f" (keys: {', '.join(exc.keys)})" if exc.keys else ""

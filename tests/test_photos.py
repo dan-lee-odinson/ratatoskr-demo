@@ -2,7 +2,9 @@
 cloud call, and held, with an id-only notice, when it cannot be read or the image gate says yes or is unsure.
 
 One test per adapter branch (a new file, unreadable, blank, gate yes, gate unsure, gate no, the reader failing),
-the gate's floor and band from route.toml, the folder watcher, and the courier's cycle end to end.
+the gate's floor and band from route.toml, the folder watcher, and the courier's cycle end to end. Ruling 49: a
+photo held after the image gate (the tripwire, the text gate, the check after extraction, the leak guard) is told
+it stays in the inbox folder, one test per notice site.
 """
 
 import json
@@ -184,9 +186,14 @@ def test_the_vision_url_must_be_on_this_machine(tmp_path):
 
 # --- the courier's cycle, end to end ---
 
-def photo_cycle(tmp_path, services, clock, *, p, ocr_lines=TEXT, name="whiteboard.png", content=None):
+def photo_cycle(tmp_path, services, clock, *, p, ocr_lines=TEXT, name="whiteboard.png", content=None, text_gate=None,
+                routing=None, model=None):
     todoist, telegram, router = services
     fake = attach(router)
+    if text_gate is not None:  # the text gate's answer on the OCR'd text
+        fake.gate_reply = lambda body: httpx.Response(200, json=decider_answers(sensitive=text_gate))
+    if routing is not None:  # the routing read's answer on the extracted tasks
+        fake.reply = lambda body: httpx.Response(200, json=decider_answers(sensitive=routing))
     vision = Vision(p)
     router.post(f"{VISION}/v1/systemone").mock(side_effect=vision.reply)
     settings = make_settings(tmp_path, {"route": {"backend": "decider"},
@@ -195,7 +202,7 @@ def photo_cycle(tmp_path, services, clock, *, p, ocr_lines=TEXT, name="whiteboar
     folder = settings.paths.state_dir / "inbox" / "photos"
     folder.mkdir(parents=True)
     picture(folder / name) if content is None else content(folder / name)
-    model = ScriptedModel(replies={}, default=extraction_json(tasks=[
+    model = model or ScriptedModel(replies={}, default=extraction_json(tasks=[
         {"content": "Send Ilona the antenna drawings", "due_string": "Thursday", "notes": None}]))
     runtime = runtime_for(settings, model, clock, router=fake.router())
     runtime.cycle.deps.inputs["glasses"].ocr = photos.Ocr(FakeOcr(ocr_lines))
@@ -234,6 +241,44 @@ def test_the_tripwire_reads_the_photos_text_before_the_text_gate_and_the_cloud(t
         tmp_path, services, clock, p=0.2, ocr_lines=["Call Vargrheim about the contract", "before Friday at noon please"])
     assert (entry["status"], entry["reason"]) == ("hold", "stoplist:vargrheim")
     assert len(vision.bodies) == 1 and fake.gate_bodies == [] and model.calls == []
+
+
+# --- a held photo's notice names the folder, not Pocket (ruling 49): one test per notice site ---
+
+def photo_notice(telegram, reason, name="whiteboard.png"):
+    rid = photo_id(Path(name))
+    assert [t for t in telegram.texts if t.startswith(f"Held {rid}:")] == [
+        f"Held {rid}: {reason} (photo). It stays in the inbox folder."]
+    assert not any("Pocket" in t for t in telegram.texts)
+
+
+def test_a_photo_the_tripwire_holds_is_told_it_stays_in_the_folder(tmp_path, services, clock):
+    entry, model, fake, vision, todoist, telegram = photo_cycle(
+        tmp_path, services, clock, p=0.2, ocr_lines=["Call Vargrheim about the contract", "before Friday at noon please"])
+    assert (entry["status"], entry["reason"]) == ("hold", "stoplist:vargrheim")
+    photo_notice(telegram, "stop-list")  # the kind of hold, never the term (ruling 13)
+
+
+def test_a_photo_the_text_gate_holds_is_told_it_stays_in_the_folder(tmp_path, services, clock):
+    entry, model, fake, vision, todoist, telegram = photo_cycle(tmp_path, services, clock, p=0.2, text_gate=0.95)
+    assert entry["status"] == "hold" and model.calls == [] and len(fake.gate_bodies) >= 1
+    photo_notice(telegram, entry["reason"])
+
+
+def test_a_photo_held_after_extraction_is_told_it_stays_in_the_folder(tmp_path, services, clock):
+    entry, model, fake, vision, todoist, telegram = photo_cycle(tmp_path, services, clock, p=0.2, routing=0.95)
+    assert (entry["status"], entry["reason"]) == ("hold", "sensitive") and len(model.calls) == 1
+    assert todoist.tasks == {}
+    photo_notice(telegram, "sensitive")
+
+
+def test_a_photo_the_leak_guard_holds_is_told_it_stays_in_the_folder(tmp_path, services, clock):
+    quoting = ScriptedModel(replies={}, default=extraction_json(tasks=[
+        {"content": "Book the clean room", "due_string": None, "notes": "She said Book the clean room for the fit check"}]))
+    entry, model, fake, vision, todoist, telegram = photo_cycle(tmp_path, services, clock, p=0.2, model=quoting)
+    assert (entry["status"], entry["reason"]) == ("hold", "leak-guard") and len(model.calls) == 2  # and the retry
+    assert todoist.tasks == {}
+    photo_notice(telegram, "leak-guard")
 
 
 def test_the_vision_launcher_serves_with_vision_on_this_machine_capped_like_the_published_one(tmp_path, monkeypatch):

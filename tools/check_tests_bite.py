@@ -380,8 +380,8 @@ MUTATIONS = [
      ["tests/test_urgent.py::test_decider_unreachable_an_urgent_recording_is_extracted_and_written_unrouted"]),
     # --- hold notices carry the id only (Dan's ruling 13); accidental presses (ruling 14), 18 Oct 2026 ---
     ("Ruling 13: the triage hold notice carries the title", "ratatoskr_demo/cycle.py",
-     'notice=f"Held {rid}: {notice_reason(decision.reason)}. "',
-     'notice=f"Held {rid} \u201c{title}\u201d: {notice_reason(decision.reason)}. "',
+     'notice=self._held_notice(rid, notice_reason(decision.reason)))',
+     'notice=self._held_notice(f"{rid} \u201c{title}\u201d", notice_reason(decision.reason)))',
      ["tests/test_leak.py::test_t_leak_the_sentinel_appears_nowhere_after_a_full_cycle"]),
     ("Ruling 13: the stop-list term in the hold notice", "ratatoskr_demo/cycle.py",
      '    return "stop-list" if reason.startswith("stoplist:") else reason', "    return reason",
@@ -480,7 +480,7 @@ MUTATIONS = [
 
     # --- every hold notice carries the release instruction (Dan's ruling 28, 20 Oct 2026) ---
     ("Ruling 28: the leak-guard notice without the release instruction", "ratatoskr_demo/cycle.py",
-     'notice=f"Held {rid}: leak-guard. Tag it ok in Pocket to release it.")',
+     'notice=self._held_notice(rid, "leak-guard"))',
      'notice=f"Held {rid}: leak-guard. Nothing was written.")',
      ["tests/test_notices_and_short.py::test_every_hold_notice_carries_the_release_instruction_and_no_title"]),
 
@@ -530,6 +530,16 @@ MUTATIONS = [
      '            image["extraction_calls"] = image.get("extraction_calls", 0) + 1\n',
      '',
      ['tests/test_photos.py::test_a_cleared_photo_passes_three_checks_then_is_written_and_its_numbers_are_in_the_ledger']),
+
+    # --- a held photo's notice names the folder, a recording's names Pocket (Dan's ruling 49, 21 Oct 2026) ---
+    ("Ruling 49: a held photo is told to tag it ok in Pocket", 'ratatoskr_demo/cycle.py',
+     '        self._photo = envelope.kind == "glasses" and isinstance(envelope.payload, ImageRef)\n',
+     '        self._photo = False\n',
+     ['tests/test_photos.py::test_a_photo_held_after_extraction_is_told_it_stays_in_the_folder']),
+    ("Ruling 49: a held recording is told it stays in the inbox folder", 'ratatoskr_demo/cycle.py',
+     '        if self._photo:\n',
+     '        if True:\n',
+     ["tests/test_notices_and_short.py::test_every_hold_notice_carries_the_release_instruction_and_no_title"]),
 
     # --- the fresh evaluation, replayable from its export (Dan's ruling 43, Part B) ---
     ("Ruling 43B: the replay asks git now instead of the run's record", "bench/replay_fresh.py",
@@ -628,8 +638,8 @@ MUTATIONS = [
      "        without_decider = urgent or not self._decider_usable(rid, urgent)",
      ["tests/test_urgent.py::test_decider_up_urgent_changes_nothing"]),
     ("Source gate: the hold notice carries the title", "ratatoskr_demo/cycle.py",
-     '                                  notice=f"Held {rid}: {verdict.reason}. Tag it ok in Pocket to release it.")',
-     '                                  notice=f"Held {rid} {title}: {verdict.reason}. Tag it ok in Pocket to release it.")',
+     '                                  notice=self._held_notice(rid, verdict.reason))',
+     '                                  notice=self._held_notice(f"{rid} {title}", verdict.reason))',
      ["tests/test_source_gate.py::test_a_sensitive_source_holds_before_extraction_with_an_id_only_notice"]),
     ("Source gate: the hook ignores its source text", "patterns/gatekeeper_triage/strands_hook.py",
      "        if self.source_text is not None:", "        if False:",

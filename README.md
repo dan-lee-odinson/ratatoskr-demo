@@ -393,9 +393,10 @@ unreadable or blank is held before any model is asked; a second Strands Decider 
 `--vision`, answers "Is this picture of something that must never leave this machine?" and holds the photo on
 yes or unsure; then RapidOCR, on the laptop, reads the photo's text, which meets the stop-list tripwire and the
 text gate like any transcript before the extraction on Bedrock. The image gate uses the same checkpoint, which
-was not trained on images, at the text gate's floor, a starting point rather than a tuned value. For the
-evaluation (`bench/IMAGE_EVAL_2026-10-22.md`) the folder was fed from the desktop with rendered pictures. The
-vision server runs from its own venv, beside the published one:
+was not trained on images, at the text gate's floor, a starting point rather than a tuned value. A held photo
+stays in the folder; this version has no way to release one. For the evaluation
+(`bench/IMAGE_EVAL_2026-10-22.md`) the folder was fed from the desktop with rendered pictures. The vision server
+runs from its own venv, beside the published one:
 
 ```bash
 python -m venv .venv-decider-vision

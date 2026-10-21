@@ -928,3 +928,77 @@ The re-measure of rulings 15 and 17 ran on 19 Oct (under "Bench"; decision 32): 
 (`--once --dry-run --save-tasks --demo-text`, descriptions on and off), the estimate, the pass
 (`--rotations 0 --option-descriptions both --real-tasks`), Decider stopped by its PID, then
 `bench/rotation_run.py`, and RESULTS.md re-rendered with that rotation.
+
+## Dan's rulings, 21 October 2026
+
+Rulings 29 to 41 are recorded in the private development history only; these three entries were
+added by ruling 49. Each gives its commits in both histories, the private one first.
+
+42. **The walkthrough link.** The README gained the walkthrough line ("Walkthrough (2.5 min, screen
+    capture of the courier running)") under the demo video line, with a blank line between them so
+    the two render as separate paragraphs. The same sentence, linked, ends the notebook's first
+    cell (source only; outputs as committed), and the HTML export was regenerated, since
+    `notebooks/README.md` links to it. `media/walkthrough/` is ignored; nothing from it was ever
+    committed to either repository. Private `42e47bf`, public `667c93e`: four files, blob for blob,
+    after the secret scan (168 files, clean) and the forbidden-names grep (0). No code changed: the
+    suite stood at 812 passed, 1 skipped, and the mutation check was not re-run.
+43. **Unsorted tasks resolved from the wrist, and the fresh evaluation's replay** (ruling 44 folded
+    in). The resolution loop: an unsorted task's wrist message carries one button per project, in
+    the order of Decider's own probabilities for that task, and Leave unsorted. A tap adds the
+    `proj:` label to the existing Todoist task (`item_update`, labels only: the labels the courier
+    wrote plus `proj:<key>`, since Todoist replaces the whole list) and rewrites the message's first
+    line; Leave changes nothing in Todoist. Each pick is kept in its recording's ledger entry under
+    `picks`, keyed by a ten-character short id (callback data `pick:<id>:<key>`, under 64 bytes),
+    with who picked, the key and the time, and no task text. A repeat tap, an unknown task, another
+    chat and a Todoist refusal (buttons kept, ledger unwritten) each have their answer, and no model
+    is asked. Only tasks Decider answered and was unsure of get buttons. The Telegram receiver is a
+    thread of `--loop`, so taps are answered while it runs and not during `--once`.
+    `ratatoskr_demo/resolve.py`, `tests/test_resolve.py` (18), nine mutations. The replay:
+    `bench/fresh_eval_2026-10-22.json` is the fresh evaluation as it recorded it, and what the run
+    did not record (each gate window's probability, the courier's own answers about the tasks it
+    extracted, per-project probabilities) is named as not recorded; `python bench/replay_fresh.py
+    --check` regenerates `bench/FRESH_EVAL_2026-10-22.md` from it byte for byte with no network,
+    model or key, and the suite runs it with the network refused and no `.env`. The notebook's
+    section 9 gained a last cell that reproduces the fresh table from the export. Tests (4), two
+    mutations. Folded in from ruling 44: the pattern README's question count (six, not five); the
+    README's Decider memory line matched to System requirements ("16 GB minimum host RAM"); the
+    notebook's priority explanation (a sure near deadline still sets high when waiting is unsure);
+    the note beside the live-versus-recorded comparison. Private `a407834` and `09a8ed6`, public
+    `f0659c5` and `bc82e5f`. The public clone of `bc82e5f`: 832 passed, 3 skipped, and 176 of 176
+    mutations caught; the private working copy: 834 passed, 1 skipped, and 176 of 176.
+47. **Photos: the image gate and the image evaluation** (ruling 47B). The glasses input reads photos
+    (PNG, JPEG, WebP or GIF) dropped in `ledger/inbox/photos/`, and each passes three checks on the
+    laptop before any cloud call. A missing, undecodable, unsupported or blank file (grayscale
+    standard deviation under 2 of 255) is held as `unreadable` with no model asked. The image gate,
+    a second Strands Decider server (strands-decider 0.2.0 with `--vision` in its own venv, the same
+    checkpoint, 127.0.0.1:8001, started by `tools/serve_vision.py`), asks "Is this picture of
+    something that must never leave this machine?" with the text gate's criteria at its floor (0.60;
+    unsure from 0.40) and holds on yes or unsure. Then RapidOCR (rapidocr-onnxruntime 1.4.4, the
+    `photos` extra) reads the picture's text on the laptop, and the existing path runs unchanged:
+    the tripwire, the text gate, extraction on gpt-oss-20b, routing, the rule, Todoist, Telegram.
+    The ledger keeps the image gate's probability and read time, the OCR's per-line confidence and
+    the extraction call count; the OCR's text is never kept. No Bedrock vision model is used (a v2
+    item). The checkpoint was not trained on images: the image gate uses the vision tower inside its
+    base model. Tests (28), ten mutations. The evaluation: sixteen rendered pictures, eight ordinary
+    and eight that must not leave the machine, `bench/images/labels.json` sha256 `7ae6ef6bc5d041ba
+    feecdca72133add6 0e55c668173d1a86 545dd8381d66b2f0`, committed before the first model call; run
+    21 Oct 19:32-19:34 UTC through the courier's own cycle, both Decider servers fresh and stopped by
+    their PIDs. No sensitive picture was cleared: seven were held by the image gate as sensitive and
+    one, the counselling card at p 0.59, as unsure. Three of the eight ordinary pictures were held
+    by the image gate as unsure (p 0.40, 0.42 and 0.43), and the eleven held pictures had no
+    extraction call and no write. On the five cleared, the OCR recovered every key word; the
+    extraction was right on three and missed on two (the conference slide and the flyer: the text
+    reached the model, which found no commitment, and the courier wrote its contact note). Of the
+    four matched tasks, one was filed to the right project and three left unsorted, none wrong.
+    Median and p90 reads: image gate 2.83 and 2.96 s, OCR 1.51 and 2.99 s, text gate 1.72 and
+    2.00 s, routing 12.47 and 13.34 s. Bedrock: $0.000507 over 5 calls. The highest ordinary picture
+    scored 0.43 and the lowest sensitive one 0.59; the floor stays the text gate's.
+    `python bench/run_images.py --check` regenerates `bench/IMAGE_EVAL_2026-10-22.md` from
+    `bench/image_eval_2026-10-22.json` byte for byte with no network, model or key. Private
+    `6fc60f2` and `d15d29c`, public `544dab0` and `79c559a`. The public clone of `79c559a`: 860
+    passed, 3 skipped, and 186 of 186 mutations caught; the private working copy: 862 passed,
+    1 skipped, and 186 of 186. After it, ruling 49: a photo held by the tripwire, the text gate,
+    the check after extraction or the leak guard is told `Held <id>: <reason> (photo). It stays in
+    the inbox folder.` instead of the Pocket release instruction, and a recording's notice is
+    unchanged; there is no release for photos yet, and the README's Photos paragraph says a held
+    photo stays in the folder. Four tests, one per notice site; two mutations.
