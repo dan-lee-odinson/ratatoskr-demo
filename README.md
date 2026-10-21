@@ -75,15 +75,16 @@ is enabled: no Pocket key without the Pocket input, no TypeSafe key without Jev 
 
 ## System requirements
 
-Decider 2B runs on the host, so the host is the one real requirement. Every number this project
-measured, in this README and in the article, was measured on a Windows 11 laptop with 16 logical
-cores, Decider held to four of them, and no GPU.
+Decider 2B runs on the host, so the host is the one real requirement. Ratatoskr works on a laptop CPU
+without a GPU; an optional GPU configuration gives the measured improvement in `bench/RESULTS.md` on
+the same workload. Every other number this project measured, in this README and in the article, was
+measured on a Windows 11 laptop with 16 logical cores, Decider held to four of them, and no GPU.
 
 | Host | Minimum | Measured on the reference machine |
 |---|---|---|
 | CPU | 4 threads free for Decider while it reads; no other CPU-heavy job on the machine | 4 intra-op threads (and 1 inter-op), laptop CPU with 16 logical cores |
 | Memory | 16 GB minimum host RAM; the server commits about 10 GB, and the memory guard stops it at the `--max-commit-gb` value (off unless given; the start command below sets 16) | 9.9 to 10.4 GB committed over 70 reads per server |
-| GPU | None required. Decider's fast path is a GPU build of torch with `causal_conv1d` and `flash-linear-attention` installed | None used; kernels: reference PyTorch implementation (causal_conv1d and flash-linear-attention not installed; CPU-only torch build) |
+| GPU | None needed | None on the default path (CPU-only torch build; kernels: reference PyTorch implementation, causal_conv1d and flash-linear-attention not installed). Optional, measured: NVIDIA GeForce RTX 5050 Laptop GPU (8 GB, driver 610.74), torch 2.14.1+cu130, bfloat16 weights, the same reference kernels: 0.44 s per six-question read warmed, against 11.01 s on the CPU in the same session (see "Running on a GPU") |
 | Disk | Decider weights (4.4 GB in the Hugging Face cache: the 4.3 GB Qwen3.5-2B base model and the 88 MB Decider checkpoint) plus two virtual environments | `.venv-decider` (server), `.venv` (courier) |
 | Python | 3.12 or later (`requires-python = ">=3.12"`) | 3.12.10 |
 | OS | Windows 11 with PowerShell is what the run commands assume; the courier and the pattern have no Windows-only code (the courier needs `httpx` and `Metaphone` from PyPI; the pattern's client is standard-library Python) | Windows 11 |
@@ -367,6 +368,32 @@ option-order test), `--inspect-shape <recording_id>` (key names and types of one
 never values), `--scrub-list`. For the bench's real-task set, `--once --dry-run --save-tasks`
 (optionally with `--demo-text "<text>"` and `--option-descriptions on|off`) saves the guarded
 extractions, never the transcripts, to the git-ignored `bench/raw/`.
+
+### Running on a GPU (optional)
+
+Every command above runs Decider on the CPU, and that stays the default. On a machine with an NVIDIA
+card, a second Decider venv holding the CUDA 13.0 build of the same torch serves it on the card, with
+the weights in bfloat16 (the measured venv held the CPU venv's other packages at the same versions):
+
+```bash
+python -m venv .venv-decider-cuda
+```
+```bash
+.venv-decider-cuda/Scripts/python -m pip install "torch==2.14.1" --index-url https://download.pytorch.org/whl/cu130
+```
+```bash
+.venv-decider-cuda/Scripts/python -m pip install strands-decider==0.1.0
+```
+```bash
+.venv-decider-cuda/Scripts/python tools/serve_decider.py --device cuda --pid-file ledger/decider.pid --max-commit-gb 16
+```
+
+Measured on an NVIDIA GeForce RTX 5050 Laptop GPU (8 GB, driver 610.74), in one session against the
+CPU on the same workload (`bench/RESULTS.md`, "Server variants"): 0.44 s per routing read and 0.11 s
+per gate window warmed, against 11.01 s and 2.23 s on the CPU; a cold start of 12.0 s; 5.0 GB of card
+memory at peak. One answer at a floor moved from sure to unsure (bfloat16 on the card against float32
+on the CPU), and nothing the courier does changed. Without a CUDA device, `--device cuda` stops at once
+with a message; it never falls back to the CPU.
 
 ### Running without a gate (demo only)
 

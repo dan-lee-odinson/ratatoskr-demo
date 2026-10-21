@@ -60,3 +60,31 @@ def test_the_header_is_the_license_appendix_s_own_words():
     appendix = (REPO / "LICENSE").read_text(encoding="utf-8").split("END OF TERMS AND CONDITIONS")[1]
     for line in HEADER.splitlines()[2:]:
         assert line.removeprefix("#").strip() in appendix
+
+
+# --- the CUDA build's NVIDIA libraries in NOTICE (Dan's ruling 51) ---
+
+# Every NVIDIA library the CUDA 13.0 build of torch 2.14.1 carries in torch/lib, as the CUDA venv held them.
+NVIDIA_DLLS = {
+    "cublas64_13.dll", "cublasLt64_13.dll", "cudart64_13.dll", "cudnn64_9.dll", "cudnn_adv64_9.dll",
+    "cudnn_cnn64_9.dll", "cudnn_engines_precompiled64_9.dll", "cudnn_engines_runtime_compiled64_9.dll",
+    "cudnn_engines_tensor_ir64_9.dll", "cudnn_ext64_9.dll", "cudnn_graph64_9.dll", "cudnn_heuristic64_9.dll",
+    "cudnn_ops64_9.dll", "cufft64_12.dll", "cufftw64_12.dll", "cupti64_2025.3.0.dll", "curand64_10.dll",
+    "cusolver64_12.dll", "cusolverMg64_12.dll", "cusparse64_12.dll", "nvJitLink_130_0.dll", "nvToolsExt64_1.dll",
+    "nvperf_host.dll", "nvrtc-builtins64_130.dll", "nvrtc64_130_0.alt.dll", "nvrtc64_130_0.dll",
+}
+GPU_ROLE = "(GPU server, optional"
+
+
+def test_notice_names_the_cuda_builds_nvidia_libraries_in_its_own_format():
+    import re
+
+    lines = [line for line in (REPO / "NOTICE").read_text(encoding="utf-8").splitlines() if GPU_ROLE in line]
+    assert lines[0].startswith("torch 2.14.1+cu130 (GPU server, optional): ")
+    # "<name> <version> (<role>): <licence> [<source>]", as every other line of the file
+    assert all(re.match(r"^.+ \S+ \(GPU server, optional[^)]*\): .+ \[.+\]$", line) for line in lines)
+    named = set(re.findall(r"[\w.-]+\.dll", "\n".join(lines)))
+    assert NVIDIA_DLLS <= named
+    lib = REPO / ".venv-decider-cuda" / "Lib" / "site-packages" / "torch" / "lib"
+    if lib.is_dir():  # where the CUDA venv is installed, every NVIDIA library in it is named
+        assert {p.name for p in lib.glob("*.dll") if re.match(r"(cu|nv|cudnn)", p.name)} <= named

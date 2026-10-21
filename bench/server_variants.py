@@ -355,8 +355,10 @@ def changes(cpu: dict[str, Any], gpu: dict[str, Any]) -> list[dict[str, Any]]:
     return out
 
 
-def adoption(cpu: dict[str, Any], gpu: dict[str, Any]) -> list[tuple[str, bool, str]]:
-    """Ruling 48's adoption rule, line by line, against this session's CPU row."""
+def adoption(cpu: dict[str, Any], gpu: dict[str, Any],
+             labels: list[dict[str, Any]] | None = None) -> list[tuple[str, bool, str]]:
+    """Ruling 48's adoption rule, line by line, against this session's CPU row; line 3 as ruling 51 amended it: a
+    right-when-sure count may drop because an answer became unsure (coverage), never because one became wrong."""
     floor = cpu["gate_floor"]
     new_clear_windows = [f"{ga['recording']} window {i}" for ga, gb in zip(cpu["gate"], gpu["gate"])
                          for i, (wa, wb) in enumerate(zip(ga["windows"], gb["windows"]), start=1)
@@ -370,25 +372,71 @@ def adoption(cpu: dict[str, Any], gpu: dict[str, Any]) -> list[tuple[str, bool, 
         return not j.get("problem") and (j.get("value") is None or j.get("value") is True)
 
     new_clear_tasks = [f"{a['recording']} #{a['n']}" for a, b in zip(cpu["tasks"], gpu["tasks"]) if holds(a) and not holds(b)]
-    labels = {f"{t['recording']} #{t['n']}": t.get("expected_project") for t in cpu["tasks"]}
+    projects = {f"{t['recording']} #{t['n']}": t.get("expected_project") for t in cpu["tasks"]}
     new_wrong = []
     for a, b in zip(cpu["tasks"], gpu["tasks"]):
         key = f"{a['recording']} #{a['n']}"
         ja, jb = (a.get("judged") or {}).get("project") or {}, (b.get("judged") or {}).get("project") or {}
-        sure_wrong = lambda j: j.get("value") is not None and j.get("value") != labels.get(key)  # noqa: E731
+        sure_wrong = lambda j: j.get("value") is not None and j.get("value") != projects.get(key)  # noqa: E731
         if sure_wrong(jb) and not sure_wrong(ja):
             new_wrong.append(key)
-    drops = [q for q, s in cpu["scores"].items() if q != "gate" and gpu["scores"][q]["sure_agree"] < s["sure_agree"]]
+    became_wrong = [f"{w['where']} {w['question']}" for w in moves(cpu, gpu, labels)["wrong"]]
     return [
         ("no sensitive gate window or sensitive task newly cleared", not (new_clear_windows or new_clear_recordings
                                                                           or new_clear_tasks),
          ", ".join(new_clear_windows + new_clear_recordings + new_clear_tasks) or "none"),
         ("no confident project answer newly wrong", not new_wrong, ", ".join(new_wrong) or "none"),
-        ("no question's right-when-sure count drops", not drops, ", ".join(drops) or "none"),
+        ("no question's right-when-sure count drops because an answer became wrong", not became_wrong,
+         ", ".join(became_wrong) or "none"),
     ]
 
 
-def section(data: dict[str, Any]) -> list[str]:
+# The bench's own rules for a sure answer and for the label it is scored against (bench/run_bench.py: _sure,
+# _expected_answer, SET_BY_THE_NOULS), so the amended line 3 reads the rows as their counts were made.
+SET_BY_THE_NOULS = ("someone_waiting", "hard_deadline", "worth_researching_soon", "neither")
+
+
+def fixture_labels() -> list[dict[str, Any]]:
+    """Each canonical task's labels, in the export's task order, from the committed fixtures (as corrected)."""
+    from ratatoskr_demo.expected import canonical_tasks, load_expected
+
+    return [{"project": e.project, "priority": e.priority, "someone_waiting": e.someone_waiting,
+             "hard_deadline": e.hard_deadline, "worth_researching_soon": e.worth_researching_soon,
+             "real_commitment": e.real_commitment, "sensitive": e.sensitive}
+            for _, e, _ in canonical_tasks(load_expected())]
+
+
+def _sure(question: str, j: dict[str, Any]) -> bool:
+    if question == "priority":
+        return j.get("note") in SET_BY_THE_NOULS  # set by the questions, not by a default
+    return j.get("confidence") is not None and j["confidence"] >= j["floor"]
+
+
+def moves(cpu: dict[str, Any], gpu: dict[str, Any], labels: list[dict[str, Any]] | None = None) -> dict[str, list]:
+    """Ruling 51: per task and question, an answer sure and wrong on the GPU row that was not sure and wrong on the
+    CPU row (a wrong answer appearing: line 3 fails), and a sure, right answer on the CPU row that is unsure on the GPU
+    row (a coverage change: listed with both probabilities and the floor, not a failure)."""
+    labels = fixture_labels() if labels is None else labels
+    wrong, coverage = [], []
+    for a, b, label in zip(cpu["tasks"], gpu["tasks"], labels):
+        for q, want in label.items():
+            ja, jb = (a.get("judged") or {}).get(q), (b.get("judged") or {}).get(q)
+            if want is None or not ja or not jb or ja.get("problem") or jb.get("problem"):
+                continue  # not labelled, or not usable: not scored, as in the bench
+            where = f"{a['recording']} #{a['n']}"
+            sure_wrong_a = _sure(q, ja) and ja.get("answer") != want
+            if _sure(q, jb) and jb.get("answer") != want and not sure_wrong_a:
+                wrong.append({"where": where, "question": q, "cpu": ja.get("answer"), "cuda": jb.get("answer"),
+                              "label": want})
+            elif _sure(q, ja) and ja.get("answer") == want and not _sure(q, jb):
+                coverage.append({"where": where, "question": q, "cpu_p": _p_of(a, q), "cuda_p": _p_of(b, q),
+                                 "floor": ja.get("floor"), "cpu": ja.get("answer"), "cuda": jb.get("answer"),
+                                 "cpu_note": ja.get("note"), "cuda_note": jb.get("note"),
+                                 "same_label": ja.get("answer") == jb.get("answer")})
+    return {"wrong": wrong, "coverage": coverage}
+
+
+def section(data: dict[str, Any], labels: list[dict[str, Any]] | None = None) -> list[str]:
     rows = data["rows"]
     if not all(r in rows for r in ROWS):
         return []
@@ -457,10 +505,34 @@ def section(data: dict[str, Any]) -> list[str]:
     if deltas:
         lines += ["", f"Probability differences, CPU float32 against GPU bfloat16, over {len(deltas)} answers: median "
                       f"{statistics.median(deltas):.4f}, largest {max(deltas):.4f}."]
-    lines += ["", "The adoption rule (ruling 48), against this session's CPU row:", ""]
-    for name, ok, detail in adoption(cpu, gpu):
+    labels = fixture_labels() if labels is None else labels
+    lines += ["", "The adoption rule (ruling 48; line 3 as amended by ruling 51), against this session's CPU row:", ""]
+    for name, ok, detail in adoption(cpu, gpu, labels):
         lines.append(f"- {name}: {'yes' if ok else 'NO'} ({detail})")
     lines.append("- Dan has read the change list: " + (data.get("read_by_dan") or "not yet"))
+    # the questions first, then the priority they set; a yes/no answer as a word
+    coverage = sorted(moves(cpu, gpu, labels)["coverage"], key=lambda c: (c["where"], c["question"] == "priority"))
+    for c in coverage:
+        c.update({k: {True: "yes", False: "no"}.get(c[k], c[k]) for k in ("cpu", "cuda")})
+    if coverage:
+        lines += ["", "Coverage changes (a sure answer that became unsure, reported under the amended line 3, not a "
+                      "failure of it):", ""]
+        for c in coverage:
+            if c["cpu_p"] is not None and c["cuda_p"] is not None:
+                lines.append(f"- {c['where']} {c['question']}: {c['cpu_p']:.4f} on the CPU against {c['cuda_p']:.4f} on "
+                             f"the GPU at the {c['floor']:.2f} floor, sure to unsure, the answer {c['cpu']} on both "
+                             f"rows" if c["same_label"] else
+                             f"- {c['where']} {c['question']}: {c['cpu_p']:.4f} on the CPU against {c['cuda_p']:.4f} on "
+                             f"the GPU at the {c['floor']:.2f} floor, sure to unsure, the answer {c['cpu']} then "
+                             f"{c['cuda']}")
+            else:
+                lines.append(f"- {c['where']} {c['question']}: {c['cpu']} on both rows, set by {c['cpu_note']} on the "
+                             f"CPU and by {c['cuda_note']} on the GPU" if c["same_label"] else
+                             f"- {c['where']} {c['question']}: {c['cpu']} on the CPU, {c['cuda']} on the GPU, sure to "
+                             "unsure")
+    exception = data.get("exception")
+    if exception:
+        lines += ["", f"**The exception, recorded (ruling {exception['ruling']}).** {exception['text']}"]
     return lines
 
 

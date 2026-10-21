@@ -1,4 +1,9 @@
 {
+ "exception": {
+  "ruling": 51,
+  "text": "The rule as first written (line 3: no question's right-when-sure count drops) failed on rec_008 #2: someone_waiting, 0.7003 on the CPU against 0.6979 on the GPU at the 0.70 floor, sure yes to unsure, no answer wrong, priority high on both rows. Dan accepted the row on 22 October 2026 on the amended rule. The cause: bfloat16 weights on the card against float32 on the CPU; float32 does not fit in the card's 8 GB. rec_011 #1 stays listed in the change list as unsure on both rows."
+ },
+ "read_by_dan": "yes, on 22 October 2026 (ruling 51)",
  "rows": {
   "cpu": {
    "cold": {

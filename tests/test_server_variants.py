@@ -17,16 +17,22 @@ sys.modules["server_variants"] = variants
 spec.loader.exec_module(variants)
 
 
-def task(recording, n, *, project="work", confidence=0.9, sensitive=0.1, label="work", ms=1000.0):
+def task(recording, n, *, project="work", confidence=0.9, sensitive=0.1, label="work", ms=1000.0, waiting=0.9):
     def noul(p, floor=0.6):
         sure = max(p, 1 - p) >= floor
         return {"answer": p >= 0.5, "confidence": max(p, 1 - p), "floor": floor, "value": (p >= 0.5) if sure else None,
                 "problem": None, "note": None}
     return {"recording": recording, "n": n, "ms": ms, "expected_project": label,
-            "answers": {"project": {"choice": project, "confidence": confidence}, "sensitive": {"p": sensitive}},
+            "answers": {"project": {"choice": project, "confidence": confidence}, "sensitive": {"p": sensitive},
+                        "someone_waiting": {"p": waiting}},
             "judged": {"project": {"answer": project, "confidence": confidence, "floor": 0.7,
                                    "value": project if confidence >= 0.7 else None, "problem": None, "note": None},
-                       "sensitive": noul(sensitive)}}
+                       "sensitive": noul(sensitive), "someone_waiting": noul(waiting, floor=0.7)}}
+
+
+def labels(n, *, project="work", waiting=True):
+    """The fixtures' labels for n synthetic tasks: the project, not sensitive, someone waiting."""
+    return [{"project": project, "sensitive": False, "someone_waiting": waiting}] * n
 
 
 def row(name, tasks, gate):
@@ -61,8 +67,8 @@ def test_identical_rows_have_no_changes_and_pass_the_adoption_rule():
     cpu = row("cpu", [task("rec_001", 1), task("rec_001", 2)], GATE)
     gpu = copy.deepcopy(cpu) | {"row": "cuda"}
     assert variants.changes(cpu, gpu) == []
-    assert [ok for _, ok, _ in variants.adoption(cpu, gpu)] == [True, True, True]
-    text = "\n".join(variants.section({"rows": {"cpu": cpu, "cuda": gpu}}))
+    assert [ok for _, ok, _ in variants.adoption(cpu, gpu, labels(2))] == [True, True, True]
+    text = "\n".join(variants.section({"rows": {"cpu": cpu, "cuda": gpu}}, labels(2)))
     assert "## Server variants (ruling 48" in text and "None: every answer" in text
     assert "Dan has read the change list: not yet" in text and "| cuda | " in text
 
@@ -74,7 +80,7 @@ def test_a_floor_crossing_and_a_new_confident_misfiling_are_listed_and_fail_the_
     found = {(c["where"], c["question"]): c["why"] for c in variants.changes(cpu, gpu)}
     assert "crosses an edge" in found[("rec_001 #1", "sensitive")] and "sure / unsure" in found[("rec_001 #1", "sensitive")]
     assert "answer" in found[("rec_001 #2", "project")]
-    rule = {name: (ok, detail) for name, ok, detail in variants.adoption(cpu, gpu)}
+    rule = {name: (ok, detail) for name, ok, detail in variants.adoption(cpu, gpu, labels(2))}
     assert rule["no sensitive gate window or sensitive task newly cleared"][0] is True  # unsure still holds
     assert rule["no confident project answer newly wrong"] == (False, "rec_001 #2")
 
@@ -84,9 +90,34 @@ def test_a_gate_window_newly_cleared_fails_the_rule():
                                               "windows": [{"p": 0.45, "ms": 900.0}]}])
     gpu = row("cuda", [task("rec_001", 1)], [{"recording": "rec_003", "triage": "Process",
                                                "windows": [{"p": 0.35, "ms": 400.0}]}])
-    rule = {name: ok for name, ok, _ in variants.adoption(cpu, gpu)}
+    rule = {name: ok for name, ok, _ in variants.adoption(cpu, gpu, labels(1))}
     assert rule["no sensitive gate window or sensitive task newly cleared"] is False
     assert {c["question"] for c in variants.changes(cpu, gpu)} == {"gate window", "gate verdict"}
+
+
+# --- line 3 as ruling 51 amended it ---
+
+LINE_3 = "no question's right-when-sure count drops because an answer became wrong"
+
+
+def test_a_wrong_answer_appearing_fails_line_3():
+    cpu = row("cpu", [task("rec_001", 1, waiting=0.9)], GATE)  # sure yes, and someone is waiting: right
+    gpu = row("cuda", [task("rec_001", 1, waiting=0.1)], GATE)  # sure no: wrong
+    rule = {name: (ok, detail) for name, ok, detail in variants.adoption(cpu, gpu, labels(1))}
+    assert rule[LINE_3] == (False, "rec_001 #1 someone_waiting")
+    assert variants.moves(cpu, gpu, labels(1))["coverage"] == []
+
+
+def test_a_sure_to_unsure_move_at_the_floor_is_coverage_and_does_not_fail_line_3():
+    cpu = row("cpu", [task("rec_008", 2, waiting=0.7003)], GATE)  # sure yes at the 0.70 floor
+    gpu = row("cuda", [task("rec_008", 2, waiting=0.6979)], GATE)  # unsure, the same answer
+    rule = {name: (ok, detail) for name, ok, detail in variants.adoption(cpu, gpu, labels(1))}
+    assert rule[LINE_3] == (True, "none")
+    [moved] = variants.moves(cpu, gpu, labels(1))["coverage"]
+    assert (moved["where"], moved["question"], moved["same_label"]) == ("rec_008 #2", "someone_waiting", True)
+    text = "\n".join(variants.section({"rows": {"cpu": cpu, "cuda": gpu}}, labels(1)))
+    assert ("- rec_008 #2 someone_waiting: 0.7003 on the CPU against 0.6979 on the GPU at the 0.70 floor, sure to "
+            "unsure, the answer yes on both rows") in text
 
 
 @pytest.mark.skipif(not variants.EXPORT.exists(), reason="the matched pair has not been run yet")
@@ -94,3 +125,16 @@ def test_results_md_carries_the_section_drawn_from_the_committed_export():
     data = json.loads(variants.EXPORT.read_text(encoding="utf-8"))
     results = (REPO / "bench" / "RESULTS.md").read_text(encoding="utf-8")
     assert "\n".join(variants.section(data)) in results
+
+
+@pytest.mark.skipif(not variants.EXPORT.exists(), reason="the matched pair has not been run yet")
+def test_the_recorded_exception_matches_the_rows_and_the_amended_rule_passes():
+    data = json.loads(variants.EXPORT.read_text(encoding="utf-8"))
+    cpu, gpu = data["rows"]["cpu"], data["rows"]["cuda"]
+    assert all(ok for _, ok, _ in variants.adoption(cpu, gpu))
+    moved = {(c["where"], c["question"]): c for c in variants.moves(cpu, gpu)["coverage"]}
+    waiting = moved[("rec_008 #2", "someone_waiting")]
+    text = data["exception"]["text"]
+    assert f"{waiting['cpu_p']:.4f}" in text and f"{waiting['cuda_p']:.4f}" in text and "0.70 floor" in text
+    assert moved[("rec_008 #2", "priority")]["cpu"] == moved[("rec_008 #2", "priority")]["cuda"] == "high"
+    assert data["read_by_dan"].startswith("yes")
