@@ -32,6 +32,11 @@ exits the server (code 3, with a line saying why) once it passes the limit, so i
 fresh rather than left to hang: on 17 Oct 2026 0.1.0 hung three times well into long runs of
 reads, its commit growing far past its start-up size (BUILD_REPORT, "Decider hang (finding)").
 
+With --device cuda (optional, Dan's ruling 48), run from the CUDA venv (`.venv-decider-cuda`: the CUDA
+13.0 build of the same torch), it serves on an NVIDIA card with the weights in bfloat16, and /health
+also names the card and the memory in use. Where torch sees no CUDA device it exits at once (code 2)
+with a line saying so; it never falls back to the CPU. The CPU is the default.
+
 It binds to 127.0.0.1 only and has no authentication: only this machine talks to it.
 The first run downloads the base model (Qwen/Qwen3.5-2B-Base, about 4.5 GB) and the
 v21 adapter (about 92 MB) into the Hugging Face cache.
@@ -98,7 +103,44 @@ def watch_memory(limit_gb: float, every: float = 30.0) -> None:
     threading.Thread(target=run, name="memory-guard", daemon=True).start()
 
 
-def main() -> int:
+def gpu_facts(torch) -> dict:
+    """The card and the memory PyTorch holds on it, for /health under --device cuda (Dan's ruling 48)."""
+    gb = 1024 ** 3
+    return {"card": torch.cuda.get_device_name(0),
+            "card_memory_allocated_gb": round(torch.cuda.memory_allocated() / gb, 2),
+            "card_memory_reserved_gb": round(torch.cuda.memory_reserved() / gb, 2),
+            "card_memory_peak_reserved_gb": round(torch.cuda.max_memory_reserved() / gb, 2)}
+
+
+def serve_cuda(args: argparse.Namespace, torch) -> int:
+    """--device cuda: strands_decider.server.serve's own steps (create_app, one uvicorn worker), with /health also
+    naming the card and the memory in use. The weights stay bfloat16 on the card: Decider upcasts its torso to
+    float32 only when the device is the CPU."""
+    import json
+
+    import uvicorn
+    from strands_decider.server import create_app
+
+    app = create_app(args.checkpoint, device="cuda", use_prefix_cache=not args.no_prefix_cache, model_name=None)
+
+    @app.middleware("http")
+    async def health_names_the_card(request, call_next):
+        response = await call_next(request)
+        if request.url.path != "/health" or response.status_code != 200:
+            return response
+        from starlette.responses import JSONResponse
+
+        body = b"".join([chunk async for chunk in response.body_iterator])
+        return JSONResponse({**json.loads(body), **gpu_facts(torch)})
+
+    facts = gpu_facts(torch)
+    print(f"serve_decider: device cuda, {facts['card']}, {facts['card_memory_allocated_gb']} GB allocated after "
+          "the weights loaded (bfloat16)", flush=True)
+    uvicorn.run(app, host="127.0.0.1", port=args.port, workers=1)
+    return 0
+
+
+def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     parser.add_argument("--checkpoint", default=CHECKPOINT)
     parser.add_argument("--port", type=int, default=8000)
@@ -106,10 +148,18 @@ def main() -> int:
     parser.add_argument("--no-prefix-cache", action="store_true", help="serve without Decider's prefix cache")
     parser.add_argument("--max-commit-gb", type=float, default=None,
                         help="exit (code 3) once this process's committed memory passes this many GB")
-    args = parser.parse_args()
+    parser.add_argument("--device", choices=("cpu", "cuda"), default="cpu",
+                        help="cpu (the default and the published path, float32 weights) or cuda (optional: an "
+                             "NVIDIA card, from the CUDA venv; bfloat16 weights). No fallback between them.")
+    args = parser.parse_args(argv)
 
     import torch
 
+    if args.device == "cuda" and not torch.cuda.is_available():  # fail here, never fall back to the CPU
+        print(f"serve_decider: --device cuda, but this Python's torch ({torch.__version__}) sees no CUDA device. "
+              "Run it from the CUDA venv (README, \"Running on a GPU\"), or use --device cpu.", file=sys.stderr,
+              flush=True)
+        return 2
     torch.set_num_threads(THREADS)
     torch.set_num_interop_threads(1)
     lower_priority()
@@ -120,6 +170,8 @@ def main() -> int:
     print(f"serve_decider: pid {os.getpid()}, torch {torch.__version__}, intra-op threads "
           f"{torch.get_num_threads()}, inter-op threads {torch.get_num_interop_threads()}, "
           f"OMP_NUM_THREADS={os.environ['OMP_NUM_THREADS']}", flush=True)
+    if args.device == "cuda":
+        return serve_cuda(args, torch)
 
     from strands_decider.server import serve
 

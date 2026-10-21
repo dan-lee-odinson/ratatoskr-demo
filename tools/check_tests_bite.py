@@ -541,6 +541,28 @@ MUTATIONS = [
      '        if True:\n',
      ["tests/test_notices_and_short.py::test_every_hold_notice_carries_the_release_instruction_and_no_title"]),
 
+    # --- the server's --device flag and the server variants' rules (Dan's ruling 48, 21 Oct 2026) ---
+    ("Ruling 48: --device cuda without CUDA falls through instead of failing", 'tools/serve_decider.py',
+     '    if args.device == "cuda" and not torch.cuda.is_available():  # fail here, never fall back to the CPU\n',
+     '    if False:\n',
+     ['tests/test_serve_device.py::test_cuda_on_a_machine_without_it_fails_at_startup_and_never_falls_back']),
+    ("Ruling 48: --device cuda never reaches the model", 'tools/serve_decider.py',
+     '    app = create_app(args.checkpoint, device="cuda",',
+     '    app = create_app(args.checkpoint, device="cpu",',
+     ['tests/test_serve_device.py::test_the_cuda_flag_reaches_the_model_and_health_names_the_card']),
+    ("Ruling 48: the default device is the GPU", 'tools/serve_decider.py',
+     '    parser.add_argument("--device", choices=("cpu", "cuda"), default="cpu",',
+     '    parser.add_argument("--device", choices=("cpu", "cuda"), default="cuda",',
+     ['tests/test_serve_device.py::test_the_default_is_the_published_cpu_path_unchanged']),
+    ("Ruling 48: the variants' gate verdict ignores an unsure window", 'bench/server_variants.py',
+     '            status = "unsure"\n',
+     '            pass\n',
+     ['tests/test_server_variants.py::test_the_gate_verdict_is_the_gates_own_loop']),
+    ("Ruling 48: a new confident misfiling passes the adoption rule", 'bench/server_variants.py',
+     '        if sure_wrong(jb) and not sure_wrong(ja):\n',
+     '        if False:\n',
+     ['tests/test_server_variants.py::test_a_floor_crossing_and_a_new_confident_misfiling_are_listed_and_fail_the_rule']),
+
     # --- the fresh evaluation, replayable from its export (Dan's ruling 43, Part B) ---
     ("Ruling 43B: the replay asks git now instead of the run's record", "bench/replay_fresh.py",
      '        with _as_recorded(data["header"]):\n', "        if True:\n",

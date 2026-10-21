@@ -1,0 +1,6190 @@
+{
+ "rows": {
+  "cpu": {
+   "cold": {
+    "environment_s": 1.5396122999954969,
+    "first_read_s": 10.548973200027831,
+    "health_polls": 4,
+    "total_s": 20.56477920000907,
+    "weight_load_s": 8.476193699985743
+   },
+   "conditions": "the other long-running experiment on this laptop paused; non-essential processes closed by Dan; the Claude desktop app running this session open; the laptop otherwise idle",
+   "failures": [],
+   "first_read": {
+    "ms": 10489.708899985999,
+    "same_answers_as_warmed": true
+   },
+   "gate": [
+    {
+     "expected_sensitive": false,
+     "recording": "rec_001",
+     "triage": "Process",
+     "windows": [
+      {
+       "ms": 2908.953999984078,
+       "p": 0.1878
+      }
+     ]
+    },
+    {
+     "recording": "rec_002",
+     "triage": "Hold",
+     "windows": []
+    },
+    {
+     "recording": "rec_003",
+     "triage": "Skip",
+     "windows": []
+    },
+    {
+     "recording": "rec_004",
+     "triage": "NotReady",
+     "windows": []
+    },
+    {
+     "expected_sensitive": false,
+     "recording": "rec_005",
+     "triage": "Process",
+     "windows": [
+      {
+       "ms": 1561.5926999598742,
+       "p": 0.2704
+      }
+     ]
+    },
+    {
+     "expected_sensitive": false,
+     "recording": "rec_006",
+     "triage": "Process",
+     "windows": [
+      {
+       "ms": 2667.9509999230504,
+       "p": 0.2168
+      }
+     ]
+    },
+    {
+     "expected_sensitive": false,
+     "recording": "rec_007",
+     "triage": "Process",
+     "windows": [
+      {
+       "ms": 2349.0567000117153,
+       "p": 0.2693
+      }
+     ]
+    },
+    {
+     "expected_sensitive": false,
+     "recording": "rec_008",
+     "triage": "Process",
+     "windows": [
+      {
+       "ms": 2289.221699931659,
+       "p": 0.2345
+      }
+     ]
+    },
+    {
+     "expected_sensitive": false,
+     "recording": "rec_009",
+     "triage": "Process",
+     "windows": [
+      {
+       "ms": 2258.6074999999255,
+       "p": 0.1798
+      }
+     ]
+    },
+    {
+     "expected_sensitive": false,
+     "recording": "rec_010",
+     "triage": "Process",
+     "windows": [
+      {
+       "ms": 2213.5324999690056,
+       "p": 0.1813
+      }
+     ]
+    },
+    {
+     "expected_sensitive": false,
+     "recording": "rec_011",
+     "triage": "Process",
+     "windows": [
+      {
+       "ms": 2069.324200041592,
+       "p": 0.1617
+      }
+     ]
+    },
+    {
+     "expected_sensitive": false,
+     "recording": "rec_012",
+     "triage": "Process",
+     "windows": [
+      {
+       "ms": 1929.65190007817,
+       "p": 0.3877
+      }
+     ]
+    },
+    {
+     "expected_sensitive": false,
+     "recording": "rec_013",
+     "triage": "Process",
+     "windows": [
+      {
+       "ms": 1909.6201000502333,
+       "p": 0.2127
+      }
+     ]
+    },
+    {
+     "expected_sensitive": true,
+     "recording": "rec_014",
+     "triage": "Process",
+     "windows": [
+      {
+       "ms": 2239.4932999741286,
+       "p": 0.848
+      }
+     ]
+    },
+    {
+     "expected_sensitive": true,
+     "recording": "rec_015",
+     "triage": "Process",
+     "windows": [
+      {
+       "ms": 2211.3231000257656,
+       "p": 0.7615
+      }
+     ]
+    }
+   ],
+   "gate_floor": 0.6,
+   "health_at_end": {
+    "base_model": "Qwen/Qwen3.5-2B-Base",
+    "checkpoint": "StrandsAgents/strands-decider-2B-hobson-v21",
+    "device": "cpu",
+    "max_length": 4096,
+    "model": "strands-decider-2B-hobson-v21",
+    "num_slots": 24,
+    "prefix_cache": true,
+    "status": "ok",
+    "temperature": 0.935220152138837
+   },
+   "health_at_load": {
+    "base_model": "Qwen/Qwen3.5-2B-Base",
+    "checkpoint": "StrandsAgents/strands-decider-2B-hobson-v21",
+    "device": "cpu",
+    "max_length": 4096,
+    "model": "strands-decider-2B-hobson-v21",
+    "num_slots": 24,
+    "prefix_cache": true,
+    "status": "ok",
+    "temperature": 0.935220152138837
+   },
+   "memory": {
+    "card_mib_at_load": 927,
+    "card_mib_peak": 927,
+    "host_at_load": {
+     "private": 10675494912,
+     "rss": 8145555456
+    },
+    "host_peak": {
+     "private": 11342471168,
+     "rss": 8684425216
+    }
+   },
+   "python": ".venv-decider/Scripts/python.exe",
+   "row": "cpu",
+   "scores": {
+    "gate": {
+     "agree": 30,
+     "matched": 30
+    },
+    "hard_deadline": {
+     "agree": 22,
+     "matched": 30,
+     "sure": 19,
+     "sure_agree": 14,
+     "usable": 30
+    },
+    "priority": {
+     "agree": 15,
+     "matched": 30,
+     "sure": 14,
+     "sure_agree": 11,
+     "usable": 30
+    },
+    "project": {
+     "agree": 24,
+     "matched": 30,
+     "sure": 18,
+     "sure_agree": 18,
+     "usable": 30
+    },
+    "real_commitment": {
+     "agree": 29,
+     "matched": 30,
+     "sure": 25,
+     "sure_agree": 25,
+     "usable": 30
+    },
+    "sensitive": {
+     "agree": 30,
+     "matched": 30,
+     "sure": 30,
+     "sure_agree": 30,
+     "usable": 30
+    },
+    "someone_waiting": {
+     "agree": 21,
+     "matched": 30,
+     "sure": 14,
+     "sure_agree": 11,
+     "usable": 30
+    },
+    "worth_researching_soon": {
+     "agree": 4,
+     "matched": 11,
+     "sure": 3,
+     "sure_agree": 1,
+     "usable": 11
+    }
+   },
+   "started": "2026-10-21 21:06 UTC",
+   "tasks": [
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.3777
+      },
+      "project": {
+       "choice": "research",
+       "confidence": 0.7471,
+       "probabilities": {
+        "community": 0.0097,
+        "other": 0.0616,
+        "personal": 0.0035,
+        "research": 0.7832,
+        "school": 0.0082,
+        "work": 0.0999,
+        "writing": 0.0337
+       }
+      },
+      "real_commitment": {
+       "p": 0.9182
+      },
+      "sensitive": {
+       "p": 0.1569
+      },
+      "someone_waiting": {
+       "p": 0.694
+      },
+      "worth_researching_soon": {
+       "p": 0.4287
+      }
+     },
+     "expected_project": "research",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.6223000000000001,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "priority": {
+       "answer": "medium",
+       "confidence": null,
+       "floor": 0.0,
+       "note": "default:waiting",
+       "problem": null,
+       "value": 3
+      },
+      "project": {
+       "answer": "research",
+       "confidence": 0.7471,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": "research"
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.9182,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.8431,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": true,
+       "confidence": 0.694,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.5712999999999999,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      }
+     },
+     "ms": 10437.009899993427,
+     "n": 1,
+     "recording": "rec_001"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.2993
+      },
+      "project": {
+       "choice": "work",
+       "confidence": 0.934,
+       "probabilities": {
+        "community": 0.01,
+        "other": 0.028,
+        "personal": 0.0021,
+        "research": 0.0069,
+        "school": 0.0025,
+        "work": 0.9435,
+        "writing": 0.007
+       }
+      },
+      "real_commitment": {
+       "p": 0.8121
+      },
+      "sensitive": {
+       "p": 0.1339
+      },
+      "someone_waiting": {
+       "p": 0.4511
+      },
+      "worth_researching_soon": {
+       "p": 0.5023
+      }
+     },
+     "expected_project": "work",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.7007,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "priority": {
+       "answer": "high",
+       "confidence": null,
+       "floor": 0.0,
+       "note": "default:waiting",
+       "problem": null,
+       "value": 4
+      },
+      "project": {
+       "answer": "work",
+       "confidence": 0.934,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": "work"
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.8121,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.8661,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": false,
+       "confidence": 0.5488999999999999,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "worth_researching_soon": {
+       "answer": true,
+       "confidence": 0.5023,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      }
+     },
+     "ms": 10396.60819992423,
+     "n": 2,
+     "recording": "rec_001"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.1537
+      },
+      "project": {
+       "choice": "work",
+       "confidence": 0.5812,
+       "probabilities": {
+        "community": 0.0438,
+        "other": 0.1978,
+        "personal": 0.0109,
+        "research": 0.0692,
+        "school": 0.012,
+        "work": 0.641,
+        "writing": 0.0251
+       }
+      },
+      "real_commitment": {
+       "p": 0.6872
+      },
+      "sensitive": {
+       "p": 0.2793
+      },
+      "someone_waiting": {
+       "p": 0.6871
+      },
+      "worth_researching_soon": {
+       "p": 0.6257
+      }
+     },
+     "expected_project": "research",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.8463,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "priority": {
+       "answer": null,
+       "confidence": null,
+       "floor": 0.0,
+       "note": "default:waiting",
+       "problem": null,
+       "value": null
+      },
+      "project": {
+       "answer": "work",
+       "confidence": 0.5812,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.6872,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.7207,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": true,
+       "confidence": 0.6871,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "worth_researching_soon": {
+       "answer": true,
+       "confidence": 0.6257,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      }
+     },
+     "ms": 10835.151599952951,
+     "n": 3,
+     "recording": "rec_001"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.1916
+      },
+      "project": {
+       "choice": "work",
+       "confidence": 0.3676,
+       "probabilities": {
+        "community": 0.0541,
+        "other": 0.3255,
+        "personal": 0.035,
+        "research": 0.0257,
+        "school": 0.0104,
+        "work": 0.458,
+        "writing": 0.0913
+       }
+      },
+      "real_commitment": {
+       "p": 0.8703
+      },
+      "sensitive": {
+       "p": 0.134
+      },
+      "someone_waiting": {
+       "p": 0.6357
+      },
+      "worth_researching_soon": {
+       "p": 0.3524
+      }
+     },
+     "expected_project": "research",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.8084,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "priority": {
+       "answer": null,
+       "confidence": null,
+       "floor": 0.0,
+       "note": "default:waiting",
+       "problem": null,
+       "value": null
+      },
+      "project": {
+       "answer": "work",
+       "confidence": 0.3676,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.8703,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.866,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": true,
+       "confidence": 0.6357,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.6476,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      }
+     },
+     "ms": 11140.014700009488,
+     "n": 4,
+     "recording": "rec_001"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.2442
+      },
+      "project": {
+       "choice": "research",
+       "confidence": 0.793,
+       "probabilities": {
+        "community": 0.015,
+        "other": 0.0476,
+        "personal": 0.0028,
+        "research": 0.8225,
+        "school": 0.0086,
+        "work": 0.0227,
+        "writing": 0.0807
+       }
+      },
+      "real_commitment": {
+       "p": 0.939
+      },
+      "sensitive": {
+       "p": 0.1701
+      },
+      "someone_waiting": {
+       "p": 0.8457
+      },
+      "worth_researching_soon": {
+       "p": 0.346
+      }
+     },
+     "expected_project": "research",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.7558,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "priority": {
+       "answer": "high",
+       "confidence": null,
+       "floor": 0.0,
+       "note": "someone_waiting",
+       "problem": null,
+       "value": 4
+      },
+      "project": {
+       "answer": "research",
+       "confidence": 0.793,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": "research"
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.939,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.8299,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": true,
+       "confidence": 0.8457,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.654,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      }
+     },
+     "ms": 11005.944999982603,
+     "n": 1,
+     "recording": "rec_006"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.3879
+      },
+      "project": {
+       "choice": "research",
+       "confidence": 0.8176,
+       "probabilities": {
+        "community": 0.0258,
+        "other": 0.059,
+        "personal": 0.0034,
+        "research": 0.8437,
+        "school": 0.0089,
+        "work": 0.0204,
+        "writing": 0.0387
+       }
+      },
+      "real_commitment": {
+       "p": 0.8407
+      },
+      "sensitive": {
+       "p": 0.183
+      },
+      "someone_waiting": {
+       "p": 0.8404
+      },
+      "worth_researching_soon": {
+       "p": 0.464
+      }
+     },
+     "expected_project": "research",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.6121,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "priority": {
+       "answer": "high",
+       "confidence": null,
+       "floor": 0.0,
+       "note": "someone_waiting",
+       "problem": null,
+       "value": 4
+      },
+      "project": {
+       "answer": "research",
+       "confidence": 0.8176,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": "research"
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.8407,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.817,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": true,
+       "confidence": 0.8404,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.536,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      }
+     },
+     "ms": 11081.926400074735,
+     "n": 2,
+     "recording": "rec_006"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.2661
+      },
+      "project": {
+       "choice": "research",
+       "confidence": 0.8531,
+       "probabilities": {
+        "community": 0.0119,
+        "other": 0.0398,
+        "personal": 0.0023,
+        "research": 0.8741,
+        "school": 0.0085,
+        "work": 0.0107,
+        "writing": 0.0527
+       }
+      },
+      "real_commitment": {
+       "p": 0.7138
+      },
+      "sensitive": {
+       "p": 0.2036
+      },
+      "someone_waiting": {
+       "p": 0.6767
+      },
+      "worth_researching_soon": {
+       "p": 0.4365
+      }
+     },
+     "expected_project": "research",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.7339,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "priority": {
+       "answer": "medium",
+       "confidence": null,
+       "floor": 0.0,
+       "note": "default:waiting",
+       "problem": null,
+       "value": 3
+      },
+      "project": {
+       "answer": "research",
+       "confidence": 0.8531,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": "research"
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.7138,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.7964,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": true,
+       "confidence": 0.6767,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.5635,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      }
+     },
+     "ms": 11116.977000026964,
+     "n": 3,
+     "recording": "rec_006"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.5884
+      },
+      "project": {
+       "choice": "school",
+       "confidence": 0.9126,
+       "probabilities": {
+        "community": 0.0042,
+        "other": 0.0444,
+        "personal": 0.0041,
+        "research": 0.011,
+        "school": 0.9251,
+        "work": 0.007,
+        "writing": 0.0042
+       }
+      },
+      "real_commitment": {
+       "p": 0.7933
+      },
+      "sensitive": {
+       "p": 0.2439
+      },
+      "someone_waiting": {
+       "p": 0.5197
+      },
+      "worth_researching_soon": {
+       "p": 0.3038
+      }
+     },
+     "expected_project": "school",
+     "judged": {
+      "hard_deadline": {
+       "answer": true,
+       "confidence": 0.5884,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "priority": {
+       "answer": "high",
+       "confidence": null,
+       "floor": 0.0,
+       "note": "default:waiting",
+       "problem": null,
+       "value": 4
+      },
+      "project": {
+       "answer": "school",
+       "confidence": 0.9126,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": "school"
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.7933,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.7561,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": true,
+       "confidence": 0.5197,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.6961999999999999,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      }
+     },
+     "ms": 10996.70130002778,
+     "n": 1,
+     "recording": "rec_007"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.3501
+      },
+      "project": {
+       "choice": "school",
+       "confidence": 0.9061,
+       "probabilities": {
+        "community": 0.0038,
+        "other": 0.0476,
+        "personal": 0.0045,
+        "research": 0.0113,
+        "school": 0.9195,
+        "work": 0.0059,
+        "writing": 0.0073
+       }
+      },
+      "real_commitment": {
+       "p": 0.9066
+      },
+      "sensitive": {
+       "p": 0.2577
+      },
+      "someone_waiting": {
+       "p": 0.5959
+      },
+      "worth_researching_soon": {
+       "p": 0.3057
+      }
+     },
+     "expected_project": "school",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.6498999999999999,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "priority": {
+       "answer": "high",
+       "confidence": null,
+       "floor": 0.0,
+       "note": "default:waiting",
+       "problem": null,
+       "value": 4
+      },
+      "project": {
+       "answer": "school",
+       "confidence": 0.9061,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": "school"
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.9066,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.7423,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": true,
+       "confidence": 0.5959,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.6942999999999999,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      }
+     },
+     "ms": 10879.96320007369,
+     "n": 2,
+     "recording": "rec_007"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.6025
+      },
+      "project": {
+       "choice": "school",
+       "confidence": 0.907,
+       "probabilities": {
+        "community": 0.0046,
+        "other": 0.0462,
+        "personal": 0.0039,
+        "research": 0.0129,
+        "school": 0.9203,
+        "work": 0.0069,
+        "writing": 0.0053
+       }
+      },
+      "real_commitment": {
+       "p": 0.8776
+      },
+      "sensitive": {
+       "p": 0.272
+      },
+      "someone_waiting": {
+       "p": 0.4606
+      },
+      "worth_researching_soon": {
+       "p": 0.3084
+      }
+     },
+     "expected_project": "school",
+     "judged": {
+      "hard_deadline": {
+       "answer": true,
+       "confidence": 0.6025,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "priority": {
+       "answer": "high",
+       "confidence": null,
+       "floor": 0.0,
+       "note": "default:waiting",
+       "problem": null,
+       "value": 4
+      },
+      "project": {
+       "answer": "school",
+       "confidence": 0.907,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": "school"
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.8776,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.728,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": false,
+       "confidence": 0.5394,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.6916,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      }
+     },
+     "ms": 10957.872499944642,
+     "n": 3,
+     "recording": "rec_007"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.308
+      },
+      "project": {
+       "choice": "work",
+       "confidence": 0.8411,
+       "probabilities": {
+        "community": 0.0086,
+        "other": 0.0888,
+        "personal": 0.0071,
+        "research": 0.0129,
+        "school": 0.0059,
+        "work": 0.8638,
+        "writing": 0.0129
+       }
+      },
+      "real_commitment": {
+       "p": 0.9155
+      },
+      "sensitive": {
+       "p": 0.2324
+      },
+      "someone_waiting": {
+       "p": 0.8556
+      },
+      "worth_researching_soon": {
+       "p": 0.3117
+      }
+     },
+     "expected_project": "work",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.692,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "priority": {
+       "answer": "high",
+       "confidence": null,
+       "floor": 0.0,
+       "note": "someone_waiting",
+       "problem": null,
+       "value": 4
+      },
+      "project": {
+       "answer": "work",
+       "confidence": 0.8411,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": "work"
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.9155,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.7676000000000001,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": true,
+       "confidence": 0.8556,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.6883,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      }
+     },
+     "ms": 11072.748200036585,
+     "n": 1,
+     "recording": "rec_008"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.1574
+      },
+      "project": {
+       "choice": "work",
+       "confidence": 0.744,
+       "probabilities": {
+        "community": 0.008,
+        "other": 0.1333,
+        "personal": 0.006,
+        "research": 0.0538,
+        "school": 0.0057,
+        "work": 0.7805,
+        "writing": 0.0127
+       }
+      },
+      "real_commitment": {
+       "p": 0.8623
+      },
+      "sensitive": {
+       "p": 0.299
+      },
+      "someone_waiting": {
+       "p": 0.7003
+      },
+      "worth_researching_soon": {
+       "p": 0.3884
+      }
+     },
+     "expected_project": "work",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.8426,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "priority": {
+       "answer": "high",
+       "confidence": null,
+       "floor": 0.0,
+       "note": "someone_waiting",
+       "problem": null,
+       "value": 4
+      },
+      "project": {
+       "answer": "work",
+       "confidence": 0.744,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": "work"
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.8623,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.7010000000000001,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": true,
+       "confidence": 0.7003,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.6115999999999999,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      }
+     },
+     "ms": 11022.466800059192,
+     "n": 2,
+     "recording": "rec_008"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.2768
+      },
+      "project": {
+       "choice": "work",
+       "confidence": 0.7776,
+       "probabilities": {
+        "community": 0.0123,
+        "other": 0.1355,
+        "personal": 0.01,
+        "research": 0.013,
+        "school": 0.0091,
+        "work": 0.8094,
+        "writing": 0.0107
+       }
+      },
+      "real_commitment": {
+       "p": 0.9056
+      },
+      "sensitive": {
+       "p": 0.2032
+      },
+      "someone_waiting": {
+       "p": 0.7481
+      },
+      "worth_researching_soon": {
+       "p": 0.2622
+      }
+     },
+     "expected_project": "work",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.7232000000000001,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "priority": {
+       "answer": "high",
+       "confidence": null,
+       "floor": 0.0,
+       "note": "someone_waiting",
+       "problem": null,
+       "value": 4
+      },
+      "project": {
+       "answer": "work",
+       "confidence": 0.7776,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": "work"
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.9056,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.7968,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": true,
+       "confidence": 0.7481,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.7378,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      }
+     },
+     "ms": 11179.01590000838,
+     "n": 3,
+     "recording": "rec_008"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.2173
+      },
+      "project": {
+       "choice": "work",
+       "confidence": 0.9207,
+       "probabilities": {
+        "community": 0.0051,
+        "other": 0.0447,
+        "personal": 0.0034,
+        "research": 0.0051,
+        "school": 0.0029,
+        "work": 0.932,
+        "writing": 0.0069
+       }
+      },
+      "real_commitment": {
+       "p": 0.9104
+      },
+      "sensitive": {
+       "p": 0.1524
+      },
+      "someone_waiting": {
+       "p": 0.8431
+      },
+      "worth_researching_soon": {
+       "p": 0.3568
+      }
+     },
+     "expected_project": "work",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.7827,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "priority": {
+       "answer": "high",
+       "confidence": null,
+       "floor": 0.0,
+       "note": "someone_waiting",
+       "problem": null,
+       "value": 4
+      },
+      "project": {
+       "answer": "work",
+       "confidence": 0.9207,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": "work"
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.9104,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.8476,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": true,
+       "confidence": 0.8431,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.6432,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      }
+     },
+     "ms": 11091.778800007887,
+     "n": 1,
+     "recording": "rec_009"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.2773
+      },
+      "project": {
+       "choice": "work",
+       "confidence": 0.887,
+       "probabilities": {
+        "community": 0.0084,
+        "other": 0.0654,
+        "personal": 0.0052,
+        "research": 0.0072,
+        "school": 0.0038,
+        "work": 0.9032,
+        "writing": 0.0069
+       }
+      },
+      "real_commitment": {
+       "p": 0.8871
+      },
+      "sensitive": {
+       "p": 0.1177
+      },
+      "someone_waiting": {
+       "p": 0.6396
+      },
+      "worth_researching_soon": {
+       "p": 0.4033
+      }
+     },
+     "expected_project": "work",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.7227,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "priority": {
+       "answer": "high",
+       "confidence": null,
+       "floor": 0.0,
+       "note": "default:waiting",
+       "problem": null,
+       "value": 4
+      },
+      "project": {
+       "answer": "work",
+       "confidence": 0.887,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": "work"
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.8871,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.8823,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": true,
+       "confidence": 0.6396,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.5967,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      }
+     },
+     "ms": 11138.251000083983,
+     "n": 2,
+     "recording": "rec_009"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.1305
+      },
+      "project": {
+       "choice": "work",
+       "confidence": 0.6315,
+       "probabilities": {
+        "community": 0.0078,
+        "other": 0.0489,
+        "personal": 0.0029,
+        "research": 0.0216,
+        "school": 0.0043,
+        "work": 0.6841,
+        "writing": 0.2305
+       }
+      },
+      "real_commitment": {
+       "p": 0.5809
+      },
+      "sensitive": {
+       "p": 0.2713
+      },
+      "someone_waiting": {
+       "p": 0.578
+      },
+      "worth_researching_soon": {
+       "p": 0.5336
+      }
+     },
+     "expected_project": "work",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.8694999999999999,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "priority": {
+       "answer": null,
+       "confidence": null,
+       "floor": 0.0,
+       "note": "default:waiting",
+       "problem": null,
+       "value": null
+      },
+      "project": {
+       "answer": "work",
+       "confidence": 0.6315,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.5809,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.7287,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": true,
+       "confidence": 0.578,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "worth_researching_soon": {
+       "answer": true,
+       "confidence": 0.5336,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      }
+     },
+     "ms": 11088.065900024958,
+     "n": 3,
+     "recording": "rec_009"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.2591
+      },
+      "project": {
+       "choice": "writing",
+       "confidence": 0.8748,
+       "probabilities": {
+        "community": 0.0089,
+        "other": 0.0281,
+        "personal": 0.0028,
+        "research": 0.0405,
+        "school": 0.0039,
+        "work": 0.0231,
+        "writing": 0.8926
+       }
+      },
+      "real_commitment": {
+       "p": 0.9139
+      },
+      "sensitive": {
+       "p": 0.1742
+      },
+      "someone_waiting": {
+       "p": 0.892
+      },
+      "worth_researching_soon": {
+       "p": 0.3851
+      }
+     },
+     "expected_project": "writing",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.7409,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "priority": {
+       "answer": "high",
+       "confidence": null,
+       "floor": 0.0,
+       "note": "someone_waiting",
+       "problem": null,
+       "value": 4
+      },
+      "project": {
+       "answer": "writing",
+       "confidence": 0.8748,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": "writing"
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.9139,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.8258,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": true,
+       "confidence": 0.892,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.6149,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      }
+     },
+     "ms": 11247.44990002364,
+     "n": 1,
+     "recording": "rec_010"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.1973
+      },
+      "project": {
+       "choice": "writing",
+       "confidence": 0.8308,
+       "probabilities": {
+        "community": 0.0078,
+        "other": 0.0419,
+        "personal": 0.003,
+        "research": 0.0279,
+        "school": 0.0031,
+        "work": 0.0614,
+        "writing": 0.855
+       }
+      },
+      "real_commitment": {
+       "p": 0.7865
+      },
+      "sensitive": {
+       "p": 0.1539
+      },
+      "someone_waiting": {
+       "p": 0.8466
+      },
+      "worth_researching_soon": {
+       "p": 0.4434
+      }
+     },
+     "expected_project": "writing",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.8027,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "priority": {
+       "answer": "high",
+       "confidence": null,
+       "floor": 0.0,
+       "note": "someone_waiting",
+       "problem": null,
+       "value": 4
+      },
+      "project": {
+       "answer": "writing",
+       "confidence": 0.8308,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": "writing"
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.7865,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.8461,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": true,
+       "confidence": 0.8466,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.5566,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      }
+     },
+     "ms": 10991.262500057928,
+     "n": 2,
+     "recording": "rec_010"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.4994
+      },
+      "project": {
+       "choice": "community",
+       "confidence": 0.8655,
+       "probabilities": {
+        "community": 0.8847,
+        "other": 0.0734,
+        "personal": 0.008,
+        "research": 0.0121,
+        "school": 0.0052,
+        "work": 0.0112,
+        "writing": 0.0054
+       }
+      },
+      "real_commitment": {
+       "p": 0.8838
+      },
+      "sensitive": {
+       "p": 0.1967
+      },
+      "someone_waiting": {
+       "p": 0.6288
+      },
+      "worth_researching_soon": {
+       "p": 0.3776
+      }
+     },
+     "expected_project": "community",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.5005999999999999,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "priority": {
+       "answer": "medium",
+       "confidence": null,
+       "floor": 0.0,
+       "note": "default:waiting",
+       "problem": null,
+       "value": 3
+      },
+      "project": {
+       "answer": "community",
+       "confidence": 0.8655,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": "community"
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.8838,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.8033,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": true,
+       "confidence": 0.6288,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.6224000000000001,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      }
+     },
+     "ms": 11139.700900064781,
+     "n": 1,
+     "recording": "rec_011"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.3429
+      },
+      "project": {
+       "choice": "community",
+       "confidence": 0.8867,
+       "probabilities": {
+        "community": 0.9029,
+        "other": 0.0564,
+        "personal": 0.0085,
+        "research": 0.0084,
+        "school": 0.01,
+        "work": 0.0091,
+        "writing": 0.0047
+       }
+      },
+      "real_commitment": {
+       "p": 0.8635
+      },
+      "sensitive": {
+       "p": 0.2083
+      },
+      "someone_waiting": {
+       "p": 0.6055
+      },
+      "worth_researching_soon": {
+       "p": 0.3599
+      }
+     },
+     "expected_project": "community",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.6571,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "priority": {
+       "answer": "medium",
+       "confidence": null,
+       "floor": 0.0,
+       "note": "default:waiting",
+       "problem": null,
+       "value": 3
+      },
+      "project": {
+       "answer": "community",
+       "confidence": 0.8867,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": "community"
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.8635,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.7917,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": true,
+       "confidence": 0.6055,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.6401,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      }
+     },
+     "ms": 10956.070900079794,
+     "n": 2,
+     "recording": "rec_011"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.2099
+      },
+      "project": {
+       "choice": "personal",
+       "confidence": 0.771,
+       "probabilities": {
+        "community": 0.006,
+        "other": 0.1553,
+        "personal": 0.8037,
+        "research": 0.0071,
+        "school": 0.005,
+        "work": 0.0174,
+        "writing": 0.0055
+       }
+      },
+      "real_commitment": {
+       "p": 0.8121
+      },
+      "sensitive": {
+       "p": 0.2564
+      },
+      "someone_waiting": {
+       "p": 0.3431
+      },
+      "worth_researching_soon": {
+       "p": 0.1668
+      }
+     },
+     "expected_project": "personal",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.7901,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "priority": {
+       "answer": "medium",
+       "confidence": null,
+       "floor": 0.0,
+       "note": "default:waiting",
+       "problem": null,
+       "value": 3
+      },
+      "project": {
+       "answer": "personal",
+       "confidence": 0.771,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": "personal"
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.8121,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.7436,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": false,
+       "confidence": 0.6569,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.8331999999999999,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      }
+     },
+     "ms": 10991.587199969217,
+     "n": 1,
+     "recording": "rec_012"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.211
+      },
+      "project": {
+       "choice": "personal",
+       "confidence": 0.65,
+       "probabilities": {
+        "community": 0.0068,
+        "other": 0.2338,
+        "personal": 0.7,
+        "research": 0.0079,
+        "school": 0.0061,
+        "work": 0.0385,
+        "writing": 0.0068
+       }
+      },
+      "real_commitment": {
+       "p": 0.8584
+      },
+      "sensitive": {
+       "p": 0.2844
+      },
+      "someone_waiting": {
+       "p": 0.2918
+      },
+      "worth_researching_soon": {
+       "p": 0.1669
+      }
+     },
+     "expected_project": "personal",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.789,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "priority": {
+       "answer": "low",
+       "confidence": null,
+       "floor": 0.0,
+       "note": "neither",
+       "problem": null,
+       "value": 2
+      },
+      "project": {
+       "answer": "personal",
+       "confidence": 0.65,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.8584,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.7156,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": false,
+       "confidence": 0.7081999999999999,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.8331,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      }
+     },
+     "ms": 10923.955600010231,
+     "n": 2,
+     "recording": "rec_012"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.4866
+      },
+      "project": {
+       "choice": "personal",
+       "confidence": 0.4962,
+       "probabilities": {
+        "community": 0.0148,
+        "other": 0.3106,
+        "personal": 0.5682,
+        "research": 0.0181,
+        "school": 0.0289,
+        "work": 0.0455,
+        "writing": 0.0139
+       }
+      },
+      "real_commitment": {
+       "p": 0.6829
+      },
+      "sensitive": {
+       "p": 0.388
+      },
+      "someone_waiting": {
+       "p": 0.3466
+      },
+      "worth_researching_soon": {
+       "p": 0.1975
+      }
+     },
+     "expected_project": "personal",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.5134000000000001,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "priority": {
+       "answer": null,
+       "confidence": null,
+       "floor": 0.0,
+       "note": "default:waiting",
+       "problem": null,
+       "value": null
+      },
+      "project": {
+       "answer": "personal",
+       "confidence": 0.4962,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.6829,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.612,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": false,
+       "confidence": 0.6534,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.8025,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      }
+     },
+     "ms": 10790.533000021242,
+     "n": 3,
+     "recording": "rec_012"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.0938
+      },
+      "project": {
+       "choice": "other",
+       "confidence": 0.5419,
+       "probabilities": {
+        "community": 0.0721,
+        "other": 0.6074,
+        "personal": 0.2664,
+        "research": 0.0111,
+        "school": 0.0072,
+        "work": 0.0263,
+        "writing": 0.0094
+       }
+      },
+      "real_commitment": {
+       "p": 0.0778
+      },
+      "sensitive": {
+       "p": 0.2096
+      },
+      "someone_waiting": {
+       "p": 0.4568
+      },
+      "worth_researching_soon": {
+       "p": 0.2914
+      }
+     },
+     "expected_project": "other",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.9062,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "priority": {
+       "answer": null,
+       "confidence": null,
+       "floor": 0.0,
+       "note": "default:waiting",
+       "problem": null,
+       "value": null
+      },
+      "project": {
+       "answer": "other",
+       "confidence": 0.5419,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "real_commitment": {
+       "answer": false,
+       "confidence": 0.9222,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.7904,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": false,
+       "confidence": 0.5432,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.7086,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      }
+     },
+     "ms": 10939.177599968389,
+     "n": 1,
+     "recording": "rec_013"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.1886
+      },
+      "project": {
+       "choice": "other",
+       "confidence": 0.4991,
+       "probabilities": {
+        "community": 0.2138,
+        "other": 0.5706,
+        "personal": 0.0444,
+        "research": 0.045,
+        "school": 0.0145,
+        "work": 0.0798,
+        "writing": 0.0319
+       }
+      },
+      "real_commitment": {
+       "p": 0.3377
+      },
+      "sensitive": {
+       "p": 0.2701
+      },
+      "someone_waiting": {
+       "p": 0.491
+      },
+      "worth_researching_soon": {
+       "p": 0.3817
+      }
+     },
+     "expected_project": "other",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.8114,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "priority": {
+       "answer": null,
+       "confidence": null,
+       "floor": 0.0,
+       "note": "default:waiting",
+       "problem": null,
+       "value": null
+      },
+      "project": {
+       "answer": "other",
+       "confidence": 0.4991,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "real_commitment": {
+       "answer": false,
+       "confidence": 0.6623,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.7299,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": false,
+       "confidence": 0.509,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.6183000000000001,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      }
+     },
+     "ms": 10888.278399943374,
+     "n": 2,
+     "recording": "rec_013"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.3989
+      },
+      "project": {
+       "choice": "other",
+       "confidence": 0.4455,
+       "probabilities": {
+        "community": 0.2707,
+        "other": 0.5247,
+        "personal": 0.0144,
+        "research": 0.0897,
+        "school": 0.0128,
+        "work": 0.0532,
+        "writing": 0.0345
+       }
+      },
+      "real_commitment": {
+       "p": 0.8695
+      },
+      "sensitive": {
+       "p": 0.6686
+      },
+      "someone_waiting": {
+       "p": 0.8428
+      },
+      "worth_researching_soon": {
+       "p": 0.2864
+      }
+     },
+     "expected_project": "community",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.6011,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "priority": {
+       "answer": "high",
+       "confidence": null,
+       "floor": 0.0,
+       "note": "someone_waiting",
+       "problem": null,
+       "value": 4
+      },
+      "project": {
+       "answer": "other",
+       "confidence": 0.4455,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.8695,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "sensitive": {
+       "answer": true,
+       "confidence": 0.6686,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "someone_waiting": {
+       "answer": true,
+       "confidence": 0.8428,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.7136,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      }
+     },
+     "ms": 11061.173600028269,
+     "n": 1,
+     "recording": "rec_014"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.567
+      },
+      "project": {
+       "choice": "other",
+       "confidence": 0.4386,
+       "probabilities": {
+        "community": 0.2299,
+        "other": 0.5188,
+        "personal": 0.0301,
+        "research": 0.0581,
+        "school": 0.0274,
+        "work": 0.1085,
+        "writing": 0.0273
+       }
+      },
+      "real_commitment": {
+       "p": 0.8982
+      },
+      "sensitive": {
+       "p": 0.2592
+      },
+      "someone_waiting": {
+       "p": 0.86
+      },
+      "worth_researching_soon": {
+       "p": 0.3655
+      }
+     },
+     "expected_project": "community",
+     "judged": {
+      "hard_deadline": {
+       "answer": true,
+       "confidence": 0.567,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "priority": {
+       "answer": "high",
+       "confidence": null,
+       "floor": 0.0,
+       "note": "someone_waiting",
+       "problem": null,
+       "value": 4
+      },
+      "project": {
+       "answer": "other",
+       "confidence": 0.4386,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.8982,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.7408,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": true,
+       "confidence": 0.86,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.6345000000000001,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      }
+     },
+     "ms": 11005.276900017634,
+     "n": 2,
+     "recording": "rec_014"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.1879
+      },
+      "project": {
+       "choice": "other",
+       "confidence": 0.4195,
+       "probabilities": {
+        "community": 0.3302,
+        "other": 0.5024,
+        "personal": 0.0157,
+        "research": 0.0325,
+        "school": 0.0149,
+        "work": 0.0751,
+        "writing": 0.0293
+       }
+      },
+      "real_commitment": {
+       "p": 0.7295
+      },
+      "sensitive": {
+       "p": 0.3406
+      },
+      "someone_waiting": {
+       "p": 0.867
+      },
+      "worth_researching_soon": {
+       "p": 0.2997
+      }
+     },
+     "expected_project": "community",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.8121,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "priority": {
+       "answer": "high",
+       "confidence": null,
+       "floor": 0.0,
+       "note": "someone_waiting",
+       "problem": null,
+       "value": 4
+      },
+      "project": {
+       "answer": "other",
+       "confidence": 0.4195,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.7295,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.6594,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": true,
+       "confidence": 0.867,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.7002999999999999,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      }
+     },
+     "ms": 10958.452499937266,
+     "n": 3,
+     "recording": "rec_014"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.1837
+      },
+      "project": {
+       "choice": "work",
+       "confidence": 0.4227,
+       "probabilities": {
+        "community": 0.0149,
+        "other": 0.4092,
+        "personal": 0.0109,
+        "research": 0.0225,
+        "school": 0.0073,
+        "work": 0.5052,
+        "writing": 0.03
+       }
+      },
+      "real_commitment": {
+       "p": 0.677
+      },
+      "sensitive": {
+       "p": 0.7472
+      },
+      "someone_waiting": {
+       "p": 0.8256
+      },
+      "worth_researching_soon": {
+       "p": 0.5053
+      }
+     },
+     "expected_project": "work",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.8163,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "priority": {
+       "answer": "high",
+       "confidence": null,
+       "floor": 0.0,
+       "note": "someone_waiting",
+       "problem": null,
+       "value": 4
+      },
+      "project": {
+       "answer": "work",
+       "confidence": 0.4227,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.677,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "sensitive": {
+       "answer": true,
+       "confidence": 0.7472,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "someone_waiting": {
+       "answer": true,
+       "confidence": 0.8256,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "worth_researching_soon": {
+       "answer": true,
+       "confidence": 0.5053,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      }
+     },
+     "ms": 11036.411699955352,
+     "n": 1,
+     "recording": "rec_015"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.1083
+      },
+      "project": {
+       "choice": "other",
+       "confidence": 0.4428,
+       "probabilities": {
+        "community": 0.0388,
+        "other": 0.5224,
+        "personal": 0.0386,
+        "research": 0.0367,
+        "school": 0.0152,
+        "work": 0.286,
+        "writing": 0.0622
+       }
+      },
+      "real_commitment": {
+       "p": 0.8301
+      },
+      "sensitive": {
+       "p": 0.2514
+      },
+      "someone_waiting": {
+       "p": 0.8452
+      },
+      "worth_researching_soon": {
+       "p": 0.4328
+      }
+     },
+     "expected_project": "work",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.8917,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "priority": {
+       "answer": "high",
+       "confidence": null,
+       "floor": 0.0,
+       "note": "someone_waiting",
+       "problem": null,
+       "value": 4
+      },
+      "project": {
+       "answer": "other",
+       "confidence": 0.4428,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.8301,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.7485999999999999,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": true,
+       "confidence": 0.8452,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.5671999999999999,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      }
+     },
+     "ms": 11010.52080001682,
+     "n": 2,
+     "recording": "rec_015"
+    }
+   ],
+   "versions": {
+    "cuda": null,
+    "driver": "610.74",
+    "host": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel, 16 logical cores",
+    "torch": "2.14.1+cpu",
+    "weights": "float32 (Decider upcasts its torso on the CPU)"
+   }
+  },
+  "cuda": {
+   "cold": {
+    "environment_s": 1.751861400087364,
+    "first_read_s": 0.9684569999808446,
+    "health_polls": 4,
+    "total_s": 12.042919600033201,
+    "weight_load_s": 9.322601199964993
+   },
+   "conditions": "the other long-running experiment on this laptop paused; non-essential processes closed by Dan; the Claude desktop app running this session open; the laptop otherwise idle",
+   "failures": [],
+   "first_read": {
+    "ms": 912.7583999652416,
+    "same_answers_as_warmed": true
+   },
+   "gate": [
+    {
+     "expected_sensitive": false,
+     "recording": "rec_001",
+     "triage": "Process",
+     "windows": [
+      {
+       "ms": 119.17629989329726,
+       "p": 0.1872
+      }
+     ]
+    },
+    {
+     "recording": "rec_002",
+     "triage": "Hold",
+     "windows": []
+    },
+    {
+     "recording": "rec_003",
+     "triage": "Skip",
+     "windows": []
+    },
+    {
+     "recording": "rec_004",
+     "triage": "NotReady",
+     "windows": []
+    },
+    {
+     "expected_sensitive": false,
+     "recording": "rec_005",
+     "triage": "Process",
+     "windows": [
+      {
+       "ms": 94.49709998443723,
+       "p": 0.2699
+      }
+     ]
+    },
+    {
+     "expected_sensitive": false,
+     "recording": "rec_006",
+     "triage": "Process",
+     "windows": [
+      {
+       "ms": 117.40359989926219,
+       "p": 0.2157
+      }
+     ]
+    },
+    {
+     "expected_sensitive": false,
+     "recording": "rec_007",
+     "triage": "Process",
+     "windows": [
+      {
+       "ms": 92.34580001793802,
+       "p": 0.2694
+      }
+     ]
+    },
+    {
+     "expected_sensitive": false,
+     "recording": "rec_008",
+     "triage": "Process",
+     "windows": [
+      {
+       "ms": 90.57660005055368,
+       "p": 0.2366
+      }
+     ]
+    },
+    {
+     "expected_sensitive": false,
+     "recording": "rec_009",
+     "triage": "Process",
+     "windows": [
+      {
+       "ms": 121.86469999141991,
+       "p": 0.179
+      }
+     ]
+    },
+    {
+     "expected_sensitive": false,
+     "recording": "rec_010",
+     "triage": "Process",
+     "windows": [
+      {
+       "ms": 129.73599997349083,
+       "p": 0.1826
+      }
+     ]
+    },
+    {
+     "expected_sensitive": false,
+     "recording": "rec_011",
+     "triage": "Process",
+     "windows": [
+      {
+       "ms": 119.57710003480315,
+       "p": 0.1613
+      }
+     ]
+    },
+    {
+     "expected_sensitive": false,
+     "recording": "rec_012",
+     "triage": "Process",
+     "windows": [
+      {
+       "ms": 107.39989997819066,
+       "p": 0.3878
+      }
+     ]
+    },
+    {
+     "expected_sensitive": false,
+     "recording": "rec_013",
+     "triage": "Process",
+     "windows": [
+      {
+       "ms": 110.58419989421964,
+       "p": 0.2127
+      }
+     ]
+    },
+    {
+     "expected_sensitive": true,
+     "recording": "rec_014",
+     "triage": "Process",
+     "windows": [
+      {
+       "ms": 92.01010002288967,
+       "p": 0.8478
+      }
+     ]
+    },
+    {
+     "expected_sensitive": true,
+     "recording": "rec_015",
+     "triage": "Process",
+     "windows": [
+      {
+       "ms": 115.17679993994534,
+       "p": 0.7607
+      }
+     ]
+    }
+   ],
+   "gate_floor": 0.6,
+   "health_at_end": {
+    "base_model": "Qwen/Qwen3.5-2B-Base",
+    "card": "NVIDIA GeForce RTX 5050 Laptop GPU",
+    "card_memory_allocated_gb": 3.6,
+    "card_memory_peak_reserved_gb": 4.03,
+    "card_memory_reserved_gb": 4.03,
+    "checkpoint": "StrandsAgents/strands-decider-2B-hobson-v21",
+    "device": "cuda",
+    "max_length": 4096,
+    "model": "strands-decider-2B-hobson-v21",
+    "num_slots": 24,
+    "prefix_cache": true,
+    "status": "ok",
+    "temperature": 0.935220152138837
+   },
+   "health_at_load": {
+    "base_model": "Qwen/Qwen3.5-2B-Base",
+    "card": "NVIDIA GeForce RTX 5050 Laptop GPU",
+    "card_memory_allocated_gb": 3.57,
+    "card_memory_peak_reserved_gb": 3.63,
+    "card_memory_reserved_gb": 3.63,
+    "checkpoint": "StrandsAgents/strands-decider-2B-hobson-v21",
+    "device": "cuda",
+    "max_length": 4096,
+    "model": "strands-decider-2B-hobson-v21",
+    "num_slots": 24,
+    "prefix_cache": true,
+    "status": "ok",
+    "temperature": 0.935220152138837
+   },
+   "memory": {
+    "card_mib_at_load": 4716,
+    "card_mib_peak": 5160,
+    "host_at_load": {
+     "private": 5459058688,
+     "rss": 992452608
+    },
+    "host_peak": {
+     "private": 7316008960,
+     "rss": 2154549248
+    }
+   },
+   "python": ".venv-decider-cuda/Scripts/python.exe",
+   "row": "cuda",
+   "scores": {
+    "gate": {
+     "agree": 30,
+     "matched": 30
+    },
+    "hard_deadline": {
+     "agree": 23,
+     "matched": 30,
+     "sure": 19,
+     "sure_agree": 14,
+     "usable": 30
+    },
+    "priority": {
+     "agree": 15,
+     "matched": 30,
+     "sure": 13,
+     "sure_agree": 10,
+     "usable": 30
+    },
+    "project": {
+     "agree": 24,
+     "matched": 30,
+     "sure": 18,
+     "sure_agree": 18,
+     "usable": 30
+    },
+    "real_commitment": {
+     "agree": 29,
+     "matched": 30,
+     "sure": 25,
+     "sure_agree": 25,
+     "usable": 30
+    },
+    "sensitive": {
+     "agree": 30,
+     "matched": 30,
+     "sure": 30,
+     "sure_agree": 30,
+     "usable": 30
+    },
+    "someone_waiting": {
+     "agree": 21,
+     "matched": 30,
+     "sure": 13,
+     "sure_agree": 10,
+     "usable": 30
+    },
+    "worth_researching_soon": {
+     "agree": 4,
+     "matched": 11,
+     "sure": 3,
+     "sure_agree": 1,
+     "usable": 11
+    }
+   },
+   "started": "2026-10-21 21:13 UTC",
+   "tasks": [
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.3766
+      },
+      "project": {
+       "choice": "research",
+       "confidence": 0.7473,
+       "probabilities": {
+        "community": 0.0096,
+        "other": 0.0607,
+        "personal": 0.0035,
+        "research": 0.7834,
+        "school": 0.0082,
+        "work": 0.1013,
+        "writing": 0.0334
+       }
+      },
+      "real_commitment": {
+       "p": 0.9179
+      },
+      "sensitive": {
+       "p": 0.1571
+      },
+      "someone_waiting": {
+       "p": 0.6914
+      },
+      "worth_researching_soon": {
+       "p": 0.4292
+      }
+     },
+     "expected_project": "research",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.6234,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "priority": {
+       "answer": "medium",
+       "confidence": null,
+       "floor": 0.0,
+       "note": "default:waiting",
+       "problem": null,
+       "value": 3
+      },
+      "project": {
+       "answer": "research",
+       "confidence": 0.7473,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": "research"
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.9179,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.8429,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": true,
+       "confidence": 0.6914,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.5708,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      }
+     },
+     "ms": 416.64010006934404,
+     "n": 1,
+     "recording": "rec_001"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.2997
+      },
+      "project": {
+       "choice": "work",
+       "confidence": 0.9348,
+       "probabilities": {
+        "community": 0.0099,
+        "other": 0.0277,
+        "personal": 0.0021,
+        "research": 0.0068,
+        "school": 0.0025,
+        "work": 0.9441,
+        "writing": 0.0069
+       }
+      },
+      "real_commitment": {
+       "p": 0.8124
+      },
+      "sensitive": {
+       "p": 0.1331
+      },
+      "someone_waiting": {
+       "p": 0.4477
+      },
+      "worth_researching_soon": {
+       "p": 0.5019
+      }
+     },
+     "expected_project": "work",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.7002999999999999,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "priority": {
+       "answer": "high",
+       "confidence": null,
+       "floor": 0.0,
+       "note": "default:waiting",
+       "problem": null,
+       "value": 4
+      },
+      "project": {
+       "answer": "work",
+       "confidence": 0.9348,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": "work"
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.8124,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.8669,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": false,
+       "confidence": 0.5523,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "worth_researching_soon": {
+       "answer": true,
+       "confidence": 0.5019,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      }
+     },
+     "ms": 474.0941000636667,
+     "n": 2,
+     "recording": "rec_001"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.1561
+      },
+      "project": {
+       "choice": "work",
+       "confidence": 0.5781,
+       "probabilities": {
+        "community": 0.0444,
+        "other": 0.1982,
+        "personal": 0.011,
+        "research": 0.0705,
+        "school": 0.0121,
+        "work": 0.6384,
+        "writing": 0.0255
+       }
+      },
+      "real_commitment": {
+       "p": 0.6874
+      },
+      "sensitive": {
+       "p": 0.2796
+      },
+      "someone_waiting": {
+       "p": 0.6871
+      },
+      "worth_researching_soon": {
+       "p": 0.6293
+      }
+     },
+     "expected_project": "research",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.8439,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "priority": {
+       "answer": null,
+       "confidence": null,
+       "floor": 0.0,
+       "note": "default:waiting",
+       "problem": null,
+       "value": null
+      },
+      "project": {
+       "answer": "work",
+       "confidence": 0.5781,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.6874,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.7203999999999999,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": true,
+       "confidence": 0.6871,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "worth_researching_soon": {
+       "answer": true,
+       "confidence": 0.6293,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      }
+     },
+     "ms": 442.67229991964996,
+     "n": 3,
+     "recording": "rec_001"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.1958
+      },
+      "project": {
+       "choice": "work",
+       "confidence": 0.3614,
+       "probabilities": {
+        "community": 0.0532,
+        "other": 0.3312,
+        "personal": 0.0346,
+        "research": 0.0258,
+        "school": 0.0104,
+        "work": 0.4527,
+        "writing": 0.0922
+       }
+      },
+      "real_commitment": {
+       "p": 0.8692
+      },
+      "sensitive": {
+       "p": 0.1336
+      },
+      "someone_waiting": {
+       "p": 0.6395
+      },
+      "worth_researching_soon": {
+       "p": 0.3533
+      }
+     },
+     "expected_project": "research",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.8042,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "priority": {
+       "answer": null,
+       "confidence": null,
+       "floor": 0.0,
+       "note": "default:waiting",
+       "problem": null,
+       "value": null
+      },
+      "project": {
+       "answer": "work",
+       "confidence": 0.3614,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.8692,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.8664000000000001,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": true,
+       "confidence": 0.6395,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.6467,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      }
+     },
+     "ms": 419.8525999672711,
+     "n": 4,
+     "recording": "rec_001"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.2413
+      },
+      "project": {
+       "choice": "research",
+       "confidence": 0.7949,
+       "probabilities": {
+        "community": 0.0146,
+        "other": 0.0475,
+        "personal": 0.0028,
+        "research": 0.8242,
+        "school": 0.0085,
+        "work": 0.0225,
+        "writing": 0.0799
+       }
+      },
+      "real_commitment": {
+       "p": 0.9386
+      },
+      "sensitive": {
+       "p": 0.1689
+      },
+      "someone_waiting": {
+       "p": 0.8445
+      },
+      "worth_researching_soon": {
+       "p": 0.3499
+      }
+     },
+     "expected_project": "research",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.7587,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "priority": {
+       "answer": "high",
+       "confidence": null,
+       "floor": 0.0,
+       "note": "someone_waiting",
+       "problem": null,
+       "value": 4
+      },
+      "project": {
+       "answer": "research",
+       "confidence": 0.7949,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": "research"
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.9386,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.8311,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": true,
+       "confidence": 0.8445,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.6501,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      }
+     },
+     "ms": 443.5873000184074,
+     "n": 1,
+     "recording": "rec_006"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.3886
+      },
+      "project": {
+       "choice": "research",
+       "confidence": 0.8158,
+       "probabilities": {
+        "community": 0.0255,
+        "other": 0.06,
+        "personal": 0.0035,
+        "research": 0.8421,
+        "school": 0.009,
+        "work": 0.0205,
+        "writing": 0.0393
+       }
+      },
+      "real_commitment": {
+       "p": 0.8361
+      },
+      "sensitive": {
+       "p": 0.1808
+      },
+      "someone_waiting": {
+       "p": 0.8393
+      },
+      "worth_researching_soon": {
+       "p": 0.4636
+      }
+     },
+     "expected_project": "research",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.6113999999999999,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "priority": {
+       "answer": "high",
+       "confidence": null,
+       "floor": 0.0,
+       "note": "someone_waiting",
+       "problem": null,
+       "value": 4
+      },
+      "project": {
+       "answer": "research",
+       "confidence": 0.8158,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": "research"
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.8361,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.8192,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": true,
+       "confidence": 0.8393,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.5364,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      }
+     },
+     "ms": 444.77699999697506,
+     "n": 2,
+     "recording": "rec_006"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.2712
+      },
+      "project": {
+       "choice": "research",
+       "confidence": 0.8546,
+       "probabilities": {
+        "community": 0.0118,
+        "other": 0.0399,
+        "personal": 0.0023,
+        "research": 0.8753,
+        "school": 0.0084,
+        "work": 0.0108,
+        "writing": 0.0514
+       }
+      },
+      "real_commitment": {
+       "p": 0.7143
+      },
+      "sensitive": {
+       "p": 0.2043
+      },
+      "someone_waiting": {
+       "p": 0.6756
+      },
+      "worth_researching_soon": {
+       "p": 0.4341
+      }
+     },
+     "expected_project": "research",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.7288,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "priority": {
+       "answer": "medium",
+       "confidence": null,
+       "floor": 0.0,
+       "note": "default:waiting",
+       "problem": null,
+       "value": 3
+      },
+      "project": {
+       "answer": "research",
+       "confidence": 0.8546,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": "research"
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.7143,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.7957,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": true,
+       "confidence": 0.6756,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.5659000000000001,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      }
+     },
+     "ms": 413.7623000424355,
+     "n": 3,
+     "recording": "rec_006"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.5893
+      },
+      "project": {
+       "choice": "school",
+       "confidence": 0.9125,
+       "probabilities": {
+        "community": 0.0042,
+        "other": 0.0446,
+        "personal": 0.004,
+        "research": 0.0109,
+        "school": 0.925,
+        "work": 0.0071,
+        "writing": 0.0042
+       }
+      },
+      "real_commitment": {
+       "p": 0.7936
+      },
+      "sensitive": {
+       "p": 0.2421
+      },
+      "someone_waiting": {
+       "p": 0.516
+      },
+      "worth_researching_soon": {
+       "p": 0.306
+      }
+     },
+     "expected_project": "school",
+     "judged": {
+      "hard_deadline": {
+       "answer": true,
+       "confidence": 0.5893,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "priority": {
+       "answer": "high",
+       "confidence": null,
+       "floor": 0.0,
+       "note": "default:waiting",
+       "problem": null,
+       "value": 4
+      },
+      "project": {
+       "answer": "school",
+       "confidence": 0.9125,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": "school"
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.7936,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.7579,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": true,
+       "confidence": 0.516,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.694,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      }
+     },
+     "ms": 417.40710008889437,
+     "n": 1,
+     "recording": "rec_007"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.3514
+      },
+      "project": {
+       "choice": "school",
+       "confidence": 0.9067,
+       "probabilities": {
+        "community": 0.0038,
+        "other": 0.0473,
+        "personal": 0.0045,
+        "research": 0.0113,
+        "school": 0.92,
+        "work": 0.0058,
+        "writing": 0.0072
+       }
+      },
+      "real_commitment": {
+       "p": 0.9066
+      },
+      "sensitive": {
+       "p": 0.2567
+      },
+      "someone_waiting": {
+       "p": 0.5917
+      },
+      "worth_researching_soon": {
+       "p": 0.3051
+      }
+     },
+     "expected_project": "school",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.6486000000000001,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "priority": {
+       "answer": "high",
+       "confidence": null,
+       "floor": 0.0,
+       "note": "default:waiting",
+       "problem": null,
+       "value": 4
+      },
+      "project": {
+       "answer": "school",
+       "confidence": 0.9067,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": "school"
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.9066,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.7433000000000001,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": true,
+       "confidence": 0.5917,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.6949000000000001,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      }
+     },
+     "ms": 466.70310001354665,
+     "n": 2,
+     "recording": "rec_007"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.604
+      },
+      "project": {
+       "choice": "school",
+       "confidence": 0.9074,
+       "probabilities": {
+        "community": 0.0046,
+        "other": 0.0461,
+        "personal": 0.0038,
+        "research": 0.0128,
+        "school": 0.9207,
+        "work": 0.0068,
+        "writing": 0.0052
+       }
+      },
+      "real_commitment": {
+       "p": 0.8771
+      },
+      "sensitive": {
+       "p": 0.2746
+      },
+      "someone_waiting": {
+       "p": 0.4598
+      },
+      "worth_researching_soon": {
+       "p": 0.3062
+      }
+     },
+     "expected_project": "school",
+     "judged": {
+      "hard_deadline": {
+       "answer": true,
+       "confidence": 0.604,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "priority": {
+       "answer": "high",
+       "confidence": null,
+       "floor": 0.0,
+       "note": "default:waiting",
+       "problem": null,
+       "value": 4
+      },
+      "project": {
+       "answer": "school",
+       "confidence": 0.9074,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": "school"
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.8771,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.7254,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": false,
+       "confidence": 0.5402,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.6938,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      }
+     },
+     "ms": 426.4080000575632,
+     "n": 3,
+     "recording": "rec_007"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.3117
+      },
+      "project": {
+       "choice": "work",
+       "confidence": 0.8434,
+       "probabilities": {
+        "community": 0.0085,
+        "other": 0.0871,
+        "personal": 0.0071,
+        "research": 0.0128,
+        "school": 0.0059,
+        "work": 0.8658,
+        "writing": 0.0128
+       }
+      },
+      "real_commitment": {
+       "p": 0.9162
+      },
+      "sensitive": {
+       "p": 0.2335
+      },
+      "someone_waiting": {
+       "p": 0.8543
+      },
+      "worth_researching_soon": {
+       "p": 0.3132
+      }
+     },
+     "expected_project": "work",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.6883,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "priority": {
+       "answer": "high",
+       "confidence": null,
+       "floor": 0.0,
+       "note": "someone_waiting",
+       "problem": null,
+       "value": 4
+      },
+      "project": {
+       "answer": "work",
+       "confidence": 0.8434,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": "work"
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.9162,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.7665,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": true,
+       "confidence": 0.8543,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.6868000000000001,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      }
+     },
+     "ms": 436.0443000914529,
+     "n": 1,
+     "recording": "rec_008"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.1613
+      },
+      "project": {
+       "choice": "work",
+       "confidence": 0.7438,
+       "probabilities": {
+        "community": 0.0081,
+        "other": 0.1329,
+        "personal": 0.0061,
+        "research": 0.0538,
+        "school": 0.0057,
+        "work": 0.7804,
+        "writing": 0.0128
+       }
+      },
+      "real_commitment": {
+       "p": 0.8615
+      },
+      "sensitive": {
+       "p": 0.3003
+      },
+      "someone_waiting": {
+       "p": 0.6979
+      },
+      "worth_researching_soon": {
+       "p": 0.3887
+      }
+     },
+     "expected_project": "work",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.8387,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "priority": {
+       "answer": "high",
+       "confidence": null,
+       "floor": 0.0,
+       "note": "default:waiting",
+       "problem": null,
+       "value": 4
+      },
+      "project": {
+       "answer": "work",
+       "confidence": 0.7438,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": "work"
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.8615,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.6997,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": true,
+       "confidence": 0.6979,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.6113,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      }
+     },
+     "ms": 454.1227000299841,
+     "n": 2,
+     "recording": "rec_008"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.2781
+      },
+      "project": {
+       "choice": "work",
+       "confidence": 0.7736,
+       "probabilities": {
+        "community": 0.0124,
+        "other": 0.1385,
+        "personal": 0.01,
+        "research": 0.0131,
+        "school": 0.0093,
+        "work": 0.806,
+        "writing": 0.0107
+       }
+      },
+      "real_commitment": {
+       "p": 0.9051
+      },
+      "sensitive": {
+       "p": 0.2034
+      },
+      "someone_waiting": {
+       "p": 0.7466
+      },
+      "worth_researching_soon": {
+       "p": 0.2629
+      }
+     },
+     "expected_project": "work",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.7219,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "priority": {
+       "answer": "high",
+       "confidence": null,
+       "floor": 0.0,
+       "note": "someone_waiting",
+       "problem": null,
+       "value": 4
+      },
+      "project": {
+       "answer": "work",
+       "confidence": 0.7736,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": "work"
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.9051,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.7966,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": true,
+       "confidence": 0.7466,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.7371,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      }
+     },
+     "ms": 423.41779998969287,
+     "n": 3,
+     "recording": "rec_008"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.2215
+      },
+      "project": {
+       "choice": "work",
+       "confidence": 0.9197,
+       "probabilities": {
+        "community": 0.0052,
+        "other": 0.0451,
+        "personal": 0.0034,
+        "research": 0.0052,
+        "school": 0.0029,
+        "work": 0.9312,
+        "writing": 0.007
+       }
+      },
+      "real_commitment": {
+       "p": 0.9083
+      },
+      "sensitive": {
+       "p": 0.1523
+      },
+      "someone_waiting": {
+       "p": 0.8424
+      },
+      "worth_researching_soon": {
+       "p": 0.3565
+      }
+     },
+     "expected_project": "work",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.7785,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "priority": {
+       "answer": "high",
+       "confidence": null,
+       "floor": 0.0,
+       "note": "someone_waiting",
+       "problem": null,
+       "value": 4
+      },
+      "project": {
+       "answer": "work",
+       "confidence": 0.9197,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": "work"
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.9083,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.8477,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": true,
+       "confidence": 0.8424,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.6435,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      }
+     },
+     "ms": 435.051100095734,
+     "n": 1,
+     "recording": "rec_009"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.2794
+      },
+      "project": {
+       "choice": "work",
+       "confidence": 0.8878,
+       "probabilities": {
+        "community": 0.0082,
+        "other": 0.0653,
+        "personal": 0.0051,
+        "research": 0.0071,
+        "school": 0.0037,
+        "work": 0.9039,
+        "writing": 0.0068
+       }
+      },
+      "real_commitment": {
+       "p": 0.8871
+      },
+      "sensitive": {
+       "p": 0.117
+      },
+      "someone_waiting": {
+       "p": 0.6382
+      },
+      "worth_researching_soon": {
+       "p": 0.4046
+      }
+     },
+     "expected_project": "work",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.7206,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "priority": {
+       "answer": "high",
+       "confidence": null,
+       "floor": 0.0,
+       "note": "default:waiting",
+       "problem": null,
+       "value": 4
+      },
+      "project": {
+       "answer": "work",
+       "confidence": 0.8878,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": "work"
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.8871,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.883,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": true,
+       "confidence": 0.6382,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.5953999999999999,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      }
+     },
+     "ms": 429.0552999591455,
+     "n": 2,
+     "recording": "rec_009"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.1307
+      },
+      "project": {
+       "choice": "work",
+       "confidence": 0.6415,
+       "probabilities": {
+        "community": 0.0076,
+        "other": 0.0474,
+        "personal": 0.0029,
+        "research": 0.0212,
+        "school": 0.0042,
+        "work": 0.6927,
+        "writing": 0.224
+       }
+      },
+      "real_commitment": {
+       "p": 0.5771
+      },
+      "sensitive": {
+       "p": 0.2723
+      },
+      "someone_waiting": {
+       "p": 0.5776
+      },
+      "worth_researching_soon": {
+       "p": 0.5314
+      }
+     },
+     "expected_project": "work",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.8693,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "priority": {
+       "answer": null,
+       "confidence": null,
+       "floor": 0.0,
+       "note": "default:waiting",
+       "problem": null,
+       "value": null
+      },
+      "project": {
+       "answer": "work",
+       "confidence": 0.6415,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.5771,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.7277,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": true,
+       "confidence": 0.5776,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "worth_researching_soon": {
+       "answer": true,
+       "confidence": 0.5314,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      }
+     },
+     "ms": 460.81219997722656,
+     "n": 3,
+     "recording": "rec_009"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.2623
+      },
+      "project": {
+       "choice": "writing",
+       "confidence": 0.8748,
+       "probabilities": {
+        "community": 0.0088,
+        "other": 0.0279,
+        "personal": 0.0028,
+        "research": 0.0408,
+        "school": 0.0039,
+        "work": 0.0231,
+        "writing": 0.8927
+       }
+      },
+      "real_commitment": {
+       "p": 0.915
+      },
+      "sensitive": {
+       "p": 0.1725
+      },
+      "someone_waiting": {
+       "p": 0.892
+      },
+      "worth_researching_soon": {
+       "p": 0.3819
+      }
+     },
+     "expected_project": "writing",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.7377,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "priority": {
+       "answer": "high",
+       "confidence": null,
+       "floor": 0.0,
+       "note": "someone_waiting",
+       "problem": null,
+       "value": 4
+      },
+      "project": {
+       "answer": "writing",
+       "confidence": 0.8748,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": "writing"
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.915,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.8275,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": true,
+       "confidence": 0.892,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.6181,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      }
+     },
+     "ms": 436.81710003875196,
+     "n": 1,
+     "recording": "rec_010"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.2006
+      },
+      "project": {
+       "choice": "writing",
+       "confidence": 0.8291,
+       "probabilities": {
+        "community": 0.0077,
+        "other": 0.0425,
+        "personal": 0.003,
+        "research": 0.0279,
+        "school": 0.0031,
+        "work": 0.0624,
+        "writing": 0.8535
+       }
+      },
+      "real_commitment": {
+       "p": 0.7892
+      },
+      "sensitive": {
+       "p": 0.1553
+      },
+      "someone_waiting": {
+       "p": 0.8437
+      },
+      "worth_researching_soon": {
+       "p": 0.4442
+      }
+     },
+     "expected_project": "writing",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.7994,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "priority": {
+       "answer": "high",
+       "confidence": null,
+       "floor": 0.0,
+       "note": "someone_waiting",
+       "problem": null,
+       "value": 4
+      },
+      "project": {
+       "answer": "writing",
+       "confidence": 0.8291,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": "writing"
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.7892,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.8447,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": true,
+       "confidence": 0.8437,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.5558000000000001,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      }
+     },
+     "ms": 427.66359995584935,
+     "n": 2,
+     "recording": "rec_010"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.5089
+      },
+      "project": {
+       "choice": "community",
+       "confidence": 0.8653,
+       "probabilities": {
+        "community": 0.8846,
+        "other": 0.0732,
+        "personal": 0.008,
+        "research": 0.0122,
+        "school": 0.0052,
+        "work": 0.0114,
+        "writing": 0.0054
+       }
+      },
+      "real_commitment": {
+       "p": 0.8843
+      },
+      "sensitive": {
+       "p": 0.1935
+      },
+      "someone_waiting": {
+       "p": 0.6258
+      },
+      "worth_researching_soon": {
+       "p": 0.3788
+      }
+     },
+     "expected_project": "community",
+     "judged": {
+      "hard_deadline": {
+       "answer": true,
+       "confidence": 0.5089,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "priority": {
+       "answer": "medium",
+       "confidence": null,
+       "floor": 0.0,
+       "note": "default:waiting",
+       "problem": null,
+       "value": 3
+      },
+      "project": {
+       "answer": "community",
+       "confidence": 0.8653,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": "community"
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.8843,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.8065,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": true,
+       "confidence": 0.6258,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.6212,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      }
+     },
+     "ms": 473.0282999807969,
+     "n": 1,
+     "recording": "rec_011"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.3449
+      },
+      "project": {
+       "choice": "community",
+       "confidence": 0.8869,
+       "probabilities": {
+        "community": 0.9031,
+        "other": 0.0566,
+        "personal": 0.0083,
+        "research": 0.0084,
+        "school": 0.01,
+        "work": 0.009,
+        "writing": 0.0046
+       }
+      },
+      "real_commitment": {
+       "p": 0.8647
+      },
+      "sensitive": {
+       "p": 0.2096
+      },
+      "someone_waiting": {
+       "p": 0.6056
+      },
+      "worth_researching_soon": {
+       "p": 0.3599
+      }
+     },
+     "expected_project": "community",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.6551,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "priority": {
+       "answer": "medium",
+       "confidence": null,
+       "floor": 0.0,
+       "note": "default:waiting",
+       "problem": null,
+       "value": 3
+      },
+      "project": {
+       "answer": "community",
+       "confidence": 0.8869,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": "community"
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.8647,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.7904,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": true,
+       "confidence": 0.6056,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.6401,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      }
+     },
+     "ms": 433.6070000426844,
+     "n": 2,
+     "recording": "rec_011"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.2135
+      },
+      "project": {
+       "choice": "personal",
+       "confidence": 0.7723,
+       "probabilities": {
+        "community": 0.006,
+        "other": 0.1543,
+        "personal": 0.8048,
+        "research": 0.007,
+        "school": 0.0049,
+        "work": 0.0174,
+        "writing": 0.0055
+       }
+      },
+      "real_commitment": {
+       "p": 0.8138
+      },
+      "sensitive": {
+       "p": 0.2521
+      },
+      "someone_waiting": {
+       "p": 0.3414
+      },
+      "worth_researching_soon": {
+       "p": 0.1686
+      }
+     },
+     "expected_project": "personal",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.7865,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "priority": {
+       "answer": "medium",
+       "confidence": null,
+       "floor": 0.0,
+       "note": "default:waiting",
+       "problem": null,
+       "value": 3
+      },
+      "project": {
+       "answer": "personal",
+       "confidence": 0.7723,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": "personal"
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.8138,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.7479,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": false,
+       "confidence": 0.6586000000000001,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.8314,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      }
+     },
+     "ms": 427.1209000144154,
+     "n": 1,
+     "recording": "rec_012"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.211
+      },
+      "project": {
+       "choice": "personal",
+       "confidence": 0.6423,
+       "probabilities": {
+        "community": 0.0069,
+        "other": 0.2396,
+        "personal": 0.6934,
+        "research": 0.008,
+        "school": 0.0061,
+        "work": 0.039,
+        "writing": 0.007
+       }
+      },
+      "real_commitment": {
+       "p": 0.8604
+      },
+      "sensitive": {
+       "p": 0.2836
+      },
+      "someone_waiting": {
+       "p": 0.2956
+      },
+      "worth_researching_soon": {
+       "p": 0.1647
+      }
+     },
+     "expected_project": "personal",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.789,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "priority": {
+       "answer": "low",
+       "confidence": null,
+       "floor": 0.0,
+       "note": "neither",
+       "problem": null,
+       "value": 2
+      },
+      "project": {
+       "answer": "personal",
+       "confidence": 0.6423,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.8604,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.7163999999999999,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": false,
+       "confidence": 0.7044,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.8352999999999999,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      }
+     },
+     "ms": 438.7791999615729,
+     "n": 2,
+     "recording": "rec_012"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.4888
+      },
+      "project": {
+       "choice": "personal",
+       "confidence": 0.4906,
+       "probabilities": {
+        "community": 0.0149,
+        "other": 0.3159,
+        "personal": 0.5634,
+        "research": 0.0178,
+        "school": 0.0292,
+        "work": 0.0453,
+        "writing": 0.0135
+       }
+      },
+      "real_commitment": {
+       "p": 0.6858
+      },
+      "sensitive": {
+       "p": 0.3901
+      },
+      "someone_waiting": {
+       "p": 0.3432
+      },
+      "worth_researching_soon": {
+       "p": 0.1964
+      }
+     },
+     "expected_project": "personal",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.5112,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "priority": {
+       "answer": null,
+       "confidence": null,
+       "floor": 0.0,
+       "note": "default:waiting",
+       "problem": null,
+       "value": null
+      },
+      "project": {
+       "answer": "personal",
+       "confidence": 0.4906,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.6858,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.6099,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": false,
+       "confidence": 0.6568,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.8036,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      }
+     },
+     "ms": 446.6197999427095,
+     "n": 3,
+     "recording": "rec_012"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.0931
+      },
+      "project": {
+       "choice": "other",
+       "confidence": 0.5435,
+       "probabilities": {
+        "community": 0.0703,
+        "other": 0.6087,
+        "personal": 0.2663,
+        "research": 0.0112,
+        "school": 0.0073,
+        "work": 0.0265,
+        "writing": 0.0097
+       }
+      },
+      "real_commitment": {
+       "p": 0.0781
+      },
+      "sensitive": {
+       "p": 0.2123
+      },
+      "someone_waiting": {
+       "p": 0.4519
+      },
+      "worth_researching_soon": {
+       "p": 0.2906
+      }
+     },
+     "expected_project": "other",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.9069,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "priority": {
+       "answer": null,
+       "confidence": null,
+       "floor": 0.0,
+       "note": "default:waiting",
+       "problem": null,
+       "value": null
+      },
+      "project": {
+       "answer": "other",
+       "confidence": 0.5435,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "real_commitment": {
+       "answer": false,
+       "confidence": 0.9218999999999999,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.7877000000000001,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": false,
+       "confidence": 0.5481,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.7094,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      }
+     },
+     "ms": 441.6395000880584,
+     "n": 1,
+     "recording": "rec_013"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.1893
+      },
+      "project": {
+       "choice": "other",
+       "confidence": 0.5009,
+       "probabilities": {
+        "community": 0.2148,
+        "other": 0.5722,
+        "personal": 0.0434,
+        "research": 0.0457,
+        "school": 0.0144,
+        "work": 0.0788,
+        "writing": 0.0307
+       }
+      },
+      "real_commitment": {
+       "p": 0.3371
+      },
+      "sensitive": {
+       "p": 0.2668
+      },
+      "someone_waiting": {
+       "p": 0.4875
+      },
+      "worth_researching_soon": {
+       "p": 0.3814
+      }
+     },
+     "expected_project": "other",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.8107,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "priority": {
+       "answer": null,
+       "confidence": null,
+       "floor": 0.0,
+       "note": "default:waiting",
+       "problem": null,
+       "value": null
+      },
+      "project": {
+       "answer": "other",
+       "confidence": 0.5009,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "real_commitment": {
+       "answer": false,
+       "confidence": 0.6629,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.7332000000000001,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": false,
+       "confidence": 0.5125,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.6186,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      }
+     },
+     "ms": 444.88060008734465,
+     "n": 2,
+     "recording": "rec_013"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.3983
+      },
+      "project": {
+       "choice": "other",
+       "confidence": 0.449,
+       "probabilities": {
+        "community": 0.2703,
+        "other": 0.5277,
+        "personal": 0.0144,
+        "research": 0.0875,
+        "school": 0.0125,
+        "work": 0.0537,
+        "writing": 0.0339
+       }
+      },
+      "real_commitment": {
+       "p": 0.8677
+      },
+      "sensitive": {
+       "p": 0.6738
+      },
+      "someone_waiting": {
+       "p": 0.8407
+      },
+      "worth_researching_soon": {
+       "p": 0.2873
+      }
+     },
+     "expected_project": "community",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.6017,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "priority": {
+       "answer": "high",
+       "confidence": null,
+       "floor": 0.0,
+       "note": "someone_waiting",
+       "problem": null,
+       "value": 4
+      },
+      "project": {
+       "answer": "other",
+       "confidence": 0.449,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.8677,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "sensitive": {
+       "answer": true,
+       "confidence": 0.6738,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "someone_waiting": {
+       "answer": true,
+       "confidence": 0.8407,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.7127,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      }
+     },
+     "ms": 456.31589996628463,
+     "n": 1,
+     "recording": "rec_014"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.5738
+      },
+      "project": {
+       "choice": "other",
+       "confidence": 0.4367,
+       "probabilities": {
+        "community": 0.2335,
+        "other": 0.5172,
+        "personal": 0.0297,
+        "research": 0.059,
+        "school": 0.0274,
+        "work": 0.1054,
+        "writing": 0.0278
+       }
+      },
+      "real_commitment": {
+       "p": 0.8991
+      },
+      "sensitive": {
+       "p": 0.2575
+      },
+      "someone_waiting": {
+       "p": 0.86
+      },
+      "worth_researching_soon": {
+       "p": 0.3659
+      }
+     },
+     "expected_project": "community",
+     "judged": {
+      "hard_deadline": {
+       "answer": true,
+       "confidence": 0.5738,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "priority": {
+       "answer": "high",
+       "confidence": null,
+       "floor": 0.0,
+       "note": "someone_waiting",
+       "problem": null,
+       "value": 4
+      },
+      "project": {
+       "answer": "other",
+       "confidence": 0.4367,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.8991,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.7424999999999999,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": true,
+       "confidence": 0.86,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.6341,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      }
+     },
+     "ms": 439.16860001627356,
+     "n": 2,
+     "recording": "rec_014"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.1913
+      },
+      "project": {
+       "choice": "other",
+       "confidence": 0.4121,
+       "probabilities": {
+        "community": 0.3352,
+        "other": 0.4961,
+        "personal": 0.0159,
+        "research": 0.0326,
+        "school": 0.015,
+        "work": 0.0761,
+        "writing": 0.0293
+       }
+      },
+      "real_commitment": {
+       "p": 0.7287
+      },
+      "sensitive": {
+       "p": 0.3413
+      },
+      "someone_waiting": {
+       "p": 0.8675
+      },
+      "worth_researching_soon": {
+       "p": 0.2976
+      }
+     },
+     "expected_project": "community",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.8087,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "priority": {
+       "answer": "high",
+       "confidence": null,
+       "floor": 0.0,
+       "note": "someone_waiting",
+       "problem": null,
+       "value": 4
+      },
+      "project": {
+       "answer": "other",
+       "confidence": 0.4121,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.7287,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.6587000000000001,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": true,
+       "confidence": 0.8675,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.7024,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      }
+     },
+     "ms": 434.6889000153169,
+     "n": 3,
+     "recording": "rec_014"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.1826
+      },
+      "project": {
+       "choice": "work",
+       "confidence": 0.4148,
+       "probabilities": {
+        "community": 0.0147,
+        "other": 0.4168,
+        "personal": 0.0108,
+        "research": 0.022,
+        "school": 0.0073,
+        "work": 0.4984,
+        "writing": 0.03
+       }
+      },
+      "real_commitment": {
+       "p": 0.6872
+      },
+      "sensitive": {
+       "p": 0.7462
+      },
+      "someone_waiting": {
+       "p": 0.8247
+      },
+      "worth_researching_soon": {
+       "p": 0.5056
+      }
+     },
+     "expected_project": "work",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.8174,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "priority": {
+       "answer": "high",
+       "confidence": null,
+       "floor": 0.0,
+       "note": "someone_waiting",
+       "problem": null,
+       "value": 4
+      },
+      "project": {
+       "answer": "work",
+       "confidence": 0.4148,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.6872,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "sensitive": {
+       "answer": true,
+       "confidence": 0.7462,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "someone_waiting": {
+       "answer": true,
+       "confidence": 0.8247,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "worth_researching_soon": {
+       "answer": true,
+       "confidence": 0.5056,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      }
+     },
+     "ms": 428.97430004086345,
+     "n": 1,
+     "recording": "rec_015"
+    },
+    {
+     "answers": {
+      "hard_deadline": {
+       "p": 0.1075
+      },
+      "project": {
+       "choice": "other",
+       "confidence": 0.4417,
+       "probabilities": {
+        "community": 0.0384,
+        "other": 0.5214,
+        "personal": 0.0382,
+        "research": 0.0364,
+        "school": 0.0154,
+        "work": 0.2887,
+        "writing": 0.0614
+       }
+      },
+      "real_commitment": {
+       "p": 0.8284
+      },
+      "sensitive": {
+       "p": 0.2506
+      },
+      "someone_waiting": {
+       "p": 0.8447
+      },
+      "worth_researching_soon": {
+       "p": 0.4314
+      }
+     },
+     "expected_project": "work",
+     "judged": {
+      "hard_deadline": {
+       "answer": false,
+       "confidence": 0.8925,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "priority": {
+       "answer": "high",
+       "confidence": null,
+       "floor": 0.0,
+       "note": "someone_waiting",
+       "problem": null,
+       "value": 4
+      },
+      "project": {
+       "answer": "other",
+       "confidence": 0.4417,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      },
+      "real_commitment": {
+       "answer": true,
+       "confidence": 0.8284,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "sensitive": {
+       "answer": false,
+       "confidence": 0.7494000000000001,
+       "floor": 0.6,
+       "note": null,
+       "problem": null,
+       "value": false
+      },
+      "someone_waiting": {
+       "answer": true,
+       "confidence": 0.8447,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": true
+      },
+      "worth_researching_soon": {
+       "answer": false,
+       "confidence": 0.5686,
+       "floor": 0.7,
+       "note": null,
+       "problem": null,
+       "value": null
+      }
+     },
+     "ms": 449.6493999613449,
+     "n": 2,
+     "recording": "rec_015"
+    }
+   ],
+   "versions": {
+    "capability": [
+     12,
+     0
+    ],
+    "card": "NVIDIA GeForce RTX 5050 Laptop GPU",
+    "cuda": "13.0",
+    "driver": "610.74",
+    "host": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel, 16 logical cores",
+    "torch": "2.14.1+cu130",
+    "weights": "bfloat16 on the card"
+   }
+  }
+ },
+ "runner_blob": "c654351120534cb6"
+}

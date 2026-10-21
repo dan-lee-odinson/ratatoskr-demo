@@ -57,6 +57,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.util
 import json
 import math
 import os
@@ -664,8 +665,19 @@ def render(run: Run, *, settings: Settings, spend: dict[str, Any], versions: dic
                f"{'SENSITIVE' if t.expected.sensitive else 'clear'}") if t.expected else "(unmatched)"
         cells = [_cell(run.asked[name][i]) for name in run.asked]
         lines.append(f"| {t.recording_id} | {_md(t.task.content)} | {exp} | " + " | ".join(cells) + " |")
+    lines += server_variants_lines()
     lines += ["", "## Bedrock spend (whole ledger, all purposes)", "", "```", json.dumps(spend, indent=2), "```", ""]
     return "\n".join(lines)
+
+
+def server_variants_lines() -> list[str]:
+    """The "Server variants" section (Dan's ruling 48), drawn from its committed export alone: no model asked."""
+    spec = importlib.util.spec_from_file_location("server_variants", REPO / "bench" / "server_variants.py")
+    variants = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(variants)
+    if not variants.EXPORT.exists():
+        return []
+    return variants.section(json.loads(variants.EXPORT.read_text(encoding="utf-8")))
 
 
 def label_corrections(run: Run) -> list[str]:
