@@ -1,0 +1,26 @@
+{
+  "data": {
+    "created_at": "2026-10-14T15:05:00Z",
+    "duration": 448,
+    "folder_id": "fld_default",
+    "id": "fresh_02",
+    "language": "en",
+    "recorded_by": {
+      "display_name": "Dan",
+      "email": "redacted@example.invalid",
+      "user_id": "usr_owner"
+    },
+    "recording_at": "2026-10-14T15:05:00Z",
+    "state": "completed",
+    "summarizations": null,
+    "summarizations_errors": [],
+    "tags": [],
+    "title": "Call from the garage",
+    "transcript": "Speaker 1: Hi, it's Rhys Talbot at Ferncliff Motors. We ran the diagnosis on your car. Speaker 2: How bad is it? Speaker 1: The gearbox is terminal, I'm afraid; it needs replacing, not repairing. Speaker 2: Ouch. When can you do it? Speaker 1: Bring it in Tuesday morning at eight and we'll have it back to you by Thursday. Speaker 2: I'll drop it off Tuesday at eight. Speaker 1: And keep the tow receipt; your insurer may cover the tow. Speaker 2: Good point. I'll call the insurer about the tow claim this week.",
+    "transcript_error": null,
+    "translation": null,
+    "translation_error": null,
+    "updated_at": "2026-10-14T15:05:00Z"
+  },
+  "success": true
+}

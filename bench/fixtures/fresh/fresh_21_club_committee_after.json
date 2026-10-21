@@ -1,0 +1,26 @@
+{
+  "data": {
+    "created_at": "2026-10-18T19:30:00Z",
+    "duration": 2200,
+    "folder_id": "fld_default",
+    "id": "fresh_21",
+    "language": "en",
+    "recorded_by": {
+      "display_name": "Dan",
+      "email": "redacted@example.invalid",
+      "user_id": "usr_owner"
+    },
+    "recording_at": "2026-10-18T19:30:00Z",
+    "state": "completed",
+    "summarizations": null,
+    "summarizations_errors": [],
+    "tags": [],
+    "title": "After the club meeting",
+    "transcript": "Speaker 1: Thanks for staying after the meeting. I wanted to go through a few things with you before the committee sees the minutes. Speaker 2: Of course. Go ahead. Speaker 1: Right, the treasurer's report, and then something personal, so bear with me. The membership renewals are up on last year, sixty-one paid out of seventy, and the nine who haven't paid have all had two reminders. The launch-day budget is fine: the motors are ordered, the range fees are paid, and the insurance renewal is the only large bill left this quarter. The insurer needs our updated member list before they send the liability certificate, and without the certificate the landowner won't let us on the field, so that is the one thing that has to happen before launch day. The newsletter printing went over by forty, because of the colour pages, but the sponsor covered half of it. The raffle made a hundred and twelve. The cash box is reconciled and the bank statement matches to the penny. The grant from the county arts fund came through at last, three hundred and fifty, and it is ring-fenced for the schools outreach day, so please nobody spend it on motors. The outreach day needs two volunteers with range safety cards, and I have asked twice in the newsletter without a reply. The trailer needs a new tyre before the winter; the quote from the garage was ninety, which I think is fair, and I would like the committee to approve it at the next meeting rather than by email. Our account at the model shop is clear. The equipment loan sheet shows two altimeters still out since September, one with a member who has not renewed, and I would like that one back before anyone else borrows it. The online shop sold eleven badges and four mugs, which barely covers the postage. That is all the small items. That's the money. Now the personal part. I'm going to be declaring bankruptcy next month, after my business failed, and I can't stay on as treasurer while that goes through; it wouldn't be right to keep the club's accounts. Please don't tell the committee why I'm stepping down; I'll say it's for work. I'd like someone to take over the spreadsheet from me this month, and I'll walk them through every tab. It's not complicated, but the reconciliation sheet has a few quirks that I should explain in person rather than in writing, and I would rather hand it over properly than leave a mess. Speaker 2: Gareth, I'm sorry. Of course I'll keep it to myself. I'll take over the treasurer's spreadsheet; walk me through it whenever suits you. Speaker 1: Thank you. Next week, then. And the safety briefing for launch day, could you draft it by the 30th? The range officer wants to see it a week before. Speaker 2: I'll draft the launch-day safety briefing by the 30th. Speaker 1: And would you ask the insurer about the liability certificate? I'd rather not be the one emailing them right now. Speaker 2: I'll ask the insurer for the updated liability certificate this week. Speaker 1: Thank you. That's a weight off.",
+    "transcript_error": null,
+    "translation": null,
+    "translation_error": null,
+    "updated_at": "2026-10-18T19:30:00Z"
+  },
+  "success": true
+}

@@ -1,0 +1,26 @@
+{
+  "data": {
+    "created_at": "2026-10-15T13:30:00Z",
+    "duration": 436,
+    "folder_id": "fld_default",
+    "id": "fresh_03",
+    "language": "en",
+    "recorded_by": {
+      "display_name": "Dan",
+      "email": "redacted@example.invalid",
+      "user_id": "usr_owner"
+    },
+    "recording_at": "2026-10-15T13:30:00Z",
+    "state": "completed",
+    "summarizations": null,
+    "summarizations_errors": [],
+    "tags": [],
+    "title": "Volunteer orientation",
+    "transcript": "Speaker 1: Welcome aboard. I'm Beatrix Olowe, I coordinate the volunteers at St Aldric's Hospital. Speaker 2: Thanks, I'm looking forward to it. Speaker 1: You'll be on the oncology ward's reading cart on Saturdays, so the patient-confidentiality module has to be done before your first shift on the 24th. Speaker 2: I'll finish the confidentiality module before the 24th. Speaker 1: And bring your vaccination record to the orientation on Monday; occupational health checks everyone's. Speaker 2: I'll bring it on Monday. Speaker 1: Lovely. The cart has large-print books, if anyone asks.",
+    "transcript_error": null,
+    "translation": null,
+    "translation_error": null,
+    "updated_at": "2026-10-15T13:30:00Z"
+  },
+  "success": true
+}

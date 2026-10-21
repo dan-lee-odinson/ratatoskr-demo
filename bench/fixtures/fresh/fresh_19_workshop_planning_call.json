@@ -1,0 +1,26 @@
+{
+  "data": {
+    "created_at": "2026-10-13T14:00:00Z",
+    "duration": 1968,
+    "folder_id": "fld_default",
+    "id": "fresh_19",
+    "language": "en",
+    "recorded_by": {
+      "display_name": "Dan",
+      "email": "redacted@example.invalid",
+      "user_id": "usr_owner"
+    },
+    "recording_at": "2026-10-13T14:00:00Z",
+    "state": "completed",
+    "summarizations": null,
+    "summarizations_errors": [],
+    "tags": [],
+    "title": "Workshop planning",
+    "transcript": "Speaker 1: Thanks for making time. I want to get the small-satellite thermal workshop settled before the venue starts chasing us. Shall we go through the list? Speaker 2: Please. I have the spreadsheet open. Venue first? Speaker 1: Venue first. The Harbour Lecture Theatre holds a hundred and twenty, which is more than we need, and they include the projector and two microphones. They want final catering numbers by the 23rd, and after that the menu is fixed and we pay for whatever we ordered. Speaker 2: I'll confirm the catering numbers with them by the 23rd. Do we have a headcount yet? Speaker 1: Eighty-four registered, and usually about ten percent don't come, so order for eighty. Two vegetarian options, one vegan, and the coeliac speaker needs a separate plate. Speaker 2: Noted. Eighty, two vegetarian, one vegan, one gluten-free. What about the speakers? Speaker 1: Six confirmed. The radiator session has three, the coatings session has two, and the keynote is the person from the materials lab who did the louvre tests. I still need the order of the afternoon sessions and the length of each break, and I want the draft schedule from you by Friday so I can send it to the speakers on Monday. Speaker 2: You'll have the draft schedule by Friday. Forty minutes per talk, twenty for questions? Speaker 1: Thirty and fifteen, I think, or we run late. The keynote can have forty-five. Speaker 1: There's something else, and I'd rather you heard it from me. I'm halfway through chemotherapy, so I won't be able to travel to the venue on the day. I'll join remotely. Please keep it between us; the committee only knows I can't travel. Speaker 2: Thank you for telling me. Of course it stays with me. Then we need the livestream to work properly. Speaker 1: Yes. Remote attendees asked for it last year too. Could you look into a livestream service that doesn't need a technician on site? Something the lecture theatre's own camera can feed. Speaker 2: I'll look up livestream services this week and send you two or three options. Speaker 1: Good. Badges: the print shop needs the final list two days before, so that follows the catering numbers. And the sponsors want their logos on the opening slide, not on every slide. Speaker 2: Opening slide only. I'll tell them when I send the invoices. Speaker 1: Last thing is the budget. We're about three hundred under, so the evening drinks are fine if you want to keep them. Speaker 2: Let's keep them. People talk more at the drinks than in the sessions. Speaker 1: That's true of every workshop I've ever run. Right, I think that's everything for this week. Speaker 2: I'll send the schedule Friday and confirm catering by the 23rd. Speak next week.",
+    "transcript_error": null,
+    "translation": null,
+    "translation_error": null,
+    "updated_at": "2026-10-13T14:00:00Z"
+  },
+  "success": true
+}

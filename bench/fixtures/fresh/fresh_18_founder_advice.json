@@ -1,0 +1,26 @@
+{
+  "data": {
+    "created_at": "2026-10-19T17:30:00Z",
+    "duration": 340,
+    "folder_id": "fld_default",
+    "id": "fresh_18",
+    "language": "en",
+    "recorded_by": {
+      "display_name": "Dan",
+      "email": "redacted@example.invalid",
+      "user_id": "usr_owner"
+    },
+    "recording_at": "2026-10-19T17:30:00Z",
+    "state": "completed",
+    "summarizations": null,
+    "summarizations_errors": [],
+    "tags": [],
+    "title": "Call with Corvane",
+    "transcript": "Speaker 1: This is between us and the board. We have eight weeks of runway, and if the bridge round doesn't close we can't make December payroll. Speaker 2: That's serious. Who knows? Speaker 1: Only the board, and now you. Do you know anyone who structures bridge loans? Speaker 2: I'll send you the contact of the adviser who helped my last company, by Wednesday. Speaker 1: Thank you.",
+    "transcript_error": null,
+    "translation": null,
+    "translation_error": null,
+    "updated_at": "2026-10-19T17:30:00Z"
+  },
+  "success": true
+}

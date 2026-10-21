@@ -1,0 +1,26 @@
+{
+  "data": {
+    "created_at": "2026-10-17T19:00:00Z",
+    "duration": 344,
+    "folder_id": "fld_default",
+    "id": "fresh_24",
+    "language": "en",
+    "recorded_by": {
+      "display_name": "Dan",
+      "email": "redacted@example.invalid",
+      "user_id": "usr_owner"
+    },
+    "recording_at": "2026-10-17T19:00:00Z",
+    "state": "completed",
+    "summarizations": null,
+    "summarizations_errors": [],
+    "tags": [],
+    "title": "Call with Bram",
+    "transcript": "Speaker 1: About the reunion dinner: I'm ninety days sober now, and I'd rather not be somewhere with an open bar. Not many people know I was in treatment. Speaker 2: I'm proud of you, Bram. Leave it with me. Speaker 1: Thanks. Could you find somewhere that doesn't centre on drinks? Speaker 2: I'll book an alcohol-free venue for the reunion by next week. Speaker 1: That means a lot.",
+    "transcript_error": null,
+    "translation": null,
+    "translation_error": null,
+    "updated_at": "2026-10-17T19:00:00Z"
+  },
+  "success": true
+}

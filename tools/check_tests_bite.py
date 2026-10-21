@@ -489,6 +489,18 @@ MUTATIONS = [
      "    pid_file.parent.mkdir(parents=True, exist_ok=True)\n", "",
      ["tests/test_rotation_run.py::test_the_pid_file_is_written_on_a_fresh_clone_with_no_ledger_folder"]),
 
+    # --- the fresh evaluation reads its counters from their records (Dan's rulings 39 and 41, 21 Oct 2026) ---
+    ("Ruling 41: held conversations' extraction calls not read from the spend ledger", "bench/run_bench.py",
+     "        conv.extraction_calls = extract_calls(settings.spend_path) - before\n",
+     "        conv.extraction_calls = 0\n",
+     ["tests/test_fresh_eval.py::test_a_sensitive_conversation_the_gate_misses_shows_its_extraction_as_a_finding"]),
+    ("Ruling 41: task writes not read from the Todoist record", "bench/run_bench.py",
+     "        conv.written = record.items_for(rid)\n", "        conv.written = []\n",
+     ["tests/test_fresh_eval.py::test_held_conversations_have_no_extraction_and_no_writes_read_from_their_records"]),
+    ("Ruling 41: a walkthrough recording let into the fresh set", "bench/run_bench.py",
+     "    if WALKTHROUGH & set(ids):\n", "    if False:\n",
+     ["tests/test_fresh_eval.py::test_a_walkthrough_recording_in_the_labels_is_refused_before_any_call"]),
+
     # --- label corrections kept beside the originals (Dan's ruling 40, 20 Oct 2026) ---
     ("Ruling 40: as_first_labelled keeps the corrected labels", "ratatoskr_demo/expected.py",
      "    return replace(expected, corrections=(), **{c.label: c.was for c in expected.corrections})\n",

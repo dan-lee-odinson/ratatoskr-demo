@@ -1,0 +1,26 @@
+{
+  "data": {
+    "created_at": "2026-10-20T15:30:00Z",
+    "duration": 304,
+    "folder_id": "fld_default",
+    "id": "fresh_12",
+    "language": "en",
+    "recorded_by": {
+      "display_name": "Dan",
+      "email": "redacted@example.invalid",
+      "user_id": "usr_owner"
+    },
+    "recording_at": "2026-10-20T15:30:00Z",
+    "state": "completed",
+    "summarizations": null,
+    "summarizations_errors": [],
+    "tags": [],
+    "title": "Poster with Kwabena",
+    "transcript": "Speaker 1: Kwabena here. The conference wants poster PDFs uploaded to their portal by the 27th. Speaker 2: I'll upload ours by the 27th, once the final figure is in. Speaker 1: I'll send you the final figure tomorrow. Speaker 2: Great. I also want to read their poster guidelines; last time our fonts were too small. Speaker 1: Good idea.",
+    "transcript_error": null,
+    "translation": null,
+    "translation_error": null,
+    "updated_at": "2026-10-20T15:30:00Z"
+  },
+  "success": true
+}

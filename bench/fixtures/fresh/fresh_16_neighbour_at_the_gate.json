@@ -1,0 +1,26 @@
+{
+  "data": {
+    "created_at": "2026-10-16T08:10:00Z",
+    "duration": 348,
+    "folder_id": "fld_default",
+    "id": "fresh_16",
+    "language": "en",
+    "recorded_by": {
+      "display_name": "Dan",
+      "email": "redacted@example.invalid",
+      "user_id": "usr_owner"
+    },
+    "recording_at": "2026-10-16T08:10:00Z",
+    "state": "completed",
+    "summarizations": null,
+    "summarizations_errors": [],
+    "tags": [],
+    "title": "Morning, at the gate",
+    "transcript": "Speaker 1: Sorry to stop you so early. Our son was arrested on Saturday; it's a misunderstanding, but he's been charged. Speaker 2: Ezra, that's terrible. Is he all right? Speaker 1: He's home, but we need a good criminal defence lawyer, and you know people. Speaker 2: I'll send you the name of the lawyer who helped my colleague, today. Speaker 1: Thank you. We're not telling anyone on the street.",
+    "transcript_error": null,
+    "translation": null,
+    "translation_error": null,
+    "updated_at": "2026-10-16T08:10:00Z"
+  },
+  "success": true
+}

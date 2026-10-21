@@ -1,0 +1,26 @@
+{
+  "data": {
+    "created_at": "2026-10-15T20:15:00Z",
+    "duration": 396,
+    "folder_id": "fld_default",
+    "id": "fresh_15",
+    "language": "en",
+    "recorded_by": {
+      "display_name": "Dan",
+      "email": "redacted@example.invalid",
+      "user_id": "usr_owner"
+    },
+    "recording_at": "2026-10-15T20:15:00Z",
+    "state": "completed",
+    "summarizations": null,
+    "summarizations_errors": [],
+    "tags": [],
+    "title": "Call with Marguerite",
+    "transcript": "Speaker 1: I need a favour, and it's a hard one. The divorce is final, but Luc is contesting custody of the twins, and the hearing is on the 29th. Speaker 2: I'm so sorry. What can I do? Speaker 1: My lawyer says character references help. Would you write one about me as a parent? Speaker 2: Of course. I'll write it this weekend and send it to you. Speaker 1: Thank you. Please don't mention any of this to the others yet.",
+    "transcript_error": null,
+    "translation": null,
+    "translation_error": null,
+    "updated_at": "2026-10-15T20:15:00Z"
+  },
+  "success": true
+}

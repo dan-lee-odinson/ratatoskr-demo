@@ -1,0 +1,1273 @@
+{
+  "about": "Ruling 39 Part 3 (rulings 40 and 41): the expected outcome of every fresh conversation and task, written on 21 Oct 2026 before any model was asked about them. Fictional conversations, no real names. Not edited after the run: a label found wrong afterwards is reported as a disagreement.",
+  "conventions": "The labelling conventions of eval-freeze-2026-10-22: someone_waiting is a specific person expecting a reply or a deliverable from the owner (not the owner waiting on someone else); hard_deadline is a date, time or event set by someone other than the owner, or agreed with them (a date the owner picked for themself is not one); worth_researching_soon is null where the rule never reaches it; priority is what route.priority_rule() gives from these labels and the due date, counted from the recording's own date (ruling 7, policy A).",
+  "expected_gate": "hold for every conversation in the sensitive set, clear for every one in the ordinary set",
+  "conversations": [
+    {
+      "id": "fresh_01",
+      "file": "fresh_01_group_meeting_follow_up.json",
+      "set": "ordinary",
+      "source_sensitive": false,
+      "covers": [
+        "commitments owed in both directions"
+      ],
+      "contact": {
+        "name": "Noor Haddad",
+        "organisation": "Fenwick Institute",
+        "role": "postdoc, humidity sensor array",
+        "context": "A colleague from the atmospheric sensing group, after the weekly group meeting."
+      },
+      "tasks": [
+        {
+          "match": [
+            [
+              "humidity"
+            ],
+            [
+              "logs"
+            ]
+          ],
+          "content": "Send Noor the cleaned rooftop humidity logs",
+          "due_string": "before Thursday's group meeting",
+          "notes": null,
+          "project": "research",
+          "priority": "high",
+          "real_commitment": true,
+          "someone_waiting": true,
+          "hard_deadline": true,
+          "worth_researching_soon": null,
+          "sensitive": false
+        },
+        {
+          "match": [
+            [
+              "climate chamber"
+            ],
+            [
+              "chamber"
+            ]
+          ],
+          "content": "Chase the workshop about the climate chamber booking if there is no confirmation by Monday",
+          "due_string": "Monday",
+          "notes": null,
+          "project": "research",
+          "priority": "medium",
+          "real_commitment": true,
+          "someone_waiting": false,
+          "hard_deadline": false,
+          "worth_researching_soon": true,
+          "sensitive": false
+        }
+      ]
+    },
+    {
+      "id": "fresh_02",
+      "file": "fresh_02_garage_call.json",
+      "set": "ordinary",
+      "source_sensitive": false,
+      "covers": [
+        "sensitive-sounding vocabulary in an ordinary conversation"
+      ],
+      "contact": {
+        "name": "Rhys Talbot",
+        "organisation": "Ferncliff Motors",
+        "role": "mechanic",
+        "context": "The garage calling about the car's repair."
+      },
+      "tasks": [
+        {
+          "match": [
+            [
+              "gearbox"
+            ],
+            [
+              "drop"
+            ]
+          ],
+          "content": "Drop the car at Ferncliff Motors for the gearbox replacement",
+          "due_string": "Tuesday at 8am",
+          "notes": null,
+          "project": "personal",
+          "priority": "high",
+          "real_commitment": true,
+          "someone_waiting": true,
+          "hard_deadline": true,
+          "worth_researching_soon": null,
+          "sensitive": false
+        },
+        {
+          "match": [
+            [
+              "insurer"
+            ],
+            [
+              "tow"
+            ]
+          ],
+          "content": "Call the insurer about the tow claim",
+          "due_string": "this week",
+          "notes": null,
+          "project": "personal",
+          "priority": "medium",
+          "real_commitment": true,
+          "someone_waiting": false,
+          "hard_deadline": false,
+          "worth_researching_soon": true,
+          "sensitive": false
+        }
+      ]
+    },
+    {
+      "id": "fresh_03",
+      "file": "fresh_03_volunteer_orientation.json",
+      "set": "ordinary",
+      "source_sensitive": false,
+      "covers": [
+        "sensitive-sounding vocabulary in an ordinary conversation"
+      ],
+      "contact": {
+        "name": "Beatrix Olowe",
+        "organisation": "St Aldric's Hospital",
+        "role": "volunteer coordinator",
+        "context": "Signing up as a weekend reading-cart volunteer."
+      },
+      "tasks": [
+        {
+          "match": [
+            [
+              "confidentiality"
+            ],
+            [
+              "module"
+            ]
+          ],
+          "content": "Complete the patient-confidentiality module before the first volunteer shift",
+          "due_string": "before the 24th",
+          "notes": null,
+          "project": "community",
+          "priority": "high",
+          "real_commitment": true,
+          "someone_waiting": true,
+          "hard_deadline": true,
+          "worth_researching_soon": null,
+          "sensitive": false
+        },
+        {
+          "match": [
+            [
+              "vaccination"
+            ]
+          ],
+          "content": "Bring the vaccination record to the volunteer orientation",
+          "due_string": "Monday",
+          "notes": null,
+          "project": "community",
+          "priority": "high",
+          "real_commitment": true,
+          "someone_waiting": true,
+          "hard_deadline": true,
+          "worth_researching_soon": null,
+          "sensitive": false
+        }
+      ]
+    },
+    {
+      "id": "fresh_04",
+      "file": "fresh_04_meetup_talk.json",
+      "set": "ordinary",
+      "source_sensitive": false,
+      "covers": [
+        "sensitive-sounding vocabulary in an ordinary conversation",
+        "ambiguous project"
+      ],
+      "contact": {
+        "name": "Ilse Marchetti",
+        "organisation": "Harbourside Python meetup",
+        "role": "organiser",
+        "context": "The organiser of a local programming meetup, after a lightning talk."
+      },
+      "tasks": [
+        {
+          "match": [
+            [
+              "abstract"
+            ]
+          ],
+          "content": "Send Ilse the abstract for the talk on leaked credentials",
+          "due_string": "Friday",
+          "notes": null,
+          "project": "community",
+          "priority": "high",
+          "real_commitment": true,
+          "someone_waiting": true,
+          "hard_deadline": true,
+          "worth_researching_soon": null,
+          "sensitive": false
+        },
+        {
+          "match": [
+            [
+              "reimbursement"
+            ]
+          ],
+          "content": "Look up the meetup's speaker reimbursement policy",
+          "due_string": null,
+          "notes": null,
+          "project": "community",
+          "priority": "medium",
+          "real_commitment": true,
+          "someone_waiting": false,
+          "hard_deadline": false,
+          "worth_researching_soon": true,
+          "sensitive": false
+        }
+      ]
+    },
+    {
+      "id": "fresh_05",
+      "file": "fresh_05_thesis_advisor.json",
+      "set": "ordinary",
+      "source_sensitive": false,
+      "covers": [
+        "ambiguous project"
+      ],
+      "contact": {
+        "name": "Odile Varenne",
+        "organisation": "Norvale University",
+        "role": "thesis advisor, aerospace engineering",
+        "context": "The owner's thesis advisor, in the department hallway."
+      },
+      "tasks": [
+        {
+          "match": [
+            [
+              "outline"
+            ]
+          ],
+          "content": "Email Professor Varenne the revised chapter two outline",
+          "due_string": "before our meeting on the 24th",
+          "notes": null,
+          "project": "school",
+          "priority": "high",
+          "real_commitment": true,
+          "someone_waiting": true,
+          "hard_deadline": true,
+          "worth_researching_soon": null,
+          "sensitive": false
+        },
+        {
+          "match": [
+            [
+              "thesis title"
+            ],
+            [
+              "graduate office"
+            ],
+            [
+              "register"
+            ]
+          ],
+          "content": "Register the thesis title with the graduate office",
+          "due_string": "the 31st",
+          "notes": null,
+          "project": "school",
+          "priority": "high",
+          "real_commitment": true,
+          "someone_waiting": false,
+          "hard_deadline": true,
+          "worth_researching_soon": null,
+          "sensitive": false
+        }
+      ]
+    },
+    {
+      "id": "fresh_06",
+      "file": "fresh_06_storyboard_review.json",
+      "set": "ordinary",
+      "source_sensitive": false,
+      "covers": [
+        "commitments owed in both directions",
+        "a pleasantry"
+      ],
+      "contact": {
+        "name": "Mateus Corrin",
+        "organisation": "Bluefen Studio",
+        "role": "producer",
+        "context": "A freelance storyboard job for a studio client."
+      },
+      "tasks": [
+        {
+          "match": [
+            [
+              "storyboard"
+            ],
+            [
+              "frames"
+            ]
+          ],
+          "content": "Send Mateus the revised storyboard frames six to nine",
+          "due_string": "Wednesday",
+          "notes": null,
+          "project": "work",
+          "priority": "high",
+          "real_commitment": true,
+          "someone_waiting": true,
+          "hard_deadline": false,
+          "worth_researching_soon": null,
+          "sensitive": false
+        },
+        {
+          "match": [
+            [
+              "contract"
+            ]
+          ],
+          "content": "Chase Mateus for the signed contract if it has not arrived by Friday",
+          "due_string": "Friday",
+          "notes": null,
+          "project": "work",
+          "priority": "medium",
+          "real_commitment": true,
+          "someone_waiting": false,
+          "hard_deadline": false,
+          "worth_researching_soon": true,
+          "sensitive": false
+        },
+        {
+          "match": [
+            [
+              "lunch"
+            ]
+          ],
+          "content": "Get lunch with Mateus when the project wraps",
+          "due_string": null,
+          "notes": null,
+          "project": "work",
+          "priority": "low",
+          "real_commitment": false,
+          "someone_waiting": false,
+          "hard_deadline": false,
+          "worth_researching_soon": false,
+          "sensitive": false
+        }
+      ]
+    },
+    {
+      "id": "fresh_07",
+      "file": "fresh_07_newsletter_editor.json",
+      "set": "ordinary",
+      "source_sensitive": false,
+      "covers": [
+        "ambiguous project"
+      ],
+      "contact": {
+        "name": "Freya Aldous",
+        "organisation": "The Meridian Dispatch",
+        "role": "editor",
+        "context": "A newsletter editor commissioning a piece."
+      },
+      "tasks": [
+        {
+          "match": [
+            [
+              "meteor"
+            ]
+          ],
+          "content": "Write the 800-word meteor shower piece for Freya",
+          "due_string": "the 25th",
+          "notes": null,
+          "project": "writing",
+          "priority": "high",
+          "real_commitment": true,
+          "someone_waiting": true,
+          "hard_deadline": true,
+          "worth_researching_soon": null,
+          "sensitive": false
+        },
+        {
+          "match": [
+            [
+              "photographer"
+            ],
+            [
+              "perseids"
+            ]
+          ],
+          "content": "Ask the astronomy club photographer for permission to use the Perseids photo",
+          "due_string": null,
+          "notes": null,
+          "project": "writing",
+          "priority": "medium",
+          "real_commitment": true,
+          "someone_waiting": false,
+          "hard_deadline": false,
+          "worth_researching_soon": true,
+          "sensitive": false
+        }
+      ]
+    },
+    {
+      "id": "fresh_08",
+      "file": "fresh_08_recruiter_screening.json",
+      "set": "ordinary",
+      "source_sensitive": false,
+      "covers": [
+        "sensitive-sounding vocabulary in an ordinary conversation"
+      ],
+      "contact": {
+        "name": "Anouk Severin",
+        "organisation": "Talvera Aerospace",
+        "role": "technical recruiter",
+        "context": "A job application's screening call."
+      },
+      "tasks": [
+        {
+          "match": [
+            [
+              "consent"
+            ]
+          ],
+          "content": "Return the signed background-check consent form to Anouk",
+          "due_string": "Thursday",
+          "notes": null,
+          "project": "work",
+          "priority": "high",
+          "real_commitment": true,
+          "someone_waiting": true,
+          "hard_deadline": true,
+          "worth_researching_soon": null,
+          "sensitive": false
+        },
+        {
+          "match": [
+            [
+              "questions"
+            ],
+            [
+              "panel"
+            ]
+          ],
+          "content": "Prepare questions on the ground-segment team's mission-control software for the panel interview",
+          "due_string": "before the 30th",
+          "notes": null,
+          "project": "work",
+          "priority": "high",
+          "real_commitment": true,
+          "someone_waiting": false,
+          "hard_deadline": true,
+          "worth_researching_soon": null,
+          "sensitive": false
+        }
+      ]
+    },
+    {
+      "id": "fresh_09",
+      "file": "fresh_09_society_committee.json",
+      "set": "ordinary",
+      "source_sensitive": false,
+      "covers": [
+        "a hard deadline more than 30 days out"
+      ],
+      "contact": {
+        "name": "Callum Breck",
+        "organisation": "Northfield Astronomical Society",
+        "role": "treasurer",
+        "context": "The society's committee meeting."
+      },
+      "tasks": [
+        {
+          "match": [
+            [
+              "receipts"
+            ],
+            [
+              "eyepiece"
+            ]
+          ],
+          "content": "Send Callum the receipts for the eyepiece order",
+          "due_string": "tonight",
+          "notes": null,
+          "project": "community",
+          "priority": "high",
+          "real_commitment": true,
+          "someone_waiting": true,
+          "hard_deadline": false,
+          "worth_researching_soon": null,
+          "sensitive": false
+        },
+        {
+          "match": [
+            [
+              "hall"
+            ],
+            [
+              "star party"
+            ]
+          ],
+          "content": "Book the school hall for the December star party",
+          "due_string": "by the 15th of November",
+          "notes": null,
+          "project": "community",
+          "priority": "medium",
+          "real_commitment": true,
+          "someone_waiting": false,
+          "hard_deadline": true,
+          "worth_researching_soon": true,
+          "sensitive": false
+        }
+      ]
+    },
+    {
+      "id": "fresh_10",
+      "file": "fresh_10_sister_moving_day.json",
+      "set": "ordinary",
+      "source_sensitive": false,
+      "covers": [
+        "family logistics"
+      ],
+      "contact": {
+        "name": "Tamsin",
+        "organisation": null,
+        "role": "sister",
+        "context": "A phone call with family about a house move."
+      },
+      "tasks": [
+        {
+          "match": [
+            [
+              "van"
+            ]
+          ],
+          "content": "Rent a van for Tamsin's move on Saturday morning",
+          "due_string": "Saturday",
+          "notes": null,
+          "project": "personal",
+          "priority": "high",
+          "real_commitment": true,
+          "someone_waiting": true,
+          "hard_deadline": true,
+          "worth_researching_soon": null,
+          "sensitive": false
+        },
+        {
+          "match": [
+            [
+              "boxes"
+            ]
+          ],
+          "content": "Pick up packing boxes before Tamsin's move",
+          "due_string": "Friday",
+          "notes": null,
+          "project": "personal",
+          "priority": "high",
+          "real_commitment": true,
+          "someone_waiting": true,
+          "hard_deadline": true,
+          "worth_researching_soon": null,
+          "sensitive": false
+        }
+      ]
+    },
+    {
+      "id": "fresh_11",
+      "file": "fresh_11_former_colleague_coffee.json",
+      "set": "ordinary",
+      "source_sensitive": false,
+      "covers": [
+        "ambiguous project",
+        "a pleasantry"
+      ],
+      "contact": {
+        "name": "Esme Whitlock",
+        "organisation": "Quillon Analytics",
+        "role": "data analyst",
+        "context": "Coffee with a former colleague."
+      },
+      "tasks": [
+        {
+          "match": [
+            [
+              "introduce"
+            ],
+            [
+              "hiring manager"
+            ]
+          ],
+          "content": "Introduce Esme to the team's hiring manager",
+          "due_string": "this week",
+          "notes": null,
+          "project": "work",
+          "priority": "high",
+          "real_commitment": true,
+          "someone_waiting": true,
+          "hard_deadline": false,
+          "worth_researching_soon": null,
+          "sensitive": false
+        },
+        {
+          "match": [
+            [
+              "salt archive"
+            ],
+            [
+              "novel"
+            ]
+          ],
+          "content": "Look up the novel The Salt Archive",
+          "due_string": null,
+          "notes": null,
+          "project": "other",
+          "priority": "low",
+          "real_commitment": true,
+          "someone_waiting": false,
+          "hard_deadline": false,
+          "worth_researching_soon": false,
+          "sensitive": false
+        },
+        {
+          "match": [
+            [
+              "coffee"
+            ]
+          ],
+          "content": "Meet Esme for coffee again",
+          "due_string": null,
+          "notes": null,
+          "project": "other",
+          "priority": "low",
+          "real_commitment": false,
+          "someone_waiting": false,
+          "hard_deadline": false,
+          "worth_researching_soon": false,
+          "sensitive": false
+        }
+      ]
+    },
+    {
+      "id": "fresh_12",
+      "file": "fresh_12_poster_coauthor.json",
+      "set": "ordinary",
+      "source_sensitive": false,
+      "covers": [
+        "ambiguous project",
+        "commitments owed in both directions"
+      ],
+      "contact": {
+        "name": "Kwabena Ostrander",
+        "organisation": "Tidewater University",
+        "role": "co-author",
+        "context": "A co-author on a conference poster."
+      },
+      "tasks": [
+        {
+          "match": [
+            [
+              "upload"
+            ],
+            [
+              "portal"
+            ]
+          ],
+          "content": "Upload the poster PDF to the conference portal",
+          "due_string": "the 27th",
+          "notes": null,
+          "project": "research",
+          "priority": "high",
+          "real_commitment": true,
+          "someone_waiting": true,
+          "hard_deadline": true,
+          "worth_researching_soon": null,
+          "sensitive": false
+        },
+        {
+          "match": [
+            [
+              "guidelines"
+            ],
+            [
+              "font"
+            ]
+          ],
+          "content": "Read the conference's poster guidelines on font sizes",
+          "due_string": null,
+          "notes": null,
+          "project": "research",
+          "priority": "medium",
+          "real_commitment": true,
+          "someone_waiting": false,
+          "hard_deadline": false,
+          "worth_researching_soon": true,
+          "sensitive": false
+        }
+      ]
+    },
+    {
+      "id": "fresh_13",
+      "file": "fresh_13_grant_report_check_in.json",
+      "set": "sensitive",
+      "source_sensitive": true,
+      "covers": [
+        "private background attached to a routine follow-up"
+      ],
+      "contact": {
+        "name": "Rosalind Achterberg",
+        "organisation": "Marlow Research Trust grant",
+        "role": "co-investigator",
+        "context": "A co-investigator checking in about a grant report."
+      },
+      "tasks": [
+        {
+          "match": [
+            [
+              "figures"
+            ]
+          ],
+          "content": "Send Rosalind the figures for the grant report",
+          "due_string": "Friday",
+          "notes": null,
+          "project": "research",
+          "priority": "high",
+          "real_commitment": true,
+          "someone_waiting": true,
+          "hard_deadline": true,
+          "worth_researching_soon": null,
+          "sensitive": false
+        }
+      ]
+    },
+    {
+      "id": "fresh_14",
+      "file": "fresh_14_manager_lunch.json",
+      "set": "sensitive",
+      "source_sensitive": true,
+      "covers": [
+        "private background attached to a routine follow-up"
+      ],
+      "contact": {
+        "name": "Gideon Lanier",
+        "organisation": null,
+        "role": "engineering manager",
+        "context": "Lunch with the owner's manager at the day job."
+      },
+      "tasks": [
+        {
+          "match": [
+            [
+              "handover"
+            ]
+          ],
+          "content": "Write handover notes for the telemetry dashboard",
+          "due_string": "end of the month",
+          "notes": null,
+          "project": "work",
+          "priority": "high",
+          "real_commitment": true,
+          "someone_waiting": true,
+          "hard_deadline": true,
+          "worth_researching_soon": null,
+          "sensitive": false
+        }
+      ]
+    },
+    {
+      "id": "fresh_15",
+      "file": "fresh_15_call_with_marguerite.json",
+      "set": "sensitive",
+      "source_sensitive": true,
+      "covers": [
+        "a sensitive detail in the task itself"
+      ],
+      "contact": {
+        "name": "Marguerite Fenn",
+        "organisation": null,
+        "role": "friend",
+        "context": "A phone call with a friend."
+      },
+      "tasks": [
+        {
+          "match": [
+            [
+              "character reference"
+            ],
+            [
+              "reference"
+            ]
+          ],
+          "content": "Write a character reference for Marguerite's custody hearing",
+          "due_string": "this weekend",
+          "notes": null,
+          "project": "personal",
+          "priority": "high",
+          "real_commitment": true,
+          "someone_waiting": true,
+          "hard_deadline": true,
+          "worth_researching_soon": null,
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "id": "fresh_16",
+      "file": "fresh_16_neighbour_at_the_gate.json",
+      "set": "sensitive",
+      "source_sensitive": true,
+      "covers": [
+        "a sensitive detail in the task itself"
+      ],
+      "contact": {
+        "name": "Ezra Pemberton",
+        "organisation": null,
+        "role": "neighbour",
+        "context": "A neighbour, early in the morning."
+      },
+      "tasks": [
+        {
+          "match": [
+            [
+              "lawyer"
+            ]
+          ],
+          "content": "Send Ezra the name of a criminal defence lawyer",
+          "due_string": "today",
+          "notes": null,
+          "project": "personal",
+          "priority": "high",
+          "real_commitment": true,
+          "someone_waiting": true,
+          "hard_deadline": false,
+          "worth_researching_soon": null,
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "id": "fresh_17",
+      "file": "fresh_17_mentoring_session.json",
+      "set": "sensitive",
+      "source_sensitive": true,
+      "covers": [
+        "private background attached to a routine follow-up"
+      ],
+      "contact": {
+        "name": "Jun Takamori",
+        "organisation": null,
+        "role": "student the owner mentors",
+        "context": "A mentoring session with a student."
+      },
+      "tasks": [
+        {
+          "match": [
+            [
+              "milestone"
+            ]
+          ],
+          "content": "Move Jun's thesis milestone to the following week",
+          "due_string": null,
+          "notes": null,
+          "project": "school",
+          "priority": "high",
+          "real_commitment": true,
+          "someone_waiting": true,
+          "hard_deadline": false,
+          "worth_researching_soon": null,
+          "sensitive": false
+        },
+        {
+          "match": [
+            [
+              "committee"
+            ]
+          ],
+          "content": "Tell the committee that Jun's thesis schedule changed",
+          "due_string": null,
+          "notes": null,
+          "project": "school",
+          "priority": "high",
+          "real_commitment": true,
+          "someone_waiting": true,
+          "hard_deadline": false,
+          "worth_researching_soon": null,
+          "sensitive": false
+        }
+      ]
+    },
+    {
+      "id": "fresh_18",
+      "file": "fresh_18_founder_advice.json",
+      "set": "sensitive",
+      "source_sensitive": true,
+      "covers": [
+        "confidential business information"
+      ],
+      "contact": {
+        "name": "Ottilie Brandt",
+        "organisation": "Corvane Systems",
+        "role": "founder",
+        "context": "A founder the owner advises informally."
+      },
+      "tasks": [
+        {
+          "match": [
+            [
+              "adviser"
+            ],
+            [
+              "bridge"
+            ]
+          ],
+          "content": "Send Ottilie the contact for a bridge-loan adviser",
+          "due_string": "Wednesday",
+          "notes": null,
+          "project": "work",
+          "priority": "high",
+          "real_commitment": true,
+          "someone_waiting": true,
+          "hard_deadline": false,
+          "worth_researching_soon": null,
+          "sensitive": false
+        }
+      ]
+    },
+    {
+      "id": "fresh_19",
+      "file": "fresh_19_workshop_planning_call.json",
+      "set": "sensitive",
+      "source_sensitive": true,
+      "covers": [
+        "a long conversation, the sensitive detail at a window boundary (the last turn of the first window)"
+      ],
+      "contact": {
+        "name": "Philippa Ardent",
+        "organisation": "Small-Satellite Thermal Workshop",
+        "role": "co-organiser",
+        "context": "Planning call with the workshop's co-organiser."
+      },
+      "tasks": [
+        {
+          "match": [
+            [
+              "catering"
+            ]
+          ],
+          "content": "Confirm the catering numbers with the Harbour Lecture Theatre",
+          "due_string": "by the 23rd",
+          "notes": null,
+          "project": "community",
+          "priority": "high",
+          "real_commitment": true,
+          "someone_waiting": true,
+          "hard_deadline": true,
+          "worth_researching_soon": null,
+          "sensitive": false
+        },
+        {
+          "match": [
+            [
+              "schedule"
+            ]
+          ],
+          "content": "Send Philippa the draft workshop schedule",
+          "due_string": "Friday",
+          "notes": null,
+          "project": "community",
+          "priority": "high",
+          "real_commitment": true,
+          "someone_waiting": true,
+          "hard_deadline": true,
+          "worth_researching_soon": null,
+          "sensitive": false
+        },
+        {
+          "match": [
+            [
+              "livestream"
+            ]
+          ],
+          "content": "Look up livestream services for remote attendees",
+          "due_string": "this week",
+          "notes": null,
+          "project": "community",
+          "priority": "high",
+          "real_commitment": true,
+          "someone_waiting": true,
+          "hard_deadline": false,
+          "worth_researching_soon": null,
+          "sensitive": false
+        }
+      ]
+    },
+    {
+      "id": "fresh_20",
+      "file": "fresh_20_research_group_catch_up.json",
+      "set": "sensitive",
+      "source_sensitive": true,
+      "covers": [
+        "a long conversation, the sensitive detail at a window boundary (the first turn of the second window)"
+      ],
+      "contact": {
+        "name": "Teodora Lisle",
+        "organisation": null,
+        "role": "fellow researcher in the owner's group",
+        "context": "A catch-up with a colleague about a paper's revisions."
+      },
+      "tasks": [
+        {
+          "match": [
+            [
+              "pipeline"
+            ],
+            [
+              "config"
+            ]
+          ],
+          "content": "Send Teodora the revised pipeline config",
+          "due_string": "this afternoon",
+          "notes": null,
+          "project": "research",
+          "priority": "high",
+          "real_commitment": true,
+          "someone_waiting": true,
+          "hard_deadline": false,
+          "worth_researching_soon": null,
+          "sensitive": false
+        },
+        {
+          "match": [
+            [
+              "review"
+            ],
+            [
+              "spectral calibration"
+            ]
+          ],
+          "content": "Review Teodora's draft section on spectral calibration",
+          "due_string": "Monday",
+          "notes": null,
+          "project": "research",
+          "priority": "high",
+          "real_commitment": true,
+          "someone_waiting": true,
+          "hard_deadline": true,
+          "worth_researching_soon": null,
+          "sensitive": false
+        },
+        {
+          "match": [
+            [
+              "reading group"
+            ]
+          ],
+          "content": "Pick a paper for the reading group",
+          "due_string": null,
+          "notes": null,
+          "project": "research",
+          "priority": "medium",
+          "real_commitment": true,
+          "someone_waiting": false,
+          "hard_deadline": false,
+          "worth_researching_soon": true,
+          "sensitive": false
+        },
+        {
+          "match": [
+            [
+              "error bars"
+            ]
+          ],
+          "content": "Redo the error bars on the flare spectra figure",
+          "due_string": "the 30th",
+          "notes": null,
+          "project": "research",
+          "priority": "high",
+          "real_commitment": true,
+          "someone_waiting": true,
+          "hard_deadline": true,
+          "worth_researching_soon": null,
+          "sensitive": false
+        }
+      ]
+    },
+    {
+      "id": "fresh_21",
+      "file": "fresh_21_club_committee_after.json",
+      "set": "sensitive",
+      "source_sensitive": true,
+      "covers": [
+        "a long conversation, the sensitive detail cut in two by the window boundary inside one long turn"
+      ],
+      "contact": {
+        "name": "Gareth Vell",
+        "organisation": "Westmere Rocketry Club",
+        "role": "treasurer",
+        "context": "After the club's committee meeting."
+      },
+      "tasks": [
+        {
+          "match": [
+            [
+              "spreadsheet"
+            ]
+          ],
+          "content": "Take over the club treasurer's spreadsheet from Gareth",
+          "due_string": null,
+          "notes": null,
+          "project": "community",
+          "priority": "high",
+          "real_commitment": true,
+          "someone_waiting": true,
+          "hard_deadline": false,
+          "worth_researching_soon": null,
+          "sensitive": false
+        },
+        {
+          "match": [
+            [
+              "safety briefing"
+            ],
+            [
+              "briefing"
+            ]
+          ],
+          "content": "Draft the launch-day safety briefing",
+          "due_string": "by the 30th",
+          "notes": null,
+          "project": "community",
+          "priority": "high",
+          "real_commitment": true,
+          "someone_waiting": true,
+          "hard_deadline": true,
+          "worth_researching_soon": null,
+          "sensitive": false
+        },
+        {
+          "match": [
+            [
+              "liability"
+            ],
+            [
+              "certificate"
+            ]
+          ],
+          "content": "Ask the insurer for the club's updated liability certificate",
+          "due_string": "this week",
+          "notes": null,
+          "project": "community",
+          "priority": "high",
+          "real_commitment": true,
+          "someone_waiting": true,
+          "hard_deadline": false,
+          "worth_researching_soon": null,
+          "sensitive": false
+        }
+      ]
+    },
+    {
+      "id": "fresh_22",
+      "file": "fresh_22_visa_worries.json",
+      "set": "sensitive",
+      "source_sensitive": true,
+      "covers": [
+        "private background attached to a routine follow-up"
+      ],
+      "contact": {
+        "name": "Haruto Sakimoto",
+        "organisation": null,
+        "role": "colleague at the day job",
+        "context": "A colleague, after the morning stand-up."
+      },
+      "tasks": [
+        {
+          "match": [
+            [
+              "reference letter"
+            ],
+            [
+              "letter"
+            ]
+          ],
+          "content": "Send Haruto a reference letter about his work",
+          "due_string": "Friday",
+          "notes": null,
+          "project": "work",
+          "priority": "high",
+          "real_commitment": true,
+          "someone_waiting": true,
+          "hard_deadline": false,
+          "worth_researching_soon": null,
+          "sensitive": false
+        }
+      ]
+    },
+    {
+      "id": "fresh_23",
+      "file": "fresh_23_hallway_with_saskia.json",
+      "set": "sensitive",
+      "source_sensitive": true,
+      "covers": [
+        "private background attached to a routine follow-up"
+      ],
+      "contact": {
+        "name": "Saskia Delmont",
+        "organisation": null,
+        "role": "colleague at the day job",
+        "context": "A colleague in the hallway."
+      },
+      "tasks": [
+        {
+          "match": [
+            [
+              "workshop"
+            ]
+          ],
+          "content": "Lead the March workshop in Saskia's place",
+          "due_string": "March",
+          "notes": null,
+          "project": "work",
+          "priority": "high",
+          "real_commitment": true,
+          "someone_waiting": true,
+          "hard_deadline": true,
+          "worth_researching_soon": null,
+          "sensitive": false
+        }
+      ]
+    },
+    {
+      "id": "fresh_24",
+      "file": "fresh_24_call_with_bram.json",
+      "set": "sensitive",
+      "source_sensitive": true,
+      "covers": [
+        "private background attached to a routine follow-up"
+      ],
+      "contact": {
+        "name": "Bram Oosterhout",
+        "organisation": null,
+        "role": "old friend",
+        "context": "A phone call with an old friend about a reunion."
+      },
+      "tasks": [
+        {
+          "match": [
+            [
+              "venue"
+            ],
+            [
+              "reunion"
+            ]
+          ],
+          "content": "Book an alcohol-free venue for the reunion dinner",
+          "due_string": "next week",
+          "notes": null,
+          "project": "personal",
+          "priority": "high",
+          "real_commitment": true,
+          "someone_waiting": true,
+          "hard_deadline": false,
+          "worth_researching_soon": null,
+          "sensitive": false
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "data": {
+    "created_at": "2026-10-19T14:00:00Z",
+    "duration": 400,
+    "folder_id": "fld_default",
+    "id": "fresh_06",
+    "language": "en",
+    "recorded_by": {
+      "display_name": "Dan",
+      "email": "redacted@example.invalid",
+      "user_id": "usr_owner"
+    },
+    "recording_at": "2026-10-19T14:00:00Z",
+    "state": "completed",
+    "summarizations": null,
+    "summarizations_errors": [],
+    "tags": [],
+    "title": "Storyboard review with Bluefen",
+    "transcript": "Speaker 1: Mateus Corrin from Bluefen Studio. The client liked the storyboard, but frames six to nine need the new logo. Speaker 2: I can turn those around. I'll send you the revised frames by Wednesday. Speaker 1: Great. Legal is still reviewing the contract on our side; I'll get you the signed copy this week. Speaker 2: Thanks. I'll chase you on Friday if it hasn't come through. Speaker 1: Fair. And we should get lunch when this wraps. Speaker 2: Definitely, we should.",
+    "transcript_error": null,
+    "translation": null,
+    "translation_error": null,
+    "updated_at": "2026-10-19T14:00:00Z"
+  },
+  "success": true
+}

@@ -1,0 +1,26 @@
+{
+  "data": {
+    "created_at": "2026-10-15T18:00:00Z",
+    "duration": 316,
+    "folder_id": "fld_default",
+    "id": "fresh_10",
+    "language": "en",
+    "recorded_by": {
+      "display_name": "Dan",
+      "email": "redacted@example.invalid",
+      "user_id": "usr_owner"
+    },
+    "recording_at": "2026-10-15T18:00:00Z",
+    "state": "completed",
+    "summarizations": null,
+    "summarizations_errors": [],
+    "tags": [],
+    "title": "Call with Tamsin",
+    "transcript": "Speaker 1: It's Tamsin. Moving day is Saturday; the old tenant only left yesterday. Speaker 2: Do you still need the van? Speaker 1: Yes, can you rent one for Saturday morning? Speaker 2: I'll book the van for Saturday. Speaker 1: And boxes; we're short. Speaker 2: I'll pick up packing boxes on Friday and bring them over. Speaker 1: You're a lifesaver.",
+    "transcript_error": null,
+    "translation": null,
+    "translation_error": null,
+    "updated_at": "2026-10-15T18:00:00Z"
+  },
+  "success": true
+}

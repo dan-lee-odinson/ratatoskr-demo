@@ -1,0 +1,26 @@
+{
+  "data": {
+    "created_at": "2026-10-14T20:30:00Z",
+    "duration": 288,
+    "folder_id": "fld_default",
+    "id": "fresh_09",
+    "language": "en",
+    "recorded_by": {
+      "display_name": "Dan",
+      "email": "redacted@example.invalid",
+      "user_id": "usr_owner"
+    },
+    "recording_at": "2026-10-14T20:30:00Z",
+    "state": "completed",
+    "summarizations": null,
+    "summarizations_errors": [],
+    "tags": [],
+    "title": "Astronomical society committee",
+    "transcript": "Speaker 1: Callum Breck, treasurer. I still need the receipts for the eyepiece order to close the quarter. Speaker 2: Sorry. I'll send you the receipts tonight. Speaker 1: Thanks. And for the December star party, the school only takes hall bookings until the 15th of November. Speaker 2: I'll book the hall, then. Speaker 1: Good.",
+    "transcript_error": null,
+    "translation": null,
+    "translation_error": null,
+    "updated_at": "2026-10-14T20:30:00Z"
+  },
+  "success": true
+}
