@@ -51,6 +51,9 @@ class LedgerEntry:
     released_by_ok: bool = False
     scrubbable: bool = False
     sensitivity_not_checked: bool = False  # written while the Jev sensitivity check could not run
+    # Unsorted tasks offered to the owner on Telegram (ruling 43), by short id: the task's ordinal, Todoist id,
+    # labels as written, priority and p shown; and, once the owner taps, project_by, project and at. No text.
+    picks: dict[str, dict[str, Any]] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
         if self.status not in STATUSES:
@@ -107,9 +110,28 @@ class Ledger:
         self._save()
         return unknown
 
+    def find_pick(self, sid: str) -> tuple[str, dict[str, Any]] | None:
+        """The recording and the record an unsorted task's short id stands for (ruling 43)."""
+        for rid, entry in self._entries.items():
+            if sid in entry.picks:
+                return rid, dict(entry.picks[sid])
+        return None
+
+    def resolve_pick(self, recording_id: str, sid: str, fields: dict[str, Any]) -> None:
+        self._entries[recording_id].picks[sid].update(fields)
+        self._save()
+
     def _save(self) -> None:
-        data = {rid: asdict(entry) for rid, entry in sorted(self._entries.items())}
+        data = {rid: _plain(entry) for rid, entry in sorted(self._entries.items())}
         atomic_write_json(self.path, data)
+
+
+def _plain(entry: LedgerEntry) -> dict[str, Any]:
+    """The entry as JSON; an entry with nothing offered on Telegram is written exactly as before ruling 43."""
+    data = asdict(entry)
+    if not data["picks"]:
+        del data["picks"]
+    return data
 
 
 def atomic_write_json(path: Path, data: Any) -> None:

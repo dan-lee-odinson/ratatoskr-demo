@@ -60,10 +60,10 @@ to that review.
 
 | file | what it is |
 |---|---|
-| `questions.toml` | the five questions, their floors, the project defaults, the tripwire terms, the source window |
+| `questions.toml` | the six questions, their floors, the project defaults, the tripwire terms, the source window |
 | `decider_client.py` | a standard-library client for `POST /v1/systemone`: `gate_source_text()` returning a `Verdict`, and `triage()` returning a typed `Triage` |
 | `strands_hook.py` | a Strands Agents `BeforeToolCallEvent` hook: gates each pending tool call's arguments and sets `cancel_tool` on a hold; its demo gates the note before the agent runs |
-| `example.py` | twenty lines: one task, one read, five answers |
+| `example.py` | twenty lines: one task, one read, six answers |
 
 ```bash
 pip install strands-decider==0.1.0

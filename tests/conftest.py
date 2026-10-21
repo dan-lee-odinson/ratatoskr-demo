@@ -99,6 +99,11 @@ class FakeTodoist:
                 self.executed.add(command["uuid"])
                 new_id = f"id{self._next}"
                 self._next += 1
+                if command["type"] == "item_update":  # ruling 43: an existing task's fields change, in place
+                    self.tasks[command["args"]["id"]].update({k: v for k, v in command["args"].items() if k != "id"})
+                    self._next -= 1
+                    status[command["uuid"]] = "ok"
+                    continue
                 if command["type"] == "project_add":
                     self.projects[command["args"]["name"]] = new_id
                 else:

@@ -14,6 +14,10 @@
 
 """Telegram send_message(text) to Dan's own chat. Nothing else (C2).
 
+Ruling 43 adds, still for that one chat: a message with an inline keyboard
+(an unsorted task's projects), an edit of one of the bot's own messages there,
+and the answer to a button tap (which Telegram needs to stop the spinner).
+
 The chat id is fixed when the Notifier is made, from TELEGRAM_CHAT_ID, and the
 class has no way to send anywhere else. Text is sent with parse_mode HTML, so
 `<`, `>` and `&` are escaped first; anything longer than Telegram's 4096
@@ -59,7 +63,8 @@ for _name in ("httpx", "httpcore"):
 class Notifier:
     def __init__(self, bot_token: str | None, chat_id: int | None, *, http: httpx.Client, base_url: str = API_BASE) -> None:
         self._http = http
-        self._url = f"{base_url.rstrip('/')}/bot{bot_token}/sendMessage"
+        self._base = f"{base_url.rstrip('/')}/bot{bot_token}"
+        self._url = f"{self._base}/sendMessage"
         self._chat_id = chat_id
 
     def send_message(self, text: str) -> None:
@@ -71,6 +76,29 @@ class Notifier:
             except httpx.TransportError as exc:
                 raise transport_error(exc, "telegram") from None
             raise_for_http(response, "telegram")
+
+    def send_with_keyboard(self, text: str, reply_markup: dict) -> None:
+        """One message (a wrist line is far under the limit) with an inline keyboard under it."""
+        self._call("sendMessage", {"chat_id": self._chat_id, "text": html.escape(text, quote=False)[:MAX_MESSAGE],
+                                   "parse_mode": "HTML", "reply_markup": reply_markup})
+
+    def edit_message(self, message_id: int, text: str, reply_markup: dict | None = None) -> None:
+        """Rewrite one of the bot's messages in this chat; without reply_markup its keyboard goes."""
+        body = {"chat_id": self._chat_id, "message_id": message_id, "text": html.escape(text, quote=False)[:MAX_MESSAGE],
+                "parse_mode": "HTML"}
+        if reply_markup:
+            body["reply_markup"] = reply_markup
+        self._call("editMessageText", body)
+
+    def answer_callback(self, callback_id: str, text: str | None = None) -> None:
+        self._call("answerCallbackQuery", {"callback_query_id": callback_id, **({"text": text} if text else {})})
+
+    def _call(self, method: str, body: dict) -> None:
+        try:
+            response = self._http.post(f"{self._base}/{method}", json=body)
+        except httpx.TransportError as exc:
+            raise transport_error(exc, "telegram") from None
+        raise_for_http(response, "telegram")
 
 
 def split_message(text: str, limit: int = MAX_MESSAGE) -> list[str]:

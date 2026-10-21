@@ -169,6 +169,10 @@ class TodoistClient:
         task_id = (body.get("temp_id_mapping") or {}).get(temp_id)
         return str(task_id) if task_id else None
 
+    def update_labels(self, task_id: str, labels: list[str], *, command_uuid: str) -> None:
+        """Set an existing task's labels (ruling 43: the owner files an unsorted task). Nothing else changes."""
+        self._command({"type": "item_update", "uuid": command_uuid, "args": {"id": task_id, "labels": labels}})
+
     def _command(self, command: dict[str, Any]) -> dict[str, Any]:
         body = self._post({"commands": json.dumps([command])})
         status = (body.get("sync_status") or {}).get(command["uuid"])

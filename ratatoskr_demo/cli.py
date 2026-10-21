@@ -69,6 +69,7 @@ from ratatoskr_demo.devices.envelope import Envelope, Text
 from ratatoskr_demo.devices.registry import build_inputs
 from ratatoskr_demo.state import State, StateLogHandler
 from ratatoskr_demo.todoist import TodoistClient
+from ratatoskr_demo.resolve import Resolver
 
 log = logging.getLogger("ratatoskr_demo")
 
@@ -288,14 +289,20 @@ def start_receiver(runtime: Runtime, stop: threading.Event, *, get_updates=None)
     """Start the one non-main thread: the Telegram receiver (/status and /demo)."""
     s = runtime.settings
     receiver_http = httpx.Client(timeout=httpx.Timeout(45.0, connect=10.0))  # its own client for its own thread
+    notifier = Notifier(s.secrets.telegram_bot_token, s.secrets.telegram_chat_id, http=receiver_http)
+    resolver = Resolver(  # an unsorted task filed by the owner from its buttons (ruling 43); no model is asked
+        runtime.state, notifier,
+        TodoistClient(s.secrets.todoist_api_token, http=receiver_http) if "todoist" in s.devices.outputs else None,
+        s.secrets.telegram_chat_id or 0, load_route_questions(s)["project"].criteria)
     receiver = TelegramReceiver(
         get_updates or telegram_get_updates(s.secrets.telegram_bot_token or "", receiver_http),
-        Notifier(s.secrets.telegram_bot_token, s.secrets.telegram_chat_id, http=receiver_http),
+        notifier,
         s.secrets.telegram_chat_id or 0,
         runtime.state,
         stop,
         process_text=runtime.cycle.process_text,
         backend=s.route.backend,
+        resolver=resolver,
     )
     receiver.start()
     return receiver

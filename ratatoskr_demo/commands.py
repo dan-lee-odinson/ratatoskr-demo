@@ -61,7 +61,8 @@ def telegram_get_updates(bot_token: str, http: httpx.Client, base_url: str = API
     url = f"{base_url.rstrip('/')}/bot{bot_token}/getUpdates"
 
     def get(offset: int | None) -> list[dict[str, Any]]:
-        params: dict[str, Any] = {"timeout": LONG_POLL_SECONDS, "allowed_updates": '["message"]'}
+        params: dict[str, Any] = {"timeout": LONG_POLL_SECONDS,
+                                  "allowed_updates": '["message", "callback_query"]'}  # taps: ruling 43
         if offset is not None:
             params["offset"] = offset
         try:
@@ -128,10 +129,12 @@ def format_demo_reply(outcome: Outcome, rid: str, *, backend: str = "decider") -
 
 class TelegramReceiver:
     def __init__(self, get_updates: GetUpdates, notifier: Notifier, chat_id: int, state: State,
-                 stop: threading.Event, *, process_text: ProcessText | None = None, backend: str = "decider") -> None:
+                 stop: threading.Event, *, process_text: ProcessText | None = None, backend: str = "decider",
+                 resolver: Any = None) -> None:
         self.get_updates, self.notifier, self.chat_id, self.state, self.stop = get_updates, notifier, chat_id, state, stop
         self.process_text = process_text
         self.backend = backend
+        self.resolver = resolver  # an unsorted task's buttons (ruling 43); None: taps are not handled
         self.thread = threading.Thread(target=self.run, name="telegram-receiver", daemon=True)
 
     def start(self) -> None:
@@ -158,6 +161,10 @@ class TelegramReceiver:
                     log.warning("telegram receiver: skipped an update (%s)", type(exc).__name__)
 
     def handle(self, update: dict[str, Any]) -> None:
+        if "callback_query" in update:  # a tap on an unsorted task's keyboard (ruling 43)
+            if self.resolver is not None:
+                self.resolver.handle(update["callback_query"])
+            return
         message = update.get("message") or {}
         chat = (message.get("chat") or {}).get("id")
         if chat != self.chat_id:

@@ -85,14 +85,16 @@ from ratatoskr_demo.backoff import RetryBook
 from ratatoskr_demo.config import Settings
 from ratatoskr_demo.devices.envelope import Envelope, Text
 from ratatoskr_demo.devices.registry import InputAdapter, Source
-from ratatoskr_demo.devices.wrist_adapter import format_task
+from ratatoskr_demo.devices.wrist_adapter import first_line, format_task
 from ratatoskr_demo.due import recording_date
 from ratatoskr_demo.errors import ConfigurationError, RatatoskrError, TerminalError, TransientError
 from ratatoskr_demo.extract import Contact, ModelCall, Task
 from ratatoskr_demo.ledger import LedgerEntry
 from ratatoskr_demo.notify import Notifier
 from ratatoskr_demo.decider import DeciderRejected, DeciderUnavailable
-from ratatoskr_demo.route import URGENT_SOURCE, Routed, RoutedTask, Router, route, urgent_unrouted
+from ratatoskr_demo import resolve
+from ratatoskr_demo.route import (URGENT_SOURCE, Routed, RoutedTask, Router, load_route_questions, route,
+                                  urgent_unrouted)
 from ratatoskr_demo.source_gate import SourceGate
 from ratatoskr_demo.spend import SpendStop
 from ratatoskr_demo.state import State
@@ -415,10 +417,12 @@ class Cycle:
         else:
             task_ids = []
             log.info("recording %s: the todoist output is off; %d task(s) not written", rid, len(payloads))
+        picks = {} if demo else self._unsorted_picks(rid, outcome.tasks, payloads, task_ids)
         self.state.ledger_put(
             rid,
             self._entry("done", title, recording_at, todoist_task_ids=[t for t in task_ids if t],
-                        released_by_ok=released, scrubbable=not demo, sensitivity_not_checked=unchecked),
+                        released_by_ok=released, scrubbable=not demo, sensitivity_not_checked=unchecked,
+                        picks=picks),
         )
         self.state.count("processed")
         routed_count = sum(1 for task in tasks if task.is_routed and task.priority_source != URGENT_SOURCE)
@@ -427,9 +431,47 @@ class Cycle:
         if writes:
             log.info("recording %s %r: %d task(s) written to %s", rid, title, len(payloads), project)
         if not demo:
-            for task in outcome.tasks:  # one wrist-shaped message per task
-                self._tell_dan(format_task(task.routed, task.content, sensitivity_unchecked=unchecked, ungated=ungated))
+            for i, task in enumerate(outcome.tasks, start=1):  # one wrist-shaped message per task
+                text = format_task(task.routed, task.content, sensitivity_unchecked=unchecked, ungated=ungated)
+                sid = resolve.short_id(rid, i)
+                if sid in picks:  # unsorted: the owner can file it from the message (ruling 43)
+                    self._tell_dan_with_keyboard(text, self._unsorted_keyboard(sid, task.routed))
+                else:
+                    self._tell_dan(text)
         return outcome
+
+    # --- unsorted tasks, filed by the owner from Telegram (ruling 43) ---
+
+    def _unsorted_picks(self, rid: str, tasks: list[TaskOutcome], payloads: list[dict[str, Any]],
+                        task_ids: list[str | None]) -> dict[str, dict[str, Any]]:
+        """A record for each task written with its project unsure, when Telegram can carry its buttons."""
+        if self.dry_run or self.deps.notifier is None:
+            return {}
+        picks = {}
+        for i, (task, args, task_id) in enumerate(zip(tasks, payloads, task_ids), start=1):
+            if task_id and _project_unsure(task.routed):
+                priority, p = resolve.first_line_parts(first_line(task.routed))
+                picks[resolve.short_id(rid, i)] = resolve.pick_record(ordinal=i, task_id=task_id,
+                                                                      labels=args["labels"], priority=priority, p=p)
+        return picks
+
+    def _unsorted_keyboard(self, sid: str, routed: RoutedTask) -> dict[str, Any]:
+        judged = {j.question: j for j in routed.trace}.get("project")
+        projects = list(load_route_questions(self.settings)["project"].criteria)
+        return resolve.keyboard(sid, projects, dict(judged.options) if judged else None,
+                                top=judged.answer if judged else None)
+
+    def _tell_dan_with_keyboard(self, text: str, reply_markup: dict[str, Any]) -> None:
+        """As _tell_dan, with the buttons. If Telegram is down the notice is queued without them."""
+        if self.dry_run or self.deps.notifier is None:
+            return
+        try:
+            self.deps.notifier.send_with_keyboard(text, reply_markup)
+        except TransientError as exc:
+            log.warning("telegram not reachable (%s); notice queued without its buttons", exc)
+            self.state.queue_notice(text)
+        except RatatoskrError as exc:
+            log.error("telegram: %s", exc)
 
     def _gate_source(self, rid: str, text: str, urgent: bool) -> Any:
         """The source-text gate. Decider unreachable: any recording waits, except one tagged urgent, which goes
@@ -626,6 +668,14 @@ def too_short(text: str) -> int | None:
     else None. An accidental press has no conversation to judge."""
     words = len(_SPEAKER.sub(" ", text).split())
     return words if words < MIN_TRANSCRIPT_WORDS else None
+
+
+def _project_unsure(routed: RoutedTask) -> bool:
+    """Decider answered the project question, below its floor: the task is unsorted, and the owner may file it."""
+    if routed.priority_source == URGENT_SOURCE:
+        return False
+    judged = {j.question: j for j in routed.trace}.get("project")
+    return judged is not None and not judged.problem and judged.value is None
 
 
 def no_followups_task(contact: Contact) -> RoutedTask:

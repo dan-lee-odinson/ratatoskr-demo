@@ -68,6 +68,9 @@ class Judgement:
     problem: str | None = None
     note: str | None = None  # for priority: which step of priority_rule() set it
     answer: Any = None  # the raw top answer: choice name, level name, or p >= 0.5 (for agreement scoring)
+    # for the project: each option's probability as Decider gave it, so an unsorted task's buttons follow its
+    # ranking (ruling 43). Kept, never acted on: the decision above is the choice and its confidence alone.
+    options: tuple[tuple[str, float], ...] = ()
 
     @property
     def accepted(self) -> bool:
@@ -138,7 +141,10 @@ def _project(answer: Any, q: RouteQuestion) -> Judgement:
     if choice not in q.criteria or confidence is None:
         return _unusable("project", q.min_confidence, "choice not among the route.toml options")
     value = choice if confidence >= q.min_confidence else None
-    return Judgement("project", choice, confidence, q.min_confidence, value, answer=choice)
+    probabilities = a.get("probabilities") if isinstance(a.get("probabilities"), Mapping) else {}
+    options = tuple((str(k), float(p)) for k, p in probabilities.items()
+                    if k in q.criteria and _probability(p) is not None)
+    return Judgement("project", choice, confidence, q.min_confidence, value, answer=choice, options=options)
 
 
 def _priority(nouls: Mapping[str, Judgement], deadline_near: bool, project: Judgement,

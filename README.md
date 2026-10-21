@@ -63,7 +63,7 @@ twenty-line example. See [`patterns/gatekeeper_triage/README.md`](patterns/gatek
 | **required** | an Amazon Bedrock API key | `openai.gpt-oss-20b` extracts the commitments |
 | **required** | a Telegram bot and its chat | `/demo <text>` in, `/status`, and every notice out |
 | **required** | a Todoist account | where the tasks land, in one project |
-| **required** | Strands Decider (local, about 8 GB of RAM) | the source-text gate and the routing (`[route] backend = "decider"`) |
+| **required** | Strands Decider (local; 16 GB minimum host RAM, see System requirements) | the source-text gate and the routing (`[route] backend = "decider"`) |
 | optional | a Pocket recorder and its API key | conversations in, recorded instead of typed (`inputs = ["pocket", ...]`) |
 | optional | an Artemis watch, or any phone with Telegram | where the three-line message is read |
 | optional | smart glasses, later, through the mock kit | an input slot only: the glasses adapter is a stub today |
@@ -82,7 +82,7 @@ cores, Decider held to four of them, and no GPU.
 | Host | Minimum | Measured on the reference machine |
 |---|---|---|
 | CPU | 4 threads free for Decider while it reads; no other CPU-heavy job on the machine | 4 intra-op threads (and 1 inter-op), laptop CPU with 16 logical cores |
-| Memory | 16 GB; the server commits about 10 GB, and the memory guard stops it at the `--max-commit-gb` value (off unless given; the start command below sets 16) | 9.9 to 10.4 GB committed over 70 reads per server |
+| Memory | 16 GB minimum host RAM; the server commits about 10 GB, and the memory guard stops it at the `--max-commit-gb` value (off unless given; the start command below sets 16) | 9.9 to 10.4 GB committed over 70 reads per server |
 | GPU | None required. Decider's fast path is a GPU build of torch with `causal_conv1d` and `flash-linear-attention` installed | None used; kernels: reference PyTorch implementation (causal_conv1d and flash-linear-attention not installed; CPU-only torch build) |
 | Disk | Decider weights (4.4 GB in the Hugging Face cache: the 4.3 GB Qwen3.5-2B base model and the 88 MB Decider checkpoint) plus two virtual environments | `.venv-decider` (server), `.venv` (courier) |
 | Python | 3.12 or later (`requires-python = ">=3.12"`) | 3.12.10 |
@@ -375,6 +375,15 @@ sensitivity (the stop-list tripwire still runs); the courier logs
 `backend=none: no sensitivity gate; nothing is held for sensitivity (the stop-list tripwire still runs)`
 at startup, and every task it writes carries the label `ungated`, which the wrist shows in place of
 the sensitivity field.
+
+### Unsorted tasks
+
+When Decider is unsure of a task's project, the task is written to Todoist with no project label, and its
+Telegram message carries one button per project, in the order of Decider's own probabilities for that
+task, and a last button, `Leave unsorted`. A tap updates the existing Todoist task with that project's
+`proj:` label and rewrites the message's first line to say the owner filed it; the model is not asked
+again. The choice is recorded in the ledger as the owner's (`project_by: owner`), and a second tap changes
+nothing. Taps are handled by the loop's Telegram receiver: they take effect at once while `--loop` runs.
 
 ## Set up your projects and your stop list
 
