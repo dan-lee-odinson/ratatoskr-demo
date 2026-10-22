@@ -1,0 +1,319 @@
+<!doctype html>
+<!-- Copyright 2026 Dan Lee-Odinson. Licensed under the Apache License, Version 2.0; see LICENSE.
+     The companion app prototype's own tests (Dan's ruling 61), run in a headless browser by tests/test_app.py:
+     the adapter contract, each state's actions, idempotent Save, and scenarios A, B and C through the real page.
+     The results are written into #results as JSON. -->
+<html lang="en">
+<head><meta charset="utf-8"><title>Companion app tests</title></head>
+<body>
+<div id="root" class="app"></div>
+<pre id="results">running</pre>
+<script src="fixtures.js"></script>
+<script src="state.js"></script>
+<script src="adapter.js"></script>
+<script src="app.js"></script>
+<script>
+"use strict";
+var S = RatatoskrState, A = RatatoskrAdapter, F = RATATOSKR_FIXTURES;
+var tests = [];
+function test(name, fn) { tests.push([name, fn]); }
+function eq(a, b, what) {
+  if (JSON.stringify(a) !== JSON.stringify(b)) {
+    throw new Error((what || "values") + ": " + JSON.stringify(a) + " != " + JSON.stringify(b));
+  }
+}
+function ok(x, what) { if (!x) { throw new Error(what || "not true"); } }
+function fixtureAdapter(storage) {
+  var n = 0;
+  return A.FixtureAdapter(F, storage || A.memoryStorage(), function () { n += 1; return "2026-10-22T14:0" + n + ":00Z"; });
+}
+// Each app gets a root of its own: an earlier app's listeners must not answer a later test's clicks.
+function freshRoot() {
+  var old = document.getElementById("root"), el = document.createElement("div");
+  el.id = "root";
+  el.className = "app";
+  old.parentNode.replaceChild(el, old);
+  return el;
+}
+function start(storage) {
+  return new RatatoskrApp.App(freshRoot(), fixtureAdapter(storage)).start();
+}
+function $(sel) { return document.getElementById("root").querySelector(sel); }
+function $$(sel) { return Array.prototype.slice.call(document.getElementById("root").querySelectorAll(sel)); }
+function click(sel) { var el = $(sel); ok(el, "no element " + sel); el.click(); return Promise.resolve().then(tick); }
+function tick() { return new Promise(function (r) { setTimeout(r, 0); }); }
+function submit() { $("form[data-save]").dispatchEvent(new Event("submit", { cancelable: true, bubbles: true })); return tick(); }
+function view(app, id) { return app.state.views[id]; }
+
+// --- the adapter contract ---
+
+test("the fixture adapter loads the fixtures and no action on a fresh store", function () {
+  return fixtureAdapter().load().then(function (loaded) {
+    eq(loaded.data.items.length, F.items.length, "items");
+    eq(loaded.actions, [], "actions");
+  });
+});
+
+test("the fixture adapter records saved prototype actions in order and they survive a new adapter (a refresh)", function () {
+  var store = A.memoryStorage(), first = fixtureAdapter(store);
+  return first.record({ item: "hold-s2", type: "keep-held", by: "owner", via: "app" }).then(function (a) {
+    eq([a.seq, a.status, a.target, a.by], [1, "saved", "prototype", "owner"], "first");
+    return first.record({ item: "task-rec_009-3", type: "tag-add", value: "reading", by: "owner", via: "app" });
+  }).then(function (b) {
+    eq(b.seq, 2, "second seq");
+    return fixtureAdapter(store).load();
+  }).then(function (loaded) {
+    eq(loaded.actions.map(function (a) { return a.type; }), ["keep-held", "tag-add"], "after a refresh");
+    return fixtureAdapter(store).reset().then(function () { return fixtureAdapter(store).load(); });
+  }).then(function (loaded) { eq(loaded.actions, [], "after reset"); });
+});
+
+test("a store that cannot be used falls back to memory, and a damaged one loads as empty", function () {
+  var broken = { getItem: function () { return "{not json"; }, setItem: function () {}, removeItem: function () {} };
+  return fixtureAdapter(broken).load().then(function (loaded) { eq(loaded.actions, [], "damaged store"); });
+});
+
+// --- each state's actions ---
+
+test("a sensitive hold and an unsure hold expose different actions; a sensitive one never has a release", function () {
+  var st = S.build(F, []);
+  eq(S.availableActions(st.views["hold-s2"]), ["review", "keep-held"], "sensitive photo");
+  eq(S.availableActions(st.views["hold-rec_014"]), ["review", "keep-held"], "sensitive transcript");
+  eq(S.availableActions(st.views["hold-s6"]), ["review", "keep-held", "release"], "unsure photo");
+  eq(S.propose(st, "hold-s2", { action: "release" }), [], "no release proposed for a sensitive hold");
+  eq(S.availableActions(st.views["scene-o5"]), ["review", "commitment", "reference"], "scene unsure");
+  eq(S.availableActions(st.views["task-rec_009-3"]), ["open", "tag", "categorize", "leave-unsorted"], "category unsure");
+});
+
+test("after the owner acts, each state offers what is left, and the first answer stands", function () {
+  var acts = [{ seq: 1, item: "hold-s2", type: "keep-held", status: "saved" },
+              { seq: 2, item: "hold-s6", type: "keep-held", status: "saved" },
+              { seq: 3, item: "scene-o5", type: "scene", value: "commitment", status: "saved" },
+              { seq: 4, item: "task-rec_009-3", type: "categorize", value: "writing", status: "saved" }];
+  var st = S.build(F, acts);
+  eq(S.availableActions(st.views["hold-s2"]), ["review"], "kept sensitive");
+  eq(S.availableActions(st.views["hold-s6"]), ["review", "release"], "kept unsure: its Release stays, as in the courier");
+  eq(S.availableActions(st.views["scene-o5"]), ["review"], "scene answered");
+  eq(S.availableActions(st.views["task-rec_009-3"]), ["open", "tag"], "categorized");
+  eq(S.propose(st, "task-rec_009-3", { category: "school" }), [], "a second category answer");
+  eq(S.propose(st, "scene-o5", { action: "reference" }), [], "a second scene answer");
+});
+
+test("a failed update is shown and never applied", function () {
+  var st = S.build(F, [{ seq: 1, item: "task-rec_009-3", type: "categorize", value: "writing", status: "failed", error: "refused" }]);
+  eq(st.views["task-rec_009-3"].ownerCategory, null, "not applied");
+  eq(S.activity(st)[0].statusText, "Failed: not applied (refused)", "shown");
+});
+
+// --- idempotent Save ---
+
+test("a repeated Save records nothing more", function () {
+  var st = S.build(F, []);
+  var first = S.propose(st, "task-rec_009-3", { category: "writing", tags: ["Reading", "reading "] });
+  eq(first.map(function (a) { return [a.type, a.value]; }), [["categorize", "writing"], ["tag-add", "reading"]], "first");
+  st = S.build(F, first.map(function (a, i) { a.seq = i + 1; a.status = "saved"; return a; }));
+  eq(S.propose(st, "task-rec_009-3", { category: "writing", tags: ["reading"] }), [], "the same Save again");
+  eq(S.propose(st, "task-rec_010-1", { category: "writing" }), [], "Decider's own sure answer is no change");
+});
+
+test("Save twice through the page records one set of actions and says there was nothing to save", function () {
+  var app;
+  return start().then(function (a) {
+    app = a;
+    return click("[data-tab=tasks]");
+  }).then(function () {
+    return click("[data-open='task-rec_009-3']");
+  }).then(function () {
+    $("input[name=category][value=writing]").checked = true;
+    return submit();
+  }).then(function () {
+    eq(app.actions.length, 1, "after the first Save");
+    return submit();
+  }).then(function () {
+    eq(app.actions.length, 1, "after the second Save");
+    ok(/Nothing to save/.test($(".sheet").textContent), "the sheet says so");
+  });
+});
+
+// --- scenario A: an ID-only review request, the simulated viewer, kept held ---
+
+test("scenario A: a held photo's card is ID only, its review link is intercepted, and keeping it held returns to the inbox", function () {
+  var app, href = window.location.href;
+  return start().then(function (a) {
+    app = a;
+    var card = $("[data-card='hold-s2']");
+    ok(card && !card.querySelector("img"), "no thumbnail on the card");
+    ok(card.textContent.indexOf("photo-") >= 0, "its safe identifier");
+    eq($("[data-review='hold-s2']").getAttribute("href").indexOf(RatatoskrApp.REVIEW_LINK), 0, "the mocked link");
+    return click("[data-review='hold-s2']");
+  }).then(function () {
+    eq(window.location.href, href, "the link never navigated");
+    ok($(".viewer .simbanner").textContent === "Simulated private review", "labelled as a simulation");
+    ok($(".viewer img.photo"), "the fictional picture in the viewer");
+    ok(!$(".viewer [data-act=release]"), "no release for a sensitive verdict");
+    ok(/has no release/.test($(".viewer").textContent), "and it says why");
+    return click(".viewer [data-act=keep-held]");
+  }).then(function () {
+    ok(!$(".viewer"), "back in the inbox");
+    ok(!$("[data-card='hold-s2']"), "out of Needs review");
+    ok(/Kept held after review/.test($(".done").textContent), "listed as reviewed");
+    var entry = S.activity(app.state)[0];
+    eq([entry.model, entry.owner, entry.statusText],
+       ["Decider (image gate): sensitive, p 0.79 (floor 0.60)", "Owner kept it held after private review (simulated viewer)",
+        "Prototype only: the courier was not told"], "the Activity entry");
+  });
+});
+
+test("scenario A: an unsure hold's viewer offers Release as owner authorization, and a transcript is supported", function () {
+  return start().then(function () {
+    return click("[data-review='hold-s6']");
+  }).then(function () {
+    ok(/Release \(owner authorization\)/.test($(".viewer [data-act=release]").textContent), "the release, named");
+    ok(/not a model clear/.test($(".viewer").textContent), "not a model clear");
+    return click("[data-close-viewer]");
+  }).then(function () {
+    var transcript = F.items.filter(function (i) { return i.id === "hold-rec_014"; })[0].viewer;
+    var card = $("[data-card='hold-rec_014']").textContent;
+    ok(card.indexOf(transcript.title) < 0 && card.indexOf(transcript.text.split(" ").slice(0, 4).join(" ")) < 0,
+       "the transcript's card carries neither its title nor its text");
+    return click("[data-review='hold-rec_014']");
+  }).then(function () {
+    ok($(".viewer .transcript").textContent.indexOf(transcript_start()) >= 0, "the viewer shows the fictional transcript");
+  });
+  function transcript_start() {
+    return F.items.filter(function (i) { return i.id === "hold-rec_014"; })[0].viewer.text.split(" ").slice(0, 4).join(" ");
+  }
+});
+
+// --- scenario B: categorize and tag a mixed task, reopen it ---
+
+test("scenario B: Decider's suggestions, the owner's category and tag, Categorized by owner, reopened as saved", function () {
+  var app;
+  return start().then(function (a) {
+    app = a;
+    return click("[data-open='task-rec_009-3']");
+  }).then(function () {
+    var names = $$(".sheet .opt .name").map(function (n) { return n.textContent; });
+    eq(names.slice(0, 2), ["work", "writing"], "Decider's suggestions, by its probabilities");
+    ok(/unsure, top work, confidence 0.63 \(floor 0.70\)/.test($(".sheet .model").textContent), "Decider's uncertainty");
+    $("input[name=category][value=writing]").checked = true;
+    $("[data-tag-input]").value = "reading list";
+    return click("[data-add-tag]");
+  }).then(function () {
+    $("input[name=category][value=writing]").checked = true;
+    return submit();
+  }).then(function () {
+    ok(/Categorized by owner/.test($(".sheet").textContent), "Categorized by owner");
+    return click("[data-close]");
+  }).then(function () {
+    ok(!$("[data-card='task-rec_009-3']"), "out of Needs review");
+    return click("[data-tab=tasks]");
+  }).then(function () {
+    return click("[data-open='task-rec_009-3']");
+  }).then(function () {
+    var chosen = $("input[name=category]:checked");
+    eq([chosen.value, chosen.disabled], ["writing", true], "reopened: the owner's category, standing");
+    ok(/#reading-list/.test($(".sheet .chips").textContent), "and the tag");
+    ok(/unsure, top work, confidence 0.63/.test($(".sheet .model").textContent), "the original model answer is kept");
+    var history = $$(".sheet .activity .owner").map(function (o) { return o.textContent; });
+    eq(history, ["Owner added tag \"reading-list\"", "Owner chose writing"], "its history");
+  });
+});
+
+// --- scenario C: organize several tasks; the filter and the groups follow ---
+
+test("scenario C: three tasks organized, the filter and the groups follow, and Activity has an entry for each", function () {
+  var app, store = A.memoryStorage();
+  var plan = [["task-rec_012-2", "personal", "home"], ["task-rec_001-3", "research", "lab"], ["task-rec_013-1", "unsorted", "social"]];
+  var chain = start(store).then(function (a) { app = a; return click("[data-tab=tasks]"); });
+  plan.forEach(function (p) {
+    chain = chain.then(function () { return click("[data-open='" + p[0] + "']"); }).then(function () {
+      $("input[name=category][value=" + p[1] + "]").checked = true;
+      $("[data-tag-input]").value = p[2];
+      return click("[data-add-tag]");
+    }).then(function () {
+      $("input[name=category][value=" + p[1] + "]").checked = true;
+      return submit();
+    }).then(function () { return click("[data-close]"); });
+  });
+  return chain.then(function () {
+    var personal = $("[data-group=personal]").textContent;
+    ok(personal.indexOf("Call the landlord") >= 0, "grouped under personal");
+    ok(/left by owner/.test($("[data-group=unsorted]").textContent), "one left unsorted, by the owner");
+    var select = $("select[data-filter=tag]");
+    select.value = "home";
+    select.dispatchEvent(new Event("change", { bubbles: true }));
+    return tick();
+  }).then(function () {
+    var cards = $$(".card.task").map(function (c) { return c.getAttribute("data-card"); });
+    eq(cards, ["task-rec_012-2"], "the tag filter");
+    var select = $("select[data-filter=tag]");
+    select.value = "";
+    select.dispatchEvent(new Event("change", { bubbles: true }));
+    var cat = $("select[data-filter=category]");
+    cat.value = "research";
+    cat.dispatchEvent(new Event("change", { bubbles: true }));
+    return tick();
+  }).then(function () {
+    var cards = $$(".card.task").map(function (c) { return c.getAttribute("data-card"); });
+    ok(cards.indexOf("task-rec_001-3") >= 0 && cards.indexOf("task-rec_001-1") >= 0, "the category filter");
+    var owners = S.activity(app.state).map(function (e) { return e.owner; });
+    eq(owners.filter(function (o) { return /^Owner chose|^Owner left/.test(o); }).length, 3, "three category entries");
+    eq(owners.filter(function (o) { return /^Owner added tag/.test(o); }).length, 3, "three tag entries");
+    return new RatatoskrApp.App(freshRoot(), fixtureAdapter(store)).start();
+  }).then(function (again) {
+    eq(S.category(again.state.views["task-rec_012-2"]), { value: "personal", by: "owner", status: "saved" },
+       "after a restart");
+  });
+});
+
+// --- what is real and what is not ---
+
+test("a saved prototype result and an acknowledged Todoist update read differently", function () {
+  var saved = S.statusText({ type: "categorize", status: "saved" });
+  var acked = S.statusText({ type: "categorize", status: "acknowledged" });
+  ok(saved !== acked && /not sent to Todoist/.test(saved) && /updated the Todoist task/.test(acked), saved + " / " + acked);
+  eq(S.statusText({ type: "tag-add", status: "saved" }), "Saved in app, not in Todoist", "a tag");
+});
+
+test("Activity keeps the model's answer apart from the owner's choice, and About names what is simulated", function () {
+  return start().then(function () {
+    return click("[data-act=commitment][data-item='scene-o5']");
+  }).then(function () {
+    return click("[data-tab=activity]");
+  }).then(function () {
+    ok(/Decider \(scene\): unsure, top reference, confidence 0.45/.test($(".entry .model").textContent), "the model's answer");
+    eq($(".entry .owner").textContent, "Owner chose Commitment", "the owner's choice");
+    return click("[data-tab=about]");
+  }).then(function () {
+    var about = $(".inventory").textContent;
+    ok(/Simulated/.test(about) && /Prototype only/.test(about) && /Saved in app, not in Todoist/.test(about), "the inventory");
+    ok(/mobile web prototype/.test($("main").textContent), "named as a mobile web prototype");
+  });
+});
+
+test("an illustrative item is marked on its card", function () {
+  var data = JSON.parse(JSON.stringify(F));
+  data.items[0].illustrative = true;
+  return new RatatoskrApp.App(freshRoot(), A.FixtureAdapter(data, A.memoryStorage())).start().then(function () {
+    ok(/Illustrative data, not a recorded model answer/.test($("[data-card='hold-s2']").textContent), "marked");
+  });
+});
+
+// --- run ---
+
+(function run() {
+  var results = { passed: [], failed: [] };
+  var chain = Promise.resolve();
+  tests.forEach(function (t) {
+    chain = chain.then(function () { return t[1](); }).then(function () { results.passed.push(t[0]); },
+      function (e) { results.failed.push({ name: t[0], error: String(e && e.message || e) }); });
+  });
+  chain.then(function () {
+    document.getElementById("root").innerHTML = "";
+    document.getElementById("results").textContent = JSON.stringify(results);
+  });
+})();
+</script>
+</body>
+</html>

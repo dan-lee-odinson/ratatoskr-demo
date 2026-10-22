@@ -1,0 +1,22 @@
+<!doctype html>
+<!-- Copyright 2026 Dan Lee-Odinson. Licensed under the Apache License, Version 2.0; see LICENSE. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ratatoskr companion · mobile web prototype</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<div id="app" class="app"><p class="empty">Loading…</p></div>
+<script src="fixtures.js"></script>
+<script src="state.js"></script>
+<script src="adapter.js"></script>
+<script src="app.js"></script>
+<script>
+  // Fixtures and this browser's storage (P0). Nothing here reaches the network.
+  new RatatoskrApp.App(document.getElementById("app"),
+    RatatoskrAdapter.FixtureAdapter(RATATOSKR_FIXTURES, RatatoskrAdapter.browserStorage())).start();
+</script>
+</body>
+</html>

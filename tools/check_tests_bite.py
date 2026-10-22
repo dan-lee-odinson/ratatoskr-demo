@@ -748,6 +748,28 @@ MUTATIONS = [
      'scene.get("scene") in SCENES2 and',
      ['tests/test_camera.py::test_the_camera_report_is_drawn_from_an_export_alone']),
 
+    # --- the companion app prototype (Dan's ruling 61, 22 Oct 2026): the page's tests run headless ---
+    ("Ruling 61: a sensitive hold offered a release", 'app/state.js',
+     '      if (view.verdict === "unsure" && !(view.resolution && view.resolution.type === "released")) {',
+     '      if (!(view.resolution && view.resolution.type === "released")) {',
+     ['tests/test_app.py::test_the_pages_own_tests_pass_in_a_headless_browser']),
+    ("Ruling 61: a repeated Save records the category again", 'app/state.js',
+     '      if (wanted && !view.ownerCategory && (!view.project.sure || change.category !== current.value)) {',
+     '      if (wanted && (!view.project.sure || change.category !== current.value)) {',
+     ['tests/test_app.py::test_the_pages_own_tests_pass_in_a_headless_browser']),
+    ("Ruling 61: a saved prototype result reads as a Todoist update", 'app/state.js',
+     '    saved: "Saved in the prototype; not sent to Todoist",',
+     '    saved: "Acknowledged: the courier updated the Todoist task",',
+     ['tests/test_app.py::test_the_pages_own_tests_pass_in_a_headless_browser']),
+    ("Ruling 61: a hold's card shows its picture", 'app/app.js',
+     '"</div><div class=\\"fine\\">ID only: no excerpt, title or thumbnail on this card.</div>"',
+     '"</div><img src=\\"" + esc(view.viewer.src) + "\\">"',
+     ['tests/test_app.py::test_the_pages_own_tests_pass_in_a_headless_browser']),
+    ("Ruling 61: a fixture's probability not the export's", 'tools/app_fixtures.py',
+     '"p": first["picture_p"][0],',
+     '"p": round(first["picture_p"][0], 2),',
+     ['tests/test_app.py::test_the_fixtures_regenerate_from_the_committed_exports_byte_for_byte']),
+
     # --- no word floor for photos (Dan's ruling 53, 21-22 Oct 2026) ---
     ("Ruling 53: the recordings' word floor applied to a photo", 'ratatoskr_demo/cycle.py',
      '        words = None if self._photo else too_short(str(text))\n',
