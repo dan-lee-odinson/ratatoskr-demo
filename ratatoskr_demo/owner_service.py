@@ -165,15 +165,21 @@ def _handler(service: OwnerService) -> type[BaseHTTPRequestHandler]:
             return self._static(self.path)
 
         def do_POST(self) -> None:  # noqa: N802
+            try:
+                length = int(self.headers.get("Content-Length") or 0)
+            except ValueError:
+                length = -1
+            # the body is read before any answer, a refusal included: answering and closing with it unread can abort
+            # the connection under the client while it is still sending (Windows, WinError 10053)
+            raw = self.rfile.read(length) if 0 < length <= BODY_LIMIT else None
             if self.path != "/owner/pick":
                 return self._json(404, {"status": "unknown route"})
             if not service.authorized(self.headers.get("Authorization")):
                 return self._json(401, {"status": "unauthorized"})
             try:
-                length = int(self.headers.get("Content-Length") or 0)
-                if not 0 < length <= BODY_LIMIT:
+                if raw is None:
                     raise ValueError("body size")
-                body = json.loads(self.rfile.read(length).decode("utf-8"))
+                body = json.loads(raw.decode("utf-8"))
                 sid, project = str(body["sid"]), str(body["project"])
             except (ValueError, KeyError, TypeError, UnicodeDecodeError):
                 return self._json(400, {"status": "refused", "error": "a JSON body with sid and project"})
