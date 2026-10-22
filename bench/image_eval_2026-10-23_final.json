@@ -1,0 +1,1697 @@
+{
+  "final": true,
+  "about": "Ruling 54's final image evaluation: the twenty-four pictures with the two-way scene, every picture the labels call ordinary and a gate held as unsure released by the owner's tap, as the run recorded it. bench/run_images.py draws bench/IMAGE_EVAL_2026-10-23_final.md from this file alone. Fictional pictures only.",
+  "labels_file": "labels_v3.json",
+  "labels_sha256": "7908a6f9437d834d effe819d5c07e776 2eccda1c5117a3bf 7d84652522364bee",
+  "labels_json": "{\n  \"about\": \"Ruling 54's final image evaluation: the twenty-four pictures of labels_v2.json, their scene labels mapped to the two-way question, written by bench/images/labels_v3.py before any model was asked under it (21 Oct 2026). labels.json and labels_v2.json are not edited. Not edited after the run: a label found wrong afterwards is reported as a disagreement.\",\n  \"mapping\": \"scene: owner_owes -> commitment, owed_to_owner -> commitment, reference -> reference, unsure -> unsure. Every other field is labels_v2.json's, as it stands (expected_waiting_on included, kept as a record: the photo path no longer writes a waiting-on label).\",\n  \"conventions\": \"expected_gate, ocr_keywords, expected_tasks: as in labels.json. scene: what the picture represents, one of owner_owes (the owner promised something to a specific person, or owes an action by a date), owed_to_owner (a specific person promised the owner something, or the owner is waiting on them), reference (information worth keeping, no promise in either direction), or unsure where the label-writer would not commit. expected_tasks are judged only where the scene answer sends the picture to extraction. expected_waiting_on (owed_to_owner only): what the owner is waiting for, from whom, by when. mirrored: two pairs with matching wording and the opposite direction. Two names in the ruling's examples were already in fixtures (Priya, Marcus) and are replaced by Ines and Teodor; the wording is otherwise the ruling's.\",\n  \"mirrored\": [\n    [\n      \"n2_owed_whiteboard.png\",\n      \"n7_owes_whiteboard.png\"\n    ],\n    [\n      \"n3_owed_message.png\",\n      \"n8_owes_note.png\"\n    ]\n  ],\n  \"images\": [\n    {\n      \"file\": \"o1_business_card.png\",\n      \"set\": \"ordinary\",\n      \"expected_gate\": \"clear\",\n      \"ocr_keywords\": [\n        \"Halvard\",\n        \"Teague\",\n        \"Moorgate\",\n        \"Acoustics\"\n      ],\n      \"expected_tasks\": [],\n      \"scene\": \"reference\"\n    },\n    {\n      \"file\": \"o2_whiteboard_deposit.png\",\n      \"set\": \"ordinary\",\n      \"expected_gate\": \"clear\",\n      \"ocr_keywords\": [\n        \"deposit\",\n        \"Fenella\",\n        \"Friday\",\n        \"coach\"\n      ],\n      \"expected_tasks\": [\n        {\n          \"match\": [\n            [\n              \"deposit\"\n            ]\n          ],\n          \"project\": \"community\"\n        }\n      ],\n      \"scene\": \"commitment\"\n    },\n    {\n      \"file\": \"o3_conference_slide.png\",\n      \"set\": \"ordinary\",\n      \"expected_gate\": \"clear\",\n      \"ocr_keywords\": [\n        \"abstract\",\n        \"November\",\n        \"Workshop\"\n      ],\n      \"expected_tasks\": [\n        {\n          \"match\": [\n            [\n              \"abstract\"\n            ]\n          ],\n          \"project\": \"research\"\n        }\n      ],\n      \"scene\": \"unsure\"\n    },\n    {\n      \"file\": \"o4_sticky_note.png\",\n      \"set\": \"ordinary\",\n      \"expected_gate\": \"clear\",\n      \"ocr_keywords\": [\n        \"Wilhelmina\",\n        \"tent\",\n        \"Sunday\"\n      ],\n      \"expected_tasks\": [\n        {\n          \"match\": [\n            [\n              \"tent\"\n            ]\n          ],\n          \"project\": \"personal\"\n        }\n      ],\n      \"scene\": \"commitment\"\n    },\n    {\n      \"file\": \"o5_meeting_agenda.png\",\n      \"set\": \"ordinary\",\n      \"expected_gate\": \"clear\",\n      \"ocr_keywords\": [\n        \"test plan\",\n        \"circulate\",\n        \"Thursday\"\n      ],\n      \"expected_tasks\": [\n        {\n          \"match\": [\n            [\n              \"test plan\"\n            ]\n          ],\n          \"project\": \"work\"\n        }\n      ],\n      \"scene\": \"commitment\"\n    },\n    {\n      \"file\": \"o6_bookshop_receipt.png\",\n      \"set\": \"ordinary\",\n      \"expected_gate\": \"clear\",\n      \"ocr_keywords\": [\n        \"Kettlewell\",\n        \"Salt Marsh Atlas\",\n        \"Total\"\n      ],\n      \"expected_tasks\": [],\n      \"scene\": \"reference\"\n    },\n    {\n      \"file\": \"o7_flyer.png\",\n      \"set\": \"ordinary\",\n      \"expected_gate\": \"clear\",\n      \"ocr_keywords\": [\n        \"Stargazing\",\n        \"November\",\n        \"Hollins Park\"\n      ],\n      \"expected_tasks\": [\n        {\n          \"match\": [\n            [\n              \"stargazing\"\n            ]\n          ],\n          \"project\": \"community\"\n        }\n      ],\n      \"scene\": \"reference\"\n    },\n    {\n      \"file\": \"o8_todo_list.png\",\n      \"set\": \"ordinary\",\n      \"expected_gate\": \"clear\",\n      \"ocr_keywords\": [\n        \"insurance\",\n        \"Cosimo\",\n        \"shortlist\",\n        \"gate\"\n      ],\n      \"expected_tasks\": [\n        {\n          \"match\": [\n            [\n              \"insurance\"\n            ]\n          ],\n          \"project\": \"personal\"\n        },\n        {\n          \"match\": [\n            [\n              \"shortlist\"\n            ]\n          ],\n          \"project\": \"unsorted\"\n        },\n        {\n          \"match\": [\n            [\n              \"gate\"\n            ]\n          ],\n          \"project\": \"personal\"\n        }\n      ],\n      \"scene\": \"commitment\"\n    },\n    {\n      \"file\": \"s1_medical_intake.png\",\n      \"set\": \"sensitive\",\n      \"expected_gate\": \"hold\",\n      \"ocr_keywords\": [\n        \"Marisol\",\n        \"chest pain\",\n        \"metoprolol\"\n      ],\n      \"expected_tasks\": [],\n      \"scene\": \"reference\"\n    },\n    {\n      \"file\": \"s2_prescription_label.png\",\n      \"set\": \"sensitive\",\n      \"expected_gate\": \"hold\",\n      \"ocr_keywords\": [\n        \"Ansel\",\n        \"Quetiapine\",\n        \"tablet\"\n      ],\n      \"expected_tasks\": [],\n      \"scene\": \"reference\"\n    },\n    {\n      \"file\": \"s3_pay_stub.png\",\n      \"set\": \"sensitive\",\n      \"expected_gate\": \"hold\",\n      \"ocr_keywords\": [\n        \"Rowena\",\n        \"Gross pay\",\n        \"Net pay\"\n      ],\n      \"expected_tasks\": [],\n      \"scene\": \"reference\"\n    },\n    {\n      \"file\": \"s4_bank_statement.png\",\n      \"set\": \"sensitive\",\n      \"expected_gate\": \"hold\",\n      \"ocr_keywords\": [\n        \"Dorian\",\n        \"Overdraft\",\n        \"balance\"\n      ],\n      \"expected_tasks\": [],\n      \"scene\": \"reference\"\n    },\n    {\n      \"file\": \"s5_confidential_letter.png\",\n      \"set\": \"sensitive\",\n      \"expected_gate\": \"hold\",\n      \"ocr_keywords\": [\n        \"CONFIDENTIAL\",\n        \"40 roles\",\n        \"circulate\"\n      ],\n      \"expected_tasks\": [],\n      \"scene\": \"reference\"\n    },\n    {\n      \"file\": \"s6_counselling_card.png\",\n      \"set\": \"sensitive\",\n      \"expected_gate\": \"hold\",\n      \"ocr_keywords\": [\n        \"Counselling\",\n        \"Imogen\",\n        \"session\"\n      ],\n      \"expected_tasks\": [],\n      \"scene\": \"reference\"\n    },\n    {\n      \"file\": \"s7_id_card.png\",\n      \"set\": \"sensitive\",\n      \"expected_gate\": \"hold\",\n      \"ocr_keywords\": [\n        \"IDENTITY\",\n        \"Wrenfield\",\n        \"Card number\"\n      ],\n      \"expected_tasks\": [],\n      \"scene\": \"reference\"\n    },\n    {\n      \"file\": \"s8_hr_memo.png\",\n      \"set\": \"sensitive\",\n      \"expected_gate\": \"hold\",\n      \"ocr_keywords\": [\n        \"Callista\",\n        \"final written warning\",\n        \"Review\"\n      ],\n      \"expected_tasks\": [],\n      \"scene\": \"reference\"\n    },\n    {\n      \"file\": \"n1_owed_note.png\",\n      \"set\": \"ordinary\",\n      \"expected_gate\": \"clear\",\n      \"ocr_keywords\": [\n        \"Ines\",\n        \"dataset\",\n        \"Tuesday\"\n      ],\n      \"expected_tasks\": [\n        {\n          \"match\": [\n            [\n              \"dataset\"\n            ]\n          ],\n          \"project\": \"research\"\n        }\n      ],\n      \"scene\": \"commitment\",\n      \"expected_waiting_on\": \"the dataset, from Ines, by Tuesday\"\n    },\n    {\n      \"file\": \"n2_owed_whiteboard.png\",\n      \"set\": \"ordinary\",\n      \"expected_gate\": \"clear\",\n      \"ocr_keywords\": [\n        \"Teodor\",\n        \"thermal data\",\n        \"next week\"\n      ],\n      \"expected_tasks\": [\n        {\n          \"match\": [\n            [\n              \"thermal\"\n            ]\n          ],\n          \"project\": \"research\"\n        }\n      ],\n      \"scene\": \"commitment\",\n      \"expected_waiting_on\": \"the thermal data, from Teodor, next week\"\n    },\n    {\n      \"file\": \"n3_owed_message.png\",\n      \"set\": \"ordinary\",\n      \"expected_gate\": \"clear\",\n      \"ocr_keywords\": [\n        \"invoice\",\n        \"Friday\",\n        \"Sam\"\n      ],\n      \"expected_tasks\": [\n        {\n          \"match\": [\n            [\n              \"invoice\"\n            ]\n          ],\n          \"project\": \"work\"\n        }\n      ],\n      \"scene\": \"commitment\",\n      \"expected_waiting_on\": \"the invoice, from Sam, on Friday\"\n    },\n    {\n      \"file\": \"n4_reference_menu.png\",\n      \"set\": \"ordinary\",\n      \"expected_gate\": \"clear\",\n      \"ocr_keywords\": [\n        \"Juniper Lane\",\n        \"Flat white\",\n        \"Soup\"\n      ],\n      \"expected_tasks\": [],\n      \"scene\": \"reference\"\n    },\n    {\n      \"file\": \"n5_reference_poster.png\",\n      \"set\": \"ordinary\",\n      \"expected_gate\": \"clear\",\n      \"ocr_keywords\": [\n        \"Lantern Walk\",\n        \"November\",\n        \"Corn Exchange\"\n      ],\n      \"expected_tasks\": [],\n      \"scene\": \"reference\"\n    },\n    {\n      \"file\": \"n6_reference_catalog.png\",\n      \"set\": \"ordinary\",\n      \"expected_gate\": \"clear\",\n      \"ocr_keywords\": [\n        \"Brightmoor\",\n        \"Trail stove\",\n        \"Titanium\"\n      ],\n      \"expected_tasks\": [],\n      \"scene\": \"reference\"\n    },\n    {\n      \"file\": \"n7_owes_whiteboard.png\",\n      \"set\": \"ordinary\",\n      \"expected_gate\": \"clear\",\n      \"ocr_keywords\": [\n        \"Teodor\",\n        \"thermal data\",\n        \"next week\"\n      ],\n      \"expected_tasks\": [\n        {\n          \"match\": [\n            [\n              \"thermal\"\n            ]\n          ],\n          \"project\": \"research\"\n        }\n      ],\n      \"scene\": \"commitment\"\n    },\n    {\n      \"file\": \"n8_owes_note.png\",\n      \"set\": \"ordinary\",\n      \"expected_gate\": \"clear\",\n      \"ocr_keywords\": [\n        \"Invoice\",\n        \"Sam\",\n        \"Friday\"\n      ],\n      \"expected_tasks\": [\n        {\n          \"match\": [\n            [\n              \"invoice\"\n            ]\n          ],\n          \"project\": \"work\"\n        }\n      ],\n      \"scene\": \"commitment\"\n    }\n  ]\n}\n",
+  "code": "97be683",
+  "runner_blob": "74fd58b6e2692299",
+  "started": "2026-10-22 02:43 UTC",
+  "finished": "2026-10-22 02:46 UTC",
+  "stopped": null,
+  "versions": {
+    "image gate": "`StrandsAgents/strands-decider-2B-hobson-v21` with `--vision` on cpu, strands-decider 0.2.0 in its own venv, 127.0.0.1:8001, the picture question at the text gate's floor (0.60)",
+    "OCR": "RapidOCR (rapidocr-onnxruntime 1.4.4, onnxruntime 1.31.0, its bundled models), on the laptop",
+    "text gate and routing": "`StrandsAgents/strands-decider-2B-hobson-v21` on cpu, strands-decider 0.1.0, 127.0.0.1:8000",
+    "scene": "the vision server: \"What does this picture represent?\" over the picture and its OCR text, at the routing read's floor for a choice question (0.70)",
+    "release": "the owner's tap on the Release button of the hold's notice, in the owner's Telegram chat, read from the bot's updates and recorded by the courier's own release handler",
+    "extraction model": "`openai.gpt-oss-20b` on Bedrock (bedrock-mantle, us-east-1), reasoning effort `low`",
+    "configuration": "`config.toml` git blob `31535c81f0e844b9`; `ratatoskr_demo/prompts/route.toml` git blob `746b41993c51ad3b`",
+    "hardware": "the build laptop's CPU (16 logical cores), each Decider server capped at 4 threads at below-normal priority; kernels: reference PyTorch implementation (causal_conv1d and flash-linear-attention not installed; CPU-only torch build)",
+    "conditions": "the other long-running experiment on this laptop paused; the laptop otherwise idle; each release by the owner's tap"
+  },
+  "memory_end": {
+    "text server": {
+      "resident_gb": 7.64,
+      "private_gb": 10.1
+    },
+    "vision server": {
+      "resident_gb": 8.91,
+      "private_gb": 12.19
+    }
+  },
+  "spend_before": {
+    "total_usd": 0.09542354,
+    "hard_stop_usd": 5.0,
+    "calls": 762,
+    "settled": 761,
+    "at_worst_case": 1,
+    "refused": 0,
+    "input_tokens": 759367,
+    "output_tokens": 140596,
+    "by_purpose": {
+      "bench-route": 0.06520925,
+      "debug": 0.0002912,
+      "extract": 0.02506247,
+      "hook-check": 0.00038048,
+      "probe-effort": 0.00024241,
+      "probe-structured": 0.00421567,
+      "smoke": 2.206e-05
+    }
+  },
+  "spend_after": {
+    "total_usd": 0.09553611,
+    "hard_stop_usd": 5.0,
+    "calls": 763,
+    "settled": 762,
+    "at_worst_case": 1,
+    "refused": 0,
+    "input_tokens": 760298,
+    "output_tokens": 140754,
+    "by_purpose": {
+      "bench-route": 0.06520925,
+      "debug": 0.0002912,
+      "extract": 0.02517504,
+      "hook-check": 0.00038048,
+      "probe-effort": 0.00024241,
+      "probe-structured": 0.00421567,
+      "smoke": 2.206e-05
+    }
+  },
+  "images": [
+    {
+      "file": "o1_business_card.png",
+      "set": "ordinary",
+      "id": "photo-2dfc2294dcde",
+      "status": "done",
+      "reason": "reference",
+      "image": {
+        "extraction_calls": 0,
+        "ocr_confidence": [
+          0.997,
+          0.9913,
+          0.999,
+          0.9995
+        ],
+        "ocr_seconds": 2.762,
+        "gate_p": 0.4017,
+        "gate_seconds": 2.268,
+        "releases": [
+          {
+            "held_by": "image gate",
+            "sid": "3c7a905ab0",
+            "by": "owner",
+            "at": "2026-10-22T02:43:30+00:00"
+          }
+        ],
+        "scene": "reference",
+        "scene_choice": "reference",
+        "scene_p": 0.9633,
+        "scene_options": {
+          "commitment": 0.0184,
+          "reference": 0.9816
+        },
+        "scene_seconds": 2.248,
+        "scene_by": "decider",
+        "scene_action": "kept on the laptop"
+      },
+      "visits": [
+        {
+          "status": "hold",
+          "reason": "image-unsure",
+          "picture_p": [
+            0.4017
+          ],
+          "ocr_ran": false,
+          "ocr_keywords_found": [],
+          "text_gate_p": [],
+          "text_gate_seconds": [],
+          "scene_reads": 0,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        },
+        {
+          "status": "done",
+          "reason": "reference",
+          "picture_p": [],
+          "ocr_ran": true,
+          "ocr_keywords_found": [
+            "Halvard",
+            "Teague",
+            "Moorgate",
+            "Acoustics"
+          ],
+          "text_gate_p": [
+            0.2845
+          ],
+          "text_gate_seconds": [
+            1.391
+          ],
+          "scene_reads": 1,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        }
+      ],
+      "extraction_calls_spend_ledger": 0,
+      "written": [],
+      "telegram": [
+        {
+          "first_line": "Held photo-2dfc2294dcde: image-unsure. Nothing was written.",
+          "buttons": [
+            "Release"
+          ],
+          "to_owner": true
+        },
+        {
+          "first_line": "reference · kept on the laptop",
+          "buttons": [],
+          "to_owner": false
+        }
+      ],
+      "reference_note": true
+    },
+    {
+      "file": "o2_whiteboard_deposit.png",
+      "set": "ordinary",
+      "id": "photo-63b48c834008",
+      "status": "hold",
+      "reason": "scene-unsure",
+      "image": {
+        "extraction_calls": 0,
+        "ocr_confidence": [
+          0.9981,
+          0.9925,
+          0.9903,
+          0.972,
+          0.949
+        ],
+        "ocr_seconds": 1.282,
+        "gate_p": 0.4188,
+        "gate_seconds": 2.259,
+        "releases": [
+          {
+            "held_by": "image gate",
+            "sid": "bbb7c14c8d",
+            "by": "owner",
+            "at": "2026-10-22T02:43:41+00:00"
+          }
+        ],
+        "scene": "unsure",
+        "scene_choice": "reference",
+        "scene_p": 0.4195,
+        "scene_options": {
+          "commitment": 0.2903,
+          "reference": 0.7097
+        },
+        "scene_seconds": 2.309,
+        "scene_by": "decider",
+        "scene_action": "asked the owner",
+        "scene_sid": "945f8b23ae"
+      },
+      "visits": [
+        {
+          "status": "hold",
+          "reason": "image-unsure",
+          "picture_p": [
+            0.4188
+          ],
+          "ocr_ran": false,
+          "ocr_keywords_found": [],
+          "text_gate_p": [],
+          "text_gate_seconds": [],
+          "scene_reads": 0,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        },
+        {
+          "status": "hold",
+          "reason": "scene-unsure",
+          "picture_p": [],
+          "ocr_ran": true,
+          "ocr_keywords_found": [
+            "deposit",
+            "Fenella",
+            "Friday",
+            "coach"
+          ],
+          "text_gate_p": [
+            0.2779
+          ],
+          "text_gate_seconds": [
+            1.428
+          ],
+          "scene_reads": 1,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        }
+      ],
+      "extraction_calls_spend_ledger": 0,
+      "written": [],
+      "telegram": [
+        {
+          "first_line": "Held photo-63b48c834008: image-unsure. Nothing was written.",
+          "buttons": [
+            "Release"
+          ],
+          "to_owner": true
+        },
+        {
+          "first_line": "scene unsure · 0.42",
+          "buttons": [
+            "Commitment",
+            "Reference"
+          ],
+          "to_owner": false
+        }
+      ],
+      "reference_note": false
+    },
+    {
+      "file": "o3_conference_slide.png",
+      "set": "ordinary",
+      "id": "photo-f458fd04fe2b",
+      "status": "done",
+      "reason": "reference",
+      "image": {
+        "extraction_calls": 0,
+        "gate_p": 0.1812,
+        "gate_seconds": 2.222,
+        "ocr_confidence": [
+          0.981,
+          0.9843,
+          0.981,
+          0.9905
+        ],
+        "ocr_seconds": 1.289,
+        "scene": "reference",
+        "scene_choice": "reference",
+        "scene_p": 0.9055,
+        "scene_options": {
+          "commitment": 0.0472,
+          "reference": 0.9528
+        },
+        "scene_seconds": 2.287,
+        "scene_by": "decider",
+        "scene_action": "kept on the laptop"
+      },
+      "visits": [
+        {
+          "status": "done",
+          "reason": "reference",
+          "picture_p": [
+            0.1812
+          ],
+          "ocr_ran": true,
+          "ocr_keywords_found": [
+            "abstract",
+            "November",
+            "Workshop"
+          ],
+          "text_gate_p": [
+            0.1856
+          ],
+          "text_gate_seconds": [
+            1.476
+          ],
+          "scene_reads": 1,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        }
+      ],
+      "extraction_calls_spend_ledger": 0,
+      "written": [],
+      "telegram": [
+        {
+          "first_line": "reference · kept on the laptop",
+          "buttons": [],
+          "to_owner": false
+        }
+      ],
+      "reference_note": true
+    },
+    {
+      "file": "o4_sticky_note.png",
+      "set": "ordinary",
+      "id": "photo-177f8f33f9e9",
+      "status": "done",
+      "reason": null,
+      "image": {
+        "extraction_calls": 1,
+        "ocr_confidence": [
+          0.9909,
+          0.9806,
+          0.9654,
+          0.8886,
+          0.9755
+        ],
+        "ocr_seconds": 1.601,
+        "gate_p": 0.4297,
+        "gate_seconds": 2.096,
+        "releases": [
+          {
+            "held_by": "image gate",
+            "sid": "1a4cd60f42",
+            "by": "owner",
+            "at": "2026-10-22T02:43:59+00:00"
+          }
+        ],
+        "scene": "commitment",
+        "scene_choice": "commitment",
+        "scene_p": 0.7362,
+        "scene_options": {
+          "commitment": 0.8681,
+          "reference": 0.1319
+        },
+        "scene_seconds": 2.148,
+        "scene_by": "decider",
+        "scene_action": "extracted"
+      },
+      "visits": [
+        {
+          "status": "hold",
+          "reason": "image-unsure",
+          "picture_p": [
+            0.4297
+          ],
+          "ocr_ran": false,
+          "ocr_keywords_found": [],
+          "text_gate_p": [],
+          "text_gate_seconds": [],
+          "scene_reads": 0,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        },
+        {
+          "status": "done",
+          "reason": null,
+          "picture_p": [],
+          "ocr_ran": true,
+          "ocr_keywords_found": [
+            "Wilhelmina",
+            "tent",
+            "Sunday"
+          ],
+          "text_gate_p": [
+            0.3585
+          ],
+          "text_gate_seconds": [
+            1.396
+          ],
+          "scene_reads": 1,
+          "routing_seconds": [
+            9.975
+          ],
+          "routing_waiting_p": [
+            0.5345
+          ]
+        }
+      ],
+      "extraction_calls_spend_ledger": 1,
+      "written": [
+        {
+          "content": "Drop off spare tent to Wilhelmina",
+          "labels": [
+            "pocket"
+          ],
+          "priority": null
+        }
+      ],
+      "telegram": [
+        {
+          "first_line": "Held photo-177f8f33f9e9: image-unsure. Nothing was written.",
+          "buttons": [
+            "Release"
+          ],
+          "to_owner": true
+        },
+        {
+          "first_line": "unsorted · - · 0.41",
+          "buttons": [
+            "other",
+            "personal",
+            "work",
+            "community",
+            "research",
+            "school",
+            "writing",
+            "Leave unsorted"
+          ],
+          "to_owner": false
+        }
+      ],
+      "reference_note": false
+    },
+    {
+      "file": "o5_meeting_agenda.png",
+      "set": "ordinary",
+      "id": "photo-450a6a2bac1a",
+      "status": "hold",
+      "reason": "scene-unsure",
+      "image": {
+        "extraction_calls": 0,
+        "gate_p": 0.2565,
+        "gate_seconds": 2.219,
+        "ocr_confidence": [
+          0.9984,
+          0.9732,
+          0.9843,
+          0.9535,
+          0.9921
+        ],
+        "ocr_seconds": 1.543,
+        "scene": "unsure",
+        "scene_choice": "reference",
+        "scene_p": 0.4518,
+        "scene_options": {
+          "commitment": 0.2741,
+          "reference": 0.7259
+        },
+        "scene_seconds": 2.354,
+        "scene_by": "decider",
+        "scene_action": "asked the owner",
+        "scene_sid": "17b200bf51"
+      },
+      "visits": [
+        {
+          "status": "hold",
+          "reason": "scene-unsure",
+          "picture_p": [
+            0.2565
+          ],
+          "ocr_ran": true,
+          "ocr_keywords_found": [
+            "test plan",
+            "circulate",
+            "Thursday"
+          ],
+          "text_gate_p": [
+            0.3357
+          ],
+          "text_gate_seconds": [
+            1.492
+          ],
+          "scene_reads": 1,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        }
+      ],
+      "extraction_calls_spend_ledger": 0,
+      "written": [],
+      "telegram": [
+        {
+          "first_line": "scene unsure · 0.45",
+          "buttons": [
+            "Commitment",
+            "Reference"
+          ],
+          "to_owner": false
+        }
+      ],
+      "reference_note": false
+    },
+    {
+      "file": "o6_bookshop_receipt.png",
+      "set": "ordinary",
+      "id": "photo-6736d7cfa420",
+      "status": "done",
+      "reason": "reference",
+      "image": {
+        "extraction_calls": 0,
+        "gate_p": 0.338,
+        "gate_seconds": 2.226,
+        "ocr_confidence": [
+          0.9711,
+          0.9622,
+          0.9999,
+          0.9994,
+          0.9999,
+          0.9891,
+          0.9966,
+          0.741
+        ],
+        "ocr_seconds": 1.262,
+        "scene": "reference",
+        "scene_choice": "reference",
+        "scene_p": 0.9155,
+        "scene_options": {
+          "commitment": 0.0422,
+          "reference": 0.9578
+        },
+        "scene_seconds": 2.292,
+        "scene_by": "decider",
+        "scene_action": "kept on the laptop"
+      },
+      "visits": [
+        {
+          "status": "done",
+          "reason": "reference",
+          "picture_p": [
+            0.338
+          ],
+          "ocr_ran": true,
+          "ocr_keywords_found": [
+            "Kettlewell",
+            "Salt Marsh Atlas",
+            "Total"
+          ],
+          "text_gate_p": [
+            0.2749
+          ],
+          "text_gate_seconds": [
+            1.419
+          ],
+          "scene_reads": 1,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        }
+      ],
+      "extraction_calls_spend_ledger": 0,
+      "written": [],
+      "telegram": [
+        {
+          "first_line": "reference · kept on the laptop",
+          "buttons": [],
+          "to_owner": false
+        }
+      ],
+      "reference_note": true
+    },
+    {
+      "file": "o7_flyer.png",
+      "set": "ordinary",
+      "id": "photo-7edc584881a3",
+      "status": "done",
+      "reason": "reference",
+      "image": {
+        "extraction_calls": 0,
+        "gate_p": 0.1641,
+        "gate_seconds": 2.398,
+        "ocr_confidence": [
+          0.9979,
+          0.9901,
+          0.9628,
+          0.9987
+        ],
+        "ocr_seconds": 1.165,
+        "scene": "reference",
+        "scene_choice": "reference",
+        "scene_p": 0.9526,
+        "scene_options": {
+          "commitment": 0.0237,
+          "reference": 0.9763
+        },
+        "scene_seconds": 2.487,
+        "scene_by": "decider",
+        "scene_action": "kept on the laptop"
+      },
+      "visits": [
+        {
+          "status": "done",
+          "reason": "reference",
+          "picture_p": [
+            0.1641
+          ],
+          "ocr_ran": true,
+          "ocr_keywords_found": [
+            "Stargazing",
+            "November",
+            "Hollins Park"
+          ],
+          "text_gate_p": [
+            0.1453
+          ],
+          "text_gate_seconds": [
+            1.489
+          ],
+          "scene_reads": 1,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        }
+      ],
+      "extraction_calls_spend_ledger": 0,
+      "written": [],
+      "telegram": [
+        {
+          "first_line": "reference · kept on the laptop",
+          "buttons": [],
+          "to_owner": false
+        }
+      ],
+      "reference_note": true
+    },
+    {
+      "file": "o8_todo_list.png",
+      "set": "ordinary",
+      "id": "photo-8bacbf448b06",
+      "status": "hold",
+      "reason": "scene-unsure",
+      "image": {
+        "extraction_calls": 0,
+        "gate_p": 0.1586,
+        "gate_seconds": 2.34,
+        "ocr_confidence": [
+          0.9971,
+          0.977,
+          0.9969,
+          0.9607
+        ],
+        "ocr_seconds": 1.131,
+        "scene": "unsure",
+        "scene_choice": "reference",
+        "scene_p": 0.5179,
+        "scene_options": {
+          "commitment": 0.2411,
+          "reference": 0.7589
+        },
+        "scene_seconds": 2.443,
+        "scene_by": "decider",
+        "scene_action": "asked the owner",
+        "scene_sid": "ba588068a3"
+      },
+      "visits": [
+        {
+          "status": "hold",
+          "reason": "scene-unsure",
+          "picture_p": [
+            0.1586
+          ],
+          "ocr_ran": true,
+          "ocr_keywords_found": [
+            "insurance",
+            "Cosimo",
+            "shortlist",
+            "gate"
+          ],
+          "text_gate_p": [
+            0.2087
+          ],
+          "text_gate_seconds": [
+            1.422
+          ],
+          "scene_reads": 1,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        }
+      ],
+      "extraction_calls_spend_ledger": 0,
+      "written": [],
+      "telegram": [
+        {
+          "first_line": "scene unsure · 0.52",
+          "buttons": [
+            "Commitment",
+            "Reference"
+          ],
+          "to_owner": false
+        }
+      ],
+      "reference_note": false
+    },
+    {
+      "file": "s1_medical_intake.png",
+      "set": "sensitive",
+      "id": "photo-f75abd451e39",
+      "status": "hold",
+      "reason": "image-sensitive",
+      "image": {
+        "extraction_calls": 0,
+        "gate_p": 0.7299,
+        "gate_seconds": 3.726
+      },
+      "visits": [
+        {
+          "status": "hold",
+          "reason": "image-sensitive",
+          "picture_p": [
+            0.7299
+          ],
+          "ocr_ran": false,
+          "ocr_keywords_found": [],
+          "text_gate_p": [],
+          "text_gate_seconds": [],
+          "scene_reads": 0,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        }
+      ],
+      "extraction_calls_spend_ledger": 0,
+      "written": [],
+      "telegram": [
+        {
+          "first_line": "Held photo-f75abd451e39: image-sensitive. Nothing was written.",
+          "buttons": [],
+          "to_owner": false
+        }
+      ],
+      "reference_note": false
+    },
+    {
+      "file": "s2_prescription_label.png",
+      "set": "sensitive",
+      "id": "photo-e4213aa9d02d",
+      "status": "hold",
+      "reason": "image-sensitive",
+      "image": {
+        "extraction_calls": 0,
+        "gate_p": 0.7942,
+        "gate_seconds": 3.288
+      },
+      "visits": [
+        {
+          "status": "hold",
+          "reason": "image-sensitive",
+          "picture_p": [
+            0.7942
+          ],
+          "ocr_ran": false,
+          "ocr_keywords_found": [],
+          "text_gate_p": [],
+          "text_gate_seconds": [],
+          "scene_reads": 0,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        }
+      ],
+      "extraction_calls_spend_ledger": 0,
+      "written": [],
+      "telegram": [
+        {
+          "first_line": "Held photo-e4213aa9d02d: image-sensitive. Nothing was written.",
+          "buttons": [],
+          "to_owner": false
+        }
+      ],
+      "reference_note": false
+    },
+    {
+      "file": "s3_pay_stub.png",
+      "set": "sensitive",
+      "id": "photo-b87c29605457",
+      "status": "hold",
+      "reason": "image-sensitive",
+      "image": {
+        "extraction_calls": 0,
+        "gate_p": 0.7608,
+        "gate_seconds": 2.813
+      },
+      "visits": [
+        {
+          "status": "hold",
+          "reason": "image-sensitive",
+          "picture_p": [
+            0.7608
+          ],
+          "ocr_ran": false,
+          "ocr_keywords_found": [],
+          "text_gate_p": [],
+          "text_gate_seconds": [],
+          "scene_reads": 0,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        }
+      ],
+      "extraction_calls_spend_ledger": 0,
+      "written": [],
+      "telegram": [
+        {
+          "first_line": "Held photo-b87c29605457: image-sensitive. Nothing was written.",
+          "buttons": [],
+          "to_owner": false
+        }
+      ],
+      "reference_note": false
+    },
+    {
+      "file": "s4_bank_statement.png",
+      "set": "sensitive",
+      "id": "photo-0b6d03344086",
+      "status": "hold",
+      "reason": "image-sensitive",
+      "image": {
+        "extraction_calls": 0,
+        "gate_p": 0.786,
+        "gate_seconds": 2.863
+      },
+      "visits": [
+        {
+          "status": "hold",
+          "reason": "image-sensitive",
+          "picture_p": [
+            0.786
+          ],
+          "ocr_ran": false,
+          "ocr_keywords_found": [],
+          "text_gate_p": [],
+          "text_gate_seconds": [],
+          "scene_reads": 0,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        }
+      ],
+      "extraction_calls_spend_ledger": 0,
+      "written": [],
+      "telegram": [
+        {
+          "first_line": "Held photo-0b6d03344086: image-sensitive. Nothing was written.",
+          "buttons": [],
+          "to_owner": false
+        }
+      ],
+      "reference_note": false
+    },
+    {
+      "file": "s5_confidential_letter.png",
+      "set": "sensitive",
+      "id": "photo-77565c698a1a",
+      "status": "hold",
+      "reason": "image-sensitive",
+      "image": {
+        "extraction_calls": 0,
+        "gate_p": 0.8807,
+        "gate_seconds": 2.825
+      },
+      "visits": [
+        {
+          "status": "hold",
+          "reason": "image-sensitive",
+          "picture_p": [
+            0.8807
+          ],
+          "ocr_ran": false,
+          "ocr_keywords_found": [],
+          "text_gate_p": [],
+          "text_gate_seconds": [],
+          "scene_reads": 0,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        }
+      ],
+      "extraction_calls_spend_ledger": 0,
+      "written": [],
+      "telegram": [
+        {
+          "first_line": "Held photo-77565c698a1a: image-sensitive. Nothing was written.",
+          "buttons": [],
+          "to_owner": false
+        }
+      ],
+      "reference_note": false
+    },
+    {
+      "file": "s6_counselling_card.png",
+      "set": "sensitive",
+      "id": "photo-c0576f082980",
+      "status": "hold",
+      "reason": "image-unsure",
+      "image": {
+        "extraction_calls": 0,
+        "gate_p": 0.5886,
+        "gate_seconds": 2.831,
+        "releases": [
+          {
+            "held_by": "image gate",
+            "sid": "9a53ef39e1",
+            "by": null,
+            "at": null
+          }
+        ]
+      },
+      "visits": [
+        {
+          "status": "hold",
+          "reason": "image-unsure",
+          "picture_p": [
+            0.5886
+          ],
+          "ocr_ran": false,
+          "ocr_keywords_found": [],
+          "text_gate_p": [],
+          "text_gate_seconds": [],
+          "scene_reads": 0,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        }
+      ],
+      "extraction_calls_spend_ledger": 0,
+      "written": [],
+      "telegram": [
+        {
+          "first_line": "Held photo-c0576f082980: image-unsure. Nothing was written.",
+          "buttons": [
+            "Release"
+          ],
+          "to_owner": false
+        }
+      ],
+      "reference_note": false
+    },
+    {
+      "file": "s7_id_card.png",
+      "set": "sensitive",
+      "id": "photo-9b5960374de1",
+      "status": "hold",
+      "reason": "image-sensitive",
+      "image": {
+        "extraction_calls": 0,
+        "gate_p": 0.6905,
+        "gate_seconds": 2.784
+      },
+      "visits": [
+        {
+          "status": "hold",
+          "reason": "image-sensitive",
+          "picture_p": [
+            0.6905
+          ],
+          "ocr_ran": false,
+          "ocr_keywords_found": [],
+          "text_gate_p": [],
+          "text_gate_seconds": [],
+          "scene_reads": 0,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        }
+      ],
+      "extraction_calls_spend_ledger": 0,
+      "written": [],
+      "telegram": [
+        {
+          "first_line": "Held photo-9b5960374de1: image-sensitive. Nothing was written.",
+          "buttons": [],
+          "to_owner": false
+        }
+      ],
+      "reference_note": false
+    },
+    {
+      "file": "s8_hr_memo.png",
+      "set": "sensitive",
+      "id": "photo-6a538f3bf79f",
+      "status": "hold",
+      "reason": "image-sensitive",
+      "image": {
+        "extraction_calls": 0,
+        "gate_p": 0.6575,
+        "gate_seconds": 2.816
+      },
+      "visits": [
+        {
+          "status": "hold",
+          "reason": "image-sensitive",
+          "picture_p": [
+            0.6575
+          ],
+          "ocr_ran": false,
+          "ocr_keywords_found": [],
+          "text_gate_p": [],
+          "text_gate_seconds": [],
+          "scene_reads": 0,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        }
+      ],
+      "extraction_calls_spend_ledger": 0,
+      "written": [],
+      "telegram": [
+        {
+          "first_line": "Held photo-6a538f3bf79f: image-sensitive. Nothing was written.",
+          "buttons": [],
+          "to_owner": false
+        }
+      ],
+      "reference_note": false
+    },
+    {
+      "file": "n1_owed_note.png",
+      "set": "ordinary",
+      "id": "photo-a4371e164236",
+      "status": "hold",
+      "reason": "scene-unsure",
+      "image": {
+        "extraction_calls": 0,
+        "ocr_confidence": [
+          0.9905,
+          0.9603,
+          0.9981,
+          0.999,
+          0.9999,
+          0.9999
+        ],
+        "ocr_seconds": 2.063,
+        "gate_p": 0.4528,
+        "gate_seconds": 2.663,
+        "releases": [
+          {
+            "held_by": "image gate",
+            "sid": "e0cd451d4c",
+            "by": "owner",
+            "at": "2026-10-22T02:45:15+00:00"
+          }
+        ],
+        "scene": "unsure",
+        "scene_choice": "commitment",
+        "scene_p": 0.557,
+        "scene_options": {
+          "commitment": 0.7785,
+          "reference": 0.2215
+        },
+        "scene_seconds": 2.371,
+        "scene_by": "decider",
+        "scene_action": "asked the owner",
+        "scene_sid": "762ae52295"
+      },
+      "visits": [
+        {
+          "status": "hold",
+          "reason": "image-unsure",
+          "picture_p": [
+            0.4528
+          ],
+          "ocr_ran": false,
+          "ocr_keywords_found": [],
+          "text_gate_p": [],
+          "text_gate_seconds": [],
+          "scene_reads": 0,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        },
+        {
+          "status": "hold",
+          "reason": "scene-unsure",
+          "picture_p": [],
+          "ocr_ran": true,
+          "ocr_keywords_found": [
+            "Ines",
+            "dataset",
+            "Tuesday"
+          ],
+          "text_gate_p": [
+            0.3829
+          ],
+          "text_gate_seconds": [
+            1.527
+          ],
+          "scene_reads": 1,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        }
+      ],
+      "extraction_calls_spend_ledger": 0,
+      "written": [],
+      "telegram": [
+        {
+          "first_line": "Held photo-a4371e164236: image-unsure. Nothing was written.",
+          "buttons": [
+            "Release"
+          ],
+          "to_owner": true
+        },
+        {
+          "first_line": "scene unsure · 0.56",
+          "buttons": [
+            "Commitment",
+            "Reference"
+          ],
+          "to_owner": false
+        }
+      ],
+      "reference_note": false
+    },
+    {
+      "file": "n2_owed_whiteboard.png",
+      "set": "ordinary",
+      "id": "photo-7b7e1144b0df",
+      "status": "hold",
+      "reason": "scene-unsure",
+      "image": {
+        "extraction_calls": 0,
+        "ocr_confidence": [
+          0.9999,
+          0.9979,
+          0.9998,
+          0.9996,
+          0.9994,
+          0.9911
+        ],
+        "ocr_seconds": 0.861,
+        "gate_p": 0.53,
+        "gate_seconds": 2.716,
+        "releases": [
+          {
+            "held_by": "image gate",
+            "sid": "ec707c171b",
+            "by": "owner",
+            "at": "2026-10-22T02:45:26+00:00"
+          }
+        ],
+        "scene": "unsure",
+        "scene_choice": "reference",
+        "scene_p": 0.3927,
+        "scene_options": {
+          "commitment": 0.3036,
+          "reference": 0.6964
+        },
+        "scene_seconds": 2.287,
+        "scene_by": "decider",
+        "scene_action": "asked the owner",
+        "scene_sid": "cdbdddce75"
+      },
+      "visits": [
+        {
+          "status": "hold",
+          "reason": "image-unsure",
+          "picture_p": [
+            0.53
+          ],
+          "ocr_ran": false,
+          "ocr_keywords_found": [],
+          "text_gate_p": [],
+          "text_gate_seconds": [],
+          "scene_reads": 0,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        },
+        {
+          "status": "hold",
+          "reason": "scene-unsure",
+          "picture_p": [],
+          "ocr_ran": true,
+          "ocr_keywords_found": [
+            "Teodor",
+            "thermal data",
+            "next week"
+          ],
+          "text_gate_p": [
+            0.3738
+          ],
+          "text_gate_seconds": [
+            1.85
+          ],
+          "scene_reads": 1,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        }
+      ],
+      "extraction_calls_spend_ledger": 0,
+      "written": [],
+      "telegram": [
+        {
+          "first_line": "Held photo-7b7e1144b0df: image-unsure. Nothing was written.",
+          "buttons": [
+            "Release"
+          ],
+          "to_owner": true
+        },
+        {
+          "first_line": "scene unsure · 0.39",
+          "buttons": [
+            "Commitment",
+            "Reference"
+          ],
+          "to_owner": false
+        }
+      ],
+      "reference_note": false
+    },
+    {
+      "file": "n3_owed_message.png",
+      "set": "ordinary",
+      "id": "photo-414cc7120a2b",
+      "status": "hold",
+      "reason": "scene-unsure",
+      "image": {
+        "extraction_calls": 0,
+        "ocr_confidence": [
+          0.5667,
+          0.8964,
+          0.9989,
+          0.9997,
+          0.9977,
+          0.9996,
+          0.9997
+        ],
+        "ocr_seconds": 0.679,
+        "gate_p": 0.3971,
+        "gate_seconds": 2.849,
+        "releases": [
+          {
+            "held_by": "text gate",
+            "sid": "96e51bbc62",
+            "by": "owner",
+            "at": "2026-10-22T02:45:40+00:00"
+          }
+        ],
+        "scene": "unsure",
+        "scene_choice": "commitment",
+        "scene_p": 0.5487,
+        "scene_options": {
+          "commitment": 0.7744,
+          "reference": 0.2256
+        },
+        "scene_seconds": 2.953,
+        "scene_by": "decider",
+        "scene_action": "asked the owner",
+        "scene_sid": "de662eadec"
+      },
+      "visits": [
+        {
+          "status": "hold",
+          "reason": "source-unsure",
+          "picture_p": [
+            0.3971
+          ],
+          "ocr_ran": true,
+          "ocr_keywords_found": [
+            "invoice",
+            "Friday",
+            "Sam"
+          ],
+          "text_gate_p": [
+            0.4606
+          ],
+          "text_gate_seconds": [
+            2.015
+          ],
+          "scene_reads": 0,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        },
+        {
+          "status": "hold",
+          "reason": "scene-unsure",
+          "picture_p": [],
+          "ocr_ran": true,
+          "ocr_keywords_found": [
+            "invoice",
+            "Friday",
+            "Sam"
+          ],
+          "text_gate_p": [],
+          "text_gate_seconds": [],
+          "scene_reads": 1,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        }
+      ],
+      "extraction_calls_spend_ledger": 0,
+      "written": [],
+      "telegram": [
+        {
+          "first_line": "Held photo-414cc7120a2b: source-unsure (photo). It stays in the inbox folder.",
+          "buttons": [
+            "Release"
+          ],
+          "to_owner": true
+        },
+        {
+          "first_line": "scene unsure · 0.55",
+          "buttons": [
+            "Commitment",
+            "Reference"
+          ],
+          "to_owner": false
+        }
+      ],
+      "reference_note": false
+    },
+    {
+      "file": "n4_reference_menu.png",
+      "set": "ordinary",
+      "id": "photo-84e4761f2a19",
+      "status": "done",
+      "reason": "reference",
+      "image": {
+        "extraction_calls": 0,
+        "gate_p": 0.3142,
+        "gate_seconds": 2.611,
+        "ocr_confidence": [
+          0.9751,
+          0.9988,
+          0.9097,
+          0.9991,
+          0.9999,
+          0.9206,
+          0.9998,
+          0.9984
+        ],
+        "ocr_seconds": 1.697,
+        "scene": "reference",
+        "scene_choice": "reference",
+        "scene_p": 0.966,
+        "scene_options": {
+          "commitment": 0.017,
+          "reference": 0.983
+        },
+        "scene_seconds": 2.987,
+        "scene_by": "decider",
+        "scene_action": "kept on the laptop"
+      },
+      "visits": [
+        {
+          "status": "done",
+          "reason": "reference",
+          "picture_p": [
+            0.3142
+          ],
+          "ocr_ran": true,
+          "ocr_keywords_found": [
+            "Juniper Lane",
+            "Flat white",
+            "Soup"
+          ],
+          "text_gate_p": [
+            0.2321
+          ],
+          "text_gate_seconds": [
+            1.844
+          ],
+          "scene_reads": 1,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        }
+      ],
+      "extraction_calls_spend_ledger": 0,
+      "written": [],
+      "telegram": [
+        {
+          "first_line": "reference · kept on the laptop",
+          "buttons": [],
+          "to_owner": false
+        }
+      ],
+      "reference_note": true
+    },
+    {
+      "file": "n5_reference_poster.png",
+      "set": "ordinary",
+      "id": "photo-46bcb79eec8d",
+      "status": "done",
+      "reason": "reference",
+      "image": {
+        "extraction_calls": 0,
+        "gate_p": 0.2,
+        "gate_seconds": 2.962,
+        "ocr_confidence": [
+          0.9513,
+          0.9781,
+          0.9943,
+          0.9982,
+          0.9926
+        ],
+        "ocr_seconds": 1.26,
+        "scene": "reference",
+        "scene_choice": "reference",
+        "scene_p": 0.9611,
+        "scene_options": {
+          "commitment": 0.0195,
+          "reference": 0.9805
+        },
+        "scene_seconds": 2.99,
+        "scene_by": "decider",
+        "scene_action": "kept on the laptop"
+      },
+      "visits": [
+        {
+          "status": "done",
+          "reason": "reference",
+          "picture_p": [
+            0.2
+          ],
+          "ocr_ran": true,
+          "ocr_keywords_found": [
+            "Lantern Walk",
+            "November"
+          ],
+          "text_gate_p": [
+            0.128
+          ],
+          "text_gate_seconds": [
+            1.841
+          ],
+          "scene_reads": 1,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        }
+      ],
+      "extraction_calls_spend_ledger": 0,
+      "written": [],
+      "telegram": [
+        {
+          "first_line": "reference · kept on the laptop",
+          "buttons": [],
+          "to_owner": false
+        }
+      ],
+      "reference_note": true
+    },
+    {
+      "file": "n6_reference_catalog.png",
+      "set": "ordinary",
+      "id": "photo-4971f08b422d",
+      "status": "done",
+      "reason": "reference",
+      "image": {
+        "extraction_calls": 0,
+        "gate_p": 0.3322,
+        "gate_seconds": 2.985,
+        "ocr_confidence": [
+          0.9997,
+          0.9728,
+          0.9917,
+          0.9646,
+          0.9999,
+          0.9887,
+          1.0,
+          0.9821,
+          0.9998
+        ],
+        "ocr_seconds": 1.126,
+        "scene": "reference",
+        "scene_choice": "reference",
+        "scene_p": 0.9624,
+        "scene_options": {
+          "commitment": 0.0188,
+          "reference": 0.9812
+        },
+        "scene_seconds": 3.035,
+        "scene_by": "decider",
+        "scene_action": "kept on the laptop"
+      },
+      "visits": [
+        {
+          "status": "done",
+          "reason": "reference",
+          "picture_p": [
+            0.3322
+          ],
+          "ocr_ran": true,
+          "ocr_keywords_found": [
+            "Brightmoor",
+            "Trail stove",
+            "Titanium"
+          ],
+          "text_gate_p": [
+            0.1828
+          ],
+          "text_gate_seconds": [
+            1.883
+          ],
+          "scene_reads": 1,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        }
+      ],
+      "extraction_calls_spend_ledger": 0,
+      "written": [],
+      "telegram": [
+        {
+          "first_line": "reference · kept on the laptop",
+          "buttons": [],
+          "to_owner": false
+        }
+      ],
+      "reference_note": true
+    },
+    {
+      "file": "n7_owes_whiteboard.png",
+      "set": "ordinary",
+      "id": "photo-e89981643e63",
+      "status": "hold",
+      "reason": "scene-unsure",
+      "image": {
+        "extraction_calls": 0,
+        "ocr_confidence": [
+          0.9992,
+          0.9997,
+          0.9998,
+          0.9997,
+          0.9994,
+          0.9904
+        ],
+        "ocr_seconds": 1.232,
+        "gate_p": 0.5052,
+        "gate_seconds": 2.652,
+        "releases": [
+          {
+            "held_by": "image gate",
+            "sid": "30061f07b5",
+            "by": "owner",
+            "at": "2026-10-22T02:46:41+00:00"
+          }
+        ],
+        "scene": "unsure",
+        "scene_choice": "reference",
+        "scene_p": 0.3236,
+        "scene_options": {
+          "commitment": 0.3382,
+          "reference": 0.6618
+        },
+        "scene_seconds": 2.341,
+        "scene_by": "decider",
+        "scene_action": "asked the owner",
+        "scene_sid": "01c8d93084"
+      },
+      "visits": [
+        {
+          "status": "hold",
+          "reason": "image-unsure",
+          "picture_p": [
+            0.5052
+          ],
+          "ocr_ran": false,
+          "ocr_keywords_found": [],
+          "text_gate_p": [],
+          "text_gate_seconds": [],
+          "scene_reads": 0,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        },
+        {
+          "status": "hold",
+          "reason": "scene-unsure",
+          "picture_p": [],
+          "ocr_ran": true,
+          "ocr_keywords_found": [
+            "Teodor",
+            "thermal data",
+            "next week"
+          ],
+          "text_gate_p": [
+            0.3739
+          ],
+          "text_gate_seconds": [
+            1.623
+          ],
+          "scene_reads": 1,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        }
+      ],
+      "extraction_calls_spend_ledger": 0,
+      "written": [],
+      "telegram": [
+        {
+          "first_line": "Held photo-e89981643e63: image-unsure. Nothing was written.",
+          "buttons": [
+            "Release"
+          ],
+          "to_owner": true
+        },
+        {
+          "first_line": "scene unsure · 0.32",
+          "buttons": [
+            "Commitment",
+            "Reference"
+          ],
+          "to_owner": false
+        }
+      ],
+      "reference_note": false
+    },
+    {
+      "file": "n8_owes_note.png",
+      "set": "ordinary",
+      "id": "photo-b0b0138cd230",
+      "status": "hold",
+      "reason": "scene-unsure",
+      "image": {
+        "extraction_calls": 0,
+        "ocr_confidence": [
+          0.9937,
+          0.9996,
+          0.9997,
+          1.0,
+          0.9999
+        ],
+        "ocr_seconds": 1.342,
+        "gate_p": 0.4348,
+        "gate_seconds": 2.382,
+        "releases": [
+          {
+            "held_by": "image gate",
+            "sid": "406f4cc1ed",
+            "by": "owner",
+            "at": "2026-10-22T02:46:52+00:00"
+          }
+        ],
+        "scene": "unsure",
+        "scene_choice": "reference",
+        "scene_p": 0.239,
+        "scene_options": {
+          "commitment": 0.3805,
+          "reference": 0.6195
+        },
+        "scene_seconds": 2.176,
+        "scene_by": "decider",
+        "scene_action": "asked the owner",
+        "scene_sid": "3cfcfacf46"
+      },
+      "visits": [
+        {
+          "status": "hold",
+          "reason": "image-unsure",
+          "picture_p": [
+            0.4348
+          ],
+          "ocr_ran": false,
+          "ocr_keywords_found": [],
+          "text_gate_p": [],
+          "text_gate_seconds": [],
+          "scene_reads": 0,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        },
+        {
+          "status": "hold",
+          "reason": "scene-unsure",
+          "picture_p": [],
+          "ocr_ran": true,
+          "ocr_keywords_found": [
+            "Invoice",
+            "Sam",
+            "Friday"
+          ],
+          "text_gate_p": [
+            0.2541
+          ],
+          "text_gate_seconds": [
+            1.439
+          ],
+          "scene_reads": 1,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        }
+      ],
+      "extraction_calls_spend_ledger": 0,
+      "written": [],
+      "telegram": [
+        {
+          "first_line": "Held photo-b0b0138cd230: image-unsure. Nothing was written.",
+          "buttons": [
+            "Release"
+          ],
+          "to_owner": true
+        },
+        {
+          "first_line": "scene unsure · 0.24",
+          "buttons": [
+            "Commitment",
+            "Reference"
+          ],
+          "to_owner": false
+        }
+      ],
+      "reference_note": false
+    }
+  ]
+}
