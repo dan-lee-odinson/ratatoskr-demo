@@ -14152,7 +14152,10 @@ Decider on the same laptop CPU; the fresh run used the frozen question wording, 
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Close">Close<a class="anchor-link" href="#Close">¶</a></h2><p>The invariants (<code>CONTRIBUTING.md</code>): a change that does any of these is declined.</p>
 <ul>
-<li>Passes an unsure privacy answer. A sensitivity answer below its floor holds; it is never read as a no.</li>
+<li>Passes an unsure privacy answer. A sensitivity answer below its floor holds; it is never read as a no.
+An explicit, recorded owner release (the Release button on a photo held as unsure) authorizes continuation
+for that photo, and the ledger records it as the owner's; a model clear and an owner release are never
+confused.</li>
 <li>Lets the <code>urgent</code> tag, or anything else, bypass a verdict Decider has given.</li>
 <li>Stores a transcript, or puts recording text into a notice, a log, or the wrist line.</li>
 <li>Binds the Decider server to anything other than the loopback address.</li>

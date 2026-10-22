@@ -66,7 +66,7 @@ twenty-line example. See [`patterns/gatekeeper_triage/README.md`](patterns/gatek
 | **required** | Strands Decider (local; 16 GB minimum host RAM, see System requirements) | the source-text gate and the routing (`[route] backend = "decider"`) |
 | optional | a Pocket recorder and its API key | conversations in, recorded instead of typed (`inputs = ["pocket", ...]`) |
 | optional | an Artemis watch, or any phone with Telegram | where the three-line message is read |
-| optional | smart glasses, later, through the mock kit | an input slot only: the glasses adapter is a stub today |
+| optional | photos now; smart glasses later, through the mock kit | the photo-folder input (desktop-fed pictures through `ledger/inbox/photos/`) works and is measured; the video path and native glasses capture through Meta's toolkit remain a stub |
 | optional | a TypeSafe API key | the bench's Jev column only |
 
 The minimum install is the five required items, `[devices] inputs = ["text"]` and
@@ -83,7 +83,7 @@ measured on a Windows 11 laptop with 16 logical cores, Decider held to four of t
 | Host | Minimum | Measured on the reference machine |
 |---|---|---|
 | CPU | 4 threads free for Decider while it reads; no other CPU-heavy job on the machine | 4 intra-op threads (and 1 inter-op), laptop CPU with 16 logical cores |
-| Memory | 16 GB minimum host RAM; the server commits about 10 GB, and the memory guard stops it at the `--max-commit-gb` value (off unless given; the start command below sets 16) | 9.9 to 10.4 GB committed over 70 reads per server |
+| Memory | The text path: 16 GB minimum host RAM; the server commits about 10 GB, and the memory guard stops it at the `--max-commit-gb` value (off unless given; the start command below sets 16). With photos enabled, the vision server runs beside it (measured, right) | The text path: 9.9 to 10.4 GB committed over 70 reads per server. With photos enabled: about 10.1 GB private for the text server plus 12.19 GB for the vision server ([`bench/IMAGE_EVAL_2026-10-22_final.md`](bench/IMAGE_EVAL_2026-10-22_final.md)) |
 | GPU | None needed | None on the default path (CPU-only torch build; kernels: reference PyTorch implementation, causal_conv1d and flash-linear-attention not installed). Optional, measured: NVIDIA GeForce RTX 5050 Laptop GPU (8 GB, driver 610.74), torch 2.14.1+cu130, bfloat16 weights, the same reference kernels: 0.44 s per six-question read warmed, against 11.01 s on the CPU in the same session (see "Running on a GPU") |
 | Disk | Decider weights (4.4 GB in the Hugging Face cache: the 4.3 GB Qwen3.5-2B base model and the 88 MB Decider checkpoint) plus two virtual environments | `.venv-decider` (server), `.venv` (courier) |
 | Python | 3.12 or later (`requires-python = ">=3.12"`) | 3.12.10 |
@@ -126,12 +126,14 @@ flowchart LR
     subgraph inputs["inputs (device adapters, any of them)"]
         T["Telegram /demo &lt;text&gt;<br/>text_adapter"]
         P["Pocket recorder<br/>pocket_adapter"]
-        G["Smart glasses<br/>glasses_adapter<br/>(STUB: not working)"]
+        G["Photos, glasses_adapter<br/>the photo-folder input (desktop-fed pictures<br/>through ledger/inbox/photos/) works and is measured"]
+        V["Smart glasses, glasses_adapter<br/>the video path and native glasses capture<br/>through Meta's toolkit remain a stub"]
     end
-    E(["device envelope<br/>Text · TranscriptRef · VideoRef ..."])
+    E(["device envelope<br/>Text · TranscriptRef · ImageRef · VideoRef ..."])
     T --> E
     P --> E
-    G -. "slot only" .-> E
+    G --> E
+    V -. "slot only" .-> E
     E --> TR{"triage<br/>keep · already · not ready ·<br/>hold tag · ledger hold ·<br/>stop-list tripwire"}
     TR -- "names a forbidden client" --> H1["HOLD<br/>no model is called"]
     TR -- process --> SG{"source-text gate<br/>Strands Decider on 127.0.0.1<br/>reads the transcript, ~300-word windows"}
@@ -288,8 +290,10 @@ that.
 
 - It runs from the command line on one machine. There is no web interface, no database and no
   queue; Strands Decider is served on `127.0.0.1` and nothing else may reach it.
-- The glasses adapter is a stub: it accepts an envelope carrying a `VideoRef` and returns it
-  unchanged, so the seam has the slot. Nothing reads video.
+- Glasses: the photo-folder input (desktop-fed pictures through `ledger/inbox/photos/`) works and is
+  measured; the video path and native glasses capture through Meta's toolkit remain a stub. The stub
+  accepts an envelope carrying a `VideoRef` and returns it unchanged, so the seam has the slot. Nothing
+  reads video.
 - It never deletes a recording, and it sends messages only to the one Telegram chat configured.
 - Tasks go to one Todoist project (`Ratatoskr Demo`) and nowhere else.
 - Strands Decider on a laptop CPU is not fast (see "How fast Decider is here" below): a recording
@@ -425,7 +429,9 @@ text gate like any transcript before the extraction on Bedrock. The image gate u
 was not trained on images, at the text gate's floor, a starting point rather than a tuned value. A photo held as
 sensitive stays in the folder, with no way to release it. One held as unsure by the image gate or the text gate
 gets a Release button on its notice; the owner's tap sends nothing anywhere and lets the photo continue on the next
-cycle from the check after the one that held it, every later check running as usual. The 8-word floor that closes
+cycle from the check after the one that held it, every later check running as usual. A recorded owner release
+authorizes continuation past that gate's unsure hold for that unchanged file (the ledger keeps the file's sha256; a
+changed file is a new picture); it is distinct from a model clear and is recorded as the owner's. The 8-word floor that closes
 an accidental press on a recording does not apply to a photo: a note with four words on it goes on, and a photo whose
 text has no words at all is held as unreadable. After the text gate and before
 anything is extracted, the vision server is asked what the picture represents, from the picture and its text, at

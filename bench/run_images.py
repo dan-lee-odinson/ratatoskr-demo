@@ -1313,7 +1313,10 @@ def render4(data: dict[str, Any]) -> str:
               "- The gates' own reading of the released pictures: each was let through by the owner after a gate held "
               "it as unsure.",
               "- A trained image gate or scene decision: the checkpoint's image answers come from its base model's "
-              "vision tower, untrained on images.", ""]
+              "vision tower, untrained on images.",
+              "- The chained path (an owner release, then an owner scene answer) was not exercised in this run; a defect "
+              "in it was found in external review on 22 October and fixed in `de195ac`; the run's numbers are "
+              "unaffected.", ""]
     return "\n".join(lines)
 
 
