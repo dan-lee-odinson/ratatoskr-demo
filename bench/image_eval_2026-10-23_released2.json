@@ -1,0 +1,583 @@
+{
+  "addendum": 2,
+  "about": "Ruling 53's second addendum, with no word floor for photos: the five new ordinary pictures the gates held as unsure, each released by the owner's tap, as the run recorded it. bench/run_images.py draws bench/IMAGE_EVAL_2026-10-23_released2.md from this file alone. Fictional pictures only.",
+  "labels_file": "labels_v2.json",
+  "labels_sha256": "c79b3dd16ff919dc 33870712dac8c6ca 332dca1e0f3c14d0 5a2ba44978fe5a6d",
+  "labels_json": "{\n  \"about\": \"Ruling 50's image evaluation: the expected outcome of every picture, the sixteen of ruling 47B and eight new ones, written before any model was asked about the new ones (21 Oct 2026). Fictional, rendered by bench/images/render.py and render_v2.py. labels.json is not edited: its fields are copied here as they stand. Not edited after the run: a label found wrong afterwards is reported as a disagreement.\",\n  \"conventions\": \"expected_gate, ocr_keywords, expected_tasks: as in labels.json. scene: what the picture represents, one of owner_owes (the owner promised something to a specific person, or owes an action by a date), owed_to_owner (a specific person promised the owner something, or the owner is waiting on them), reference (information worth keeping, no promise in either direction), or unsure where the label-writer would not commit. expected_tasks are judged only where the scene answer sends the picture to extraction. expected_waiting_on (owed_to_owner only): what the owner is waiting for, from whom, by when. mirrored: two pairs with matching wording and the opposite direction. Two names in the ruling's examples were already in fixtures (Priya, Marcus) and are replaced by Ines and Teodor; the wording is otherwise the ruling's.\",\n  \"mirrored\": [\n    [\n      \"n2_owed_whiteboard.png\",\n      \"n7_owes_whiteboard.png\"\n    ],\n    [\n      \"n3_owed_message.png\",\n      \"n8_owes_note.png\"\n    ]\n  ],\n  \"images\": [\n    {\n      \"file\": \"o1_business_card.png\",\n      \"set\": \"ordinary\",\n      \"expected_gate\": \"clear\",\n      \"ocr_keywords\": [\n        \"Halvard\",\n        \"Teague\",\n        \"Moorgate\",\n        \"Acoustics\"\n      ],\n      \"expected_tasks\": [],\n      \"scene\": \"reference\"\n    },\n    {\n      \"file\": \"o2_whiteboard_deposit.png\",\n      \"set\": \"ordinary\",\n      \"expected_gate\": \"clear\",\n      \"ocr_keywords\": [\n        \"deposit\",\n        \"Fenella\",\n        \"Friday\",\n        \"coach\"\n      ],\n      \"expected_tasks\": [\n        {\n          \"match\": [\n            [\n              \"deposit\"\n            ]\n          ],\n          \"project\": \"community\"\n        }\n      ],\n      \"scene\": \"owner_owes\"\n    },\n    {\n      \"file\": \"o3_conference_slide.png\",\n      \"set\": \"ordinary\",\n      \"expected_gate\": \"clear\",\n      \"ocr_keywords\": [\n        \"abstract\",\n        \"November\",\n        \"Workshop\"\n      ],\n      \"expected_tasks\": [\n        {\n          \"match\": [\n            [\n              \"abstract\"\n            ]\n          ],\n          \"project\": \"research\"\n        }\n      ],\n      \"scene\": \"unsure\"\n    },\n    {\n      \"file\": \"o4_sticky_note.png\",\n      \"set\": \"ordinary\",\n      \"expected_gate\": \"clear\",\n      \"ocr_keywords\": [\n        \"Wilhelmina\",\n        \"tent\",\n        \"Sunday\"\n      ],\n      \"expected_tasks\": [\n        {\n          \"match\": [\n            [\n              \"tent\"\n            ]\n          ],\n          \"project\": \"personal\"\n        }\n      ],\n      \"scene\": \"owner_owes\"\n    },\n    {\n      \"file\": \"o5_meeting_agenda.png\",\n      \"set\": \"ordinary\",\n      \"expected_gate\": \"clear\",\n      \"ocr_keywords\": [\n        \"test plan\",\n        \"circulate\",\n        \"Thursday\"\n      ],\n      \"expected_tasks\": [\n        {\n          \"match\": [\n            [\n              \"test plan\"\n            ]\n          ],\n          \"project\": \"work\"\n        }\n      ],\n      \"scene\": \"owner_owes\"\n    },\n    {\n      \"file\": \"o6_bookshop_receipt.png\",\n      \"set\": \"ordinary\",\n      \"expected_gate\": \"clear\",\n      \"ocr_keywords\": [\n        \"Kettlewell\",\n        \"Salt Marsh Atlas\",\n        \"Total\"\n      ],\n      \"expected_tasks\": [],\n      \"scene\": \"reference\"\n    },\n    {\n      \"file\": \"o7_flyer.png\",\n      \"set\": \"ordinary\",\n      \"expected_gate\": \"clear\",\n      \"ocr_keywords\": [\n        \"Stargazing\",\n        \"November\",\n        \"Hollins Park\"\n      ],\n      \"expected_tasks\": [\n        {\n          \"match\": [\n            [\n              \"stargazing\"\n            ]\n          ],\n          \"project\": \"community\"\n        }\n      ],\n      \"scene\": \"reference\"\n    },\n    {\n      \"file\": \"o8_todo_list.png\",\n      \"set\": \"ordinary\",\n      \"expected_gate\": \"clear\",\n      \"ocr_keywords\": [\n        \"insurance\",\n        \"Cosimo\",\n        \"shortlist\",\n        \"gate\"\n      ],\n      \"expected_tasks\": [\n        {\n          \"match\": [\n            [\n              \"insurance\"\n            ]\n          ],\n          \"project\": \"personal\"\n        },\n        {\n          \"match\": [\n            [\n              \"shortlist\"\n            ]\n          ],\n          \"project\": \"unsorted\"\n        },\n        {\n          \"match\": [\n            [\n              \"gate\"\n            ]\n          ],\n          \"project\": \"personal\"\n        }\n      ],\n      \"scene\": \"owner_owes\"\n    },\n    {\n      \"file\": \"s1_medical_intake.png\",\n      \"set\": \"sensitive\",\n      \"expected_gate\": \"hold\",\n      \"ocr_keywords\": [\n        \"Marisol\",\n        \"chest pain\",\n        \"metoprolol\"\n      ],\n      \"expected_tasks\": [],\n      \"scene\": \"reference\"\n    },\n    {\n      \"file\": \"s2_prescription_label.png\",\n      \"set\": \"sensitive\",\n      \"expected_gate\": \"hold\",\n      \"ocr_keywords\": [\n        \"Ansel\",\n        \"Quetiapine\",\n        \"tablet\"\n      ],\n      \"expected_tasks\": [],\n      \"scene\": \"reference\"\n    },\n    {\n      \"file\": \"s3_pay_stub.png\",\n      \"set\": \"sensitive\",\n      \"expected_gate\": \"hold\",\n      \"ocr_keywords\": [\n        \"Rowena\",\n        \"Gross pay\",\n        \"Net pay\"\n      ],\n      \"expected_tasks\": [],\n      \"scene\": \"reference\"\n    },\n    {\n      \"file\": \"s4_bank_statement.png\",\n      \"set\": \"sensitive\",\n      \"expected_gate\": \"hold\",\n      \"ocr_keywords\": [\n        \"Dorian\",\n        \"Overdraft\",\n        \"balance\"\n      ],\n      \"expected_tasks\": [],\n      \"scene\": \"reference\"\n    },\n    {\n      \"file\": \"s5_confidential_letter.png\",\n      \"set\": \"sensitive\",\n      \"expected_gate\": \"hold\",\n      \"ocr_keywords\": [\n        \"CONFIDENTIAL\",\n        \"40 roles\",\n        \"circulate\"\n      ],\n      \"expected_tasks\": [],\n      \"scene\": \"reference\"\n    },\n    {\n      \"file\": \"s6_counselling_card.png\",\n      \"set\": \"sensitive\",\n      \"expected_gate\": \"hold\",\n      \"ocr_keywords\": [\n        \"Counselling\",\n        \"Imogen\",\n        \"session\"\n      ],\n      \"expected_tasks\": [],\n      \"scene\": \"reference\"\n    },\n    {\n      \"file\": \"s7_id_card.png\",\n      \"set\": \"sensitive\",\n      \"expected_gate\": \"hold\",\n      \"ocr_keywords\": [\n        \"IDENTITY\",\n        \"Wrenfield\",\n        \"Card number\"\n      ],\n      \"expected_tasks\": [],\n      \"scene\": \"reference\"\n    },\n    {\n      \"file\": \"s8_hr_memo.png\",\n      \"set\": \"sensitive\",\n      \"expected_gate\": \"hold\",\n      \"ocr_keywords\": [\n        \"Callista\",\n        \"final written warning\",\n        \"Review\"\n      ],\n      \"expected_tasks\": [],\n      \"scene\": \"reference\"\n    },\n    {\n      \"file\": \"n1_owed_note.png\",\n      \"set\": \"ordinary\",\n      \"expected_gate\": \"clear\",\n      \"ocr_keywords\": [\n        \"Ines\",\n        \"dataset\",\n        \"Tuesday\"\n      ],\n      \"expected_tasks\": [\n        {\n          \"match\": [\n            [\n              \"dataset\"\n            ]\n          ],\n          \"project\": \"research\"\n        }\n      ],\n      \"scene\": \"owed_to_owner\",\n      \"expected_waiting_on\": \"the dataset, from Ines, by Tuesday\"\n    },\n    {\n      \"file\": \"n2_owed_whiteboard.png\",\n      \"set\": \"ordinary\",\n      \"expected_gate\": \"clear\",\n      \"ocr_keywords\": [\n        \"Teodor\",\n        \"thermal data\",\n        \"next week\"\n      ],\n      \"expected_tasks\": [\n        {\n          \"match\": [\n            [\n              \"thermal\"\n            ]\n          ],\n          \"project\": \"research\"\n        }\n      ],\n      \"scene\": \"owed_to_owner\",\n      \"expected_waiting_on\": \"the thermal data, from Teodor, next week\"\n    },\n    {\n      \"file\": \"n3_owed_message.png\",\n      \"set\": \"ordinary\",\n      \"expected_gate\": \"clear\",\n      \"ocr_keywords\": [\n        \"invoice\",\n        \"Friday\",\n        \"Sam\"\n      ],\n      \"expected_tasks\": [\n        {\n          \"match\": [\n            [\n              \"invoice\"\n            ]\n          ],\n          \"project\": \"work\"\n        }\n      ],\n      \"scene\": \"owed_to_owner\",\n      \"expected_waiting_on\": \"the invoice, from Sam, on Friday\"\n    },\n    {\n      \"file\": \"n4_reference_menu.png\",\n      \"set\": \"ordinary\",\n      \"expected_gate\": \"clear\",\n      \"ocr_keywords\": [\n        \"Juniper Lane\",\n        \"Flat white\",\n        \"Soup\"\n      ],\n      \"expected_tasks\": [],\n      \"scene\": \"reference\"\n    },\n    {\n      \"file\": \"n5_reference_poster.png\",\n      \"set\": \"ordinary\",\n      \"expected_gate\": \"clear\",\n      \"ocr_keywords\": [\n        \"Lantern Walk\",\n        \"November\",\n        \"Corn Exchange\"\n      ],\n      \"expected_tasks\": [],\n      \"scene\": \"reference\"\n    },\n    {\n      \"file\": \"n6_reference_catalog.png\",\n      \"set\": \"ordinary\",\n      \"expected_gate\": \"clear\",\n      \"ocr_keywords\": [\n        \"Brightmoor\",\n        \"Trail stove\",\n        \"Titanium\"\n      ],\n      \"expected_tasks\": [],\n      \"scene\": \"reference\"\n    },\n    {\n      \"file\": \"n7_owes_whiteboard.png\",\n      \"set\": \"ordinary\",\n      \"expected_gate\": \"clear\",\n      \"ocr_keywords\": [\n        \"Teodor\",\n        \"thermal data\",\n        \"next week\"\n      ],\n      \"expected_tasks\": [\n        {\n          \"match\": [\n            [\n              \"thermal\"\n            ]\n          ],\n          \"project\": \"research\"\n        }\n      ],\n      \"scene\": \"owner_owes\"\n    },\n    {\n      \"file\": \"n8_owes_note.png\",\n      \"set\": \"ordinary\",\n      \"expected_gate\": \"clear\",\n      \"ocr_keywords\": [\n        \"Invoice\",\n        \"Sam\",\n        \"Friday\"\n      ],\n      \"expected_tasks\": [\n        {\n          \"match\": [\n            [\n              \"invoice\"\n            ]\n          ],\n          \"project\": \"work\"\n        }\n      ],\n      \"scene\": \"owner_owes\"\n    }\n  ]\n}\n",
+  "code": "5e087b8",
+  "runner_blob": "bfe44c396a8ae11c",
+  "started": "2026-10-22 01:51 UTC",
+  "finished": "2026-10-22 01:52 UTC",
+  "stopped": null,
+  "versions": {
+    "image gate": "`StrandsAgents/strands-decider-2B-hobson-v21` with `--vision` on cpu, strands-decider 0.2.0 in its own venv, 127.0.0.1:8001, the picture question at the text gate's floor (0.60)",
+    "OCR": "RapidOCR (rapidocr-onnxruntime 1.4.4, onnxruntime 1.31.0, its bundled models), on the laptop",
+    "text gate and routing": "`StrandsAgents/strands-decider-2B-hobson-v21` on cpu, strands-decider 0.1.0, 127.0.0.1:8000",
+    "scene": "the vision server: \"What does this picture represent?\" over the picture and its OCR text, at the routing read's floor for a choice question (0.70)",
+    "release": "the owner's tap on the Release button of the hold's notice, in the owner's Telegram chat, read from the bot's updates and recorded by the courier's own release handler",
+    "extraction model": "`openai.gpt-oss-20b` on Bedrock (bedrock-mantle, us-east-1), reasoning effort `low`",
+    "configuration": "`config.toml` git blob `31535c81f0e844b9`; `ratatoskr_demo/prompts/route.toml` git blob `746b41993c51ad3b`",
+    "hardware": "the build laptop's CPU (16 logical cores), each Decider server capped at 4 threads at below-normal priority; kernels: reference PyTorch implementation (causal_conv1d and flash-linear-attention not installed; CPU-only torch build)",
+    "conditions": "the other long-running experiment on this laptop paused; the laptop otherwise idle; each release by the owner's tap"
+  },
+  "memory_end": {
+    "text server": {
+      "resident_gb": 7.65,
+      "private_gb": 10.09
+    },
+    "vision server": {
+      "resident_gb": 8.91,
+      "private_gb": 12.21
+    }
+  },
+  "spend_before": {
+    "total_usd": 0.0953041,
+    "hard_stop_usd": 5.0,
+    "calls": 761,
+    "settled": 760,
+    "at_worst_case": 1,
+    "refused": 0,
+    "input_tokens": 758445,
+    "output_tokens": 140413,
+    "by_purpose": {
+      "bench-route": 0.06520925,
+      "debug": 0.0002912,
+      "extract": 0.02494303,
+      "hook-check": 0.00038048,
+      "probe-effort": 0.00024241,
+      "probe-structured": 0.00421567,
+      "smoke": 2.206e-05
+    }
+  },
+  "spend_after": {
+    "total_usd": 0.09542354,
+    "hard_stop_usd": 5.0,
+    "calls": 762,
+    "settled": 761,
+    "at_worst_case": 1,
+    "refused": 0,
+    "input_tokens": 759367,
+    "output_tokens": 140596,
+    "by_purpose": {
+      "bench-route": 0.06520925,
+      "debug": 0.0002912,
+      "extract": 0.02506247,
+      "hook-check": 0.00038048,
+      "probe-effort": 0.00024241,
+      "probe-structured": 0.00421567,
+      "smoke": 2.206e-05
+    }
+  },
+  "images": [
+    {
+      "file": "n1_owed_note.png",
+      "set": "ordinary",
+      "id": "photo-a4371e164236",
+      "status": "done",
+      "reason": null,
+      "image": {
+        "extraction_calls": 1,
+        "ocr_confidence": [
+          0.9905,
+          0.9603,
+          0.9981,
+          0.999,
+          0.9999,
+          0.9999
+        ],
+        "ocr_seconds": 3.178,
+        "gate_p": 0.4528,
+        "gate_seconds": 2.088,
+        "releases": [
+          {
+            "held_by": "image gate",
+            "sid": "e0cd451d4c",
+            "by": "owner",
+            "at": "2026-10-22T01:51:50+00:00"
+          }
+        ],
+        "scene": "owner_owes",
+        "scene_choice": "owner_owes",
+        "scene_p": 0.7134,
+        "scene_options": {
+          "owner_owes": 0.8089,
+          "owed_to_owner": 0.0575,
+          "reference": 0.1335
+        },
+        "scene_seconds": 2.124,
+        "scene_by": "decider",
+        "scene_action": "extracted"
+      },
+      "visits": [
+        {
+          "status": "hold",
+          "reason": "image-unsure",
+          "picture_p": [
+            0.4528
+          ],
+          "ocr_ran": false,
+          "ocr_keywords_found": [],
+          "text_gate_p": [],
+          "text_gate_seconds": [],
+          "scene_reads": 0,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        },
+        {
+          "status": "done",
+          "reason": null,
+          "picture_p": [],
+          "ocr_ran": true,
+          "ocr_keywords_found": [
+            "Ines",
+            "dataset",
+            "Tuesday"
+          ],
+          "text_gate_p": [
+            0.3829
+          ],
+          "text_gate_seconds": [
+            1.258
+          ],
+          "scene_reads": 1,
+          "routing_seconds": [
+            10.172
+          ],
+          "routing_waiting_p": [
+            0.7328
+          ]
+        }
+      ],
+      "extraction_calls_spend_ledger": 1,
+      "written": [
+        {
+          "content": "Expect dataset from Ines; chase if not by Tuesday",
+          "labels": [
+            "pocket"
+          ],
+          "priority": 4
+        }
+      ],
+      "telegram": [
+        {
+          "first_line": "Held photo-a4371e164236: image-unsure. Nothing was written.",
+          "buttons": [
+            "Release"
+          ],
+          "to_owner": true
+        },
+        {
+          "first_line": "unsorted · high · 0.29",
+          "buttons": [
+            "other",
+            "research",
+            "work",
+            "personal",
+            "school",
+            "writing",
+            "community",
+            "Leave unsorted"
+          ],
+          "to_owner": false
+        }
+      ],
+      "reference_note": false
+    },
+    {
+      "file": "n2_owed_whiteboard.png",
+      "set": "ordinary",
+      "id": "photo-7b7e1144b0df",
+      "status": "hold",
+      "reason": "scene-unsure",
+      "image": {
+        "extraction_calls": 0,
+        "ocr_confidence": [
+          0.9999,
+          0.9979,
+          0.9998,
+          0.9996,
+          0.9994,
+          0.9911
+        ],
+        "ocr_seconds": 0.991,
+        "gate_p": 0.53,
+        "gate_seconds": 2.102,
+        "releases": [
+          {
+            "held_by": "image gate",
+            "sid": "ec707c171b",
+            "by": "owner",
+            "at": "2026-10-22T01:52:15+00:00"
+          }
+        ],
+        "scene": "unsure",
+        "scene_choice": "reference",
+        "scene_p": 0.3417,
+        "scene_options": {
+          "owner_owes": 0.3379,
+          "owed_to_owner": 0.101,
+          "reference": 0.5611
+        },
+        "scene_seconds": 2.109,
+        "scene_by": "decider",
+        "scene_action": "asked the owner",
+        "scene_sid": "cdbdddce75"
+      },
+      "visits": [
+        {
+          "status": "hold",
+          "reason": "image-unsure",
+          "picture_p": [
+            0.53
+          ],
+          "ocr_ran": false,
+          "ocr_keywords_found": [],
+          "text_gate_p": [],
+          "text_gate_seconds": [],
+          "scene_reads": 0,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        },
+        {
+          "status": "hold",
+          "reason": "scene-unsure",
+          "picture_p": [],
+          "ocr_ran": true,
+          "ocr_keywords_found": [
+            "Teodor",
+            "thermal data",
+            "next week"
+          ],
+          "text_gate_p": [
+            0.3738
+          ],
+          "text_gate_seconds": [
+            1.675
+          ],
+          "scene_reads": 1,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        }
+      ],
+      "extraction_calls_spend_ledger": 0,
+      "written": [],
+      "telegram": [
+        {
+          "first_line": "Held photo-7b7e1144b0df: image-unsure. Nothing was written.",
+          "buttons": [
+            "Release"
+          ],
+          "to_owner": true
+        },
+        {
+          "first_line": "scene unsure · 0.34",
+          "buttons": [
+            "I owe",
+            "They owe",
+            "Reference"
+          ],
+          "to_owner": false
+        }
+      ],
+      "reference_note": false
+    },
+    {
+      "file": "n3_owed_message.png",
+      "set": "ordinary",
+      "id": "photo-414cc7120a2b",
+      "status": "hold",
+      "reason": "scene-unsure",
+      "image": {
+        "extraction_calls": 0,
+        "ocr_confidence": [
+          0.5667,
+          0.8964,
+          0.9989,
+          0.9997,
+          0.9977,
+          0.9996,
+          0.9997
+        ],
+        "ocr_seconds": 0.615,
+        "gate_p": 0.3971,
+        "gate_seconds": 2.234,
+        "releases": [
+          {
+            "held_by": "text gate",
+            "sid": "96e51bbc62",
+            "by": "owner",
+            "at": "2026-10-22T01:52:30+00:00"
+          }
+        ],
+        "scene": "unsure",
+        "scene_choice": "owner_owes",
+        "scene_p": 0.4412,
+        "scene_options": {
+          "owner_owes": 0.6274,
+          "owed_to_owner": 0.1646,
+          "reference": 0.2079
+        },
+        "scene_seconds": 2.846,
+        "scene_by": "decider",
+        "scene_action": "asked the owner",
+        "scene_sid": "de662eadec"
+      },
+      "visits": [
+        {
+          "status": "hold",
+          "reason": "source-unsure",
+          "picture_p": [
+            0.3971
+          ],
+          "ocr_ran": true,
+          "ocr_keywords_found": [
+            "invoice",
+            "Friday",
+            "Sam"
+          ],
+          "text_gate_p": [
+            0.4606
+          ],
+          "text_gate_seconds": [
+            1.901
+          ],
+          "scene_reads": 0,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        },
+        {
+          "status": "hold",
+          "reason": "scene-unsure",
+          "picture_p": [],
+          "ocr_ran": true,
+          "ocr_keywords_found": [
+            "invoice",
+            "Friday",
+            "Sam"
+          ],
+          "text_gate_p": [],
+          "text_gate_seconds": [],
+          "scene_reads": 1,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        }
+      ],
+      "extraction_calls_spend_ledger": 0,
+      "written": [],
+      "telegram": [
+        {
+          "first_line": "Held photo-414cc7120a2b: source-unsure (photo). It stays in the inbox folder.",
+          "buttons": [
+            "Release"
+          ],
+          "to_owner": true
+        },
+        {
+          "first_line": "scene unsure · 0.44",
+          "buttons": [
+            "I owe",
+            "They owe",
+            "Reference"
+          ],
+          "to_owner": false
+        }
+      ],
+      "reference_note": false
+    },
+    {
+      "file": "n7_owes_whiteboard.png",
+      "set": "ordinary",
+      "id": "photo-e89981643e63",
+      "status": "hold",
+      "reason": "scene-unsure",
+      "image": {
+        "extraction_calls": 0,
+        "ocr_confidence": [
+          0.9992,
+          0.9997,
+          0.9998,
+          0.9997,
+          0.9994,
+          0.9904
+        ],
+        "ocr_seconds": 0.871,
+        "gate_p": 0.5052,
+        "gate_seconds": 2.112,
+        "releases": [
+          {
+            "held_by": "image gate",
+            "sid": "30061f07b5",
+            "by": "owner",
+            "at": "2026-10-22T01:52:40+00:00"
+          }
+        ],
+        "scene": "unsure",
+        "scene_choice": "reference",
+        "scene_p": 0.3418,
+        "scene_options": {
+          "owner_owes": 0.3369,
+          "owed_to_owner": 0.1019,
+          "reference": 0.5612
+        },
+        "scene_seconds": 2.136,
+        "scene_by": "decider",
+        "scene_action": "asked the owner",
+        "scene_sid": "01c8d93084"
+      },
+      "visits": [
+        {
+          "status": "hold",
+          "reason": "image-unsure",
+          "picture_p": [
+            0.5052
+          ],
+          "ocr_ran": false,
+          "ocr_keywords_found": [],
+          "text_gate_p": [],
+          "text_gate_seconds": [],
+          "scene_reads": 0,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        },
+        {
+          "status": "hold",
+          "reason": "scene-unsure",
+          "picture_p": [],
+          "ocr_ran": true,
+          "ocr_keywords_found": [
+            "Teodor",
+            "thermal data",
+            "next week"
+          ],
+          "text_gate_p": [
+            0.3739
+          ],
+          "text_gate_seconds": [
+            1.711
+          ],
+          "scene_reads": 1,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        }
+      ],
+      "extraction_calls_spend_ledger": 0,
+      "written": [],
+      "telegram": [
+        {
+          "first_line": "Held photo-e89981643e63: image-unsure. Nothing was written.",
+          "buttons": [
+            "Release"
+          ],
+          "to_owner": true
+        },
+        {
+          "first_line": "scene unsure · 0.34",
+          "buttons": [
+            "I owe",
+            "They owe",
+            "Reference"
+          ],
+          "to_owner": false
+        }
+      ],
+      "reference_note": false
+    },
+    {
+      "file": "n8_owes_note.png",
+      "set": "ordinary",
+      "id": "photo-b0b0138cd230",
+      "status": "hold",
+      "reason": "scene-unsure",
+      "image": {
+        "extraction_calls": 0,
+        "ocr_confidence": [
+          0.9937,
+          0.9996,
+          0.9997,
+          1.0,
+          0.9999
+        ],
+        "ocr_seconds": 1.319,
+        "gate_p": 0.4348,
+        "gate_seconds": 2.089,
+        "releases": [
+          {
+            "held_by": "image gate",
+            "sid": "406f4cc1ed",
+            "by": "owner",
+            "at": "2026-10-22T01:52:51+00:00"
+          }
+        ],
+        "scene": "unsure",
+        "scene_choice": "reference",
+        "scene_p": 0.4422,
+        "scene_options": {
+          "owner_owes": 0.3095,
+          "owed_to_owner": 0.0624,
+          "reference": 0.6281
+        },
+        "scene_seconds": 2.055,
+        "scene_by": "decider",
+        "scene_action": "asked the owner",
+        "scene_sid": "3cfcfacf46"
+      },
+      "visits": [
+        {
+          "status": "hold",
+          "reason": "image-unsure",
+          "picture_p": [
+            0.4348
+          ],
+          "ocr_ran": false,
+          "ocr_keywords_found": [],
+          "text_gate_p": [],
+          "text_gate_seconds": [],
+          "scene_reads": 0,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        },
+        {
+          "status": "hold",
+          "reason": "scene-unsure",
+          "picture_p": [],
+          "ocr_ran": true,
+          "ocr_keywords_found": [
+            "Invoice",
+            "Sam",
+            "Friday"
+          ],
+          "text_gate_p": [
+            0.2541
+          ],
+          "text_gate_seconds": [
+            1.327
+          ],
+          "scene_reads": 1,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        }
+      ],
+      "extraction_calls_spend_ledger": 0,
+      "written": [],
+      "telegram": [
+        {
+          "first_line": "Held photo-b0b0138cd230: image-unsure. Nothing was written.",
+          "buttons": [
+            "Release"
+          ],
+          "to_owner": true
+        },
+        {
+          "first_line": "scene unsure · 0.44",
+          "buttons": [
+            "I owe",
+            "They owe",
+            "Reference"
+          ],
+          "to_owner": false
+        }
+      ],
+      "reference_note": false
+    }
+  ]
+}
