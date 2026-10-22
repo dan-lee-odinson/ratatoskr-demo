@@ -342,7 +342,8 @@ class Cycle:
         text = extract_text(recording)
         if text is NOT_READY:  # triage already checked; this keeps the types honest
             return Outcome("not-ready")
-        words = too_short(str(text))
+        # ruling 53: a photo is never an accidental press; its guard is the readability check (no words: unreadable)
+        words = None if self._photo else too_short(str(text))
         if words is not None:  # ruling 14: no read, no notice; marked seen, so it is not looked at again
             log.info("recording %s: transcript of %d word(s), under %d; skipped before the source gate",
                      rid, words, MIN_TRANSCRIPT_WORDS)

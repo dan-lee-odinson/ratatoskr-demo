@@ -138,6 +138,9 @@ class PhotoFolder:
         started = time.perf_counter()
         text, confidence = self.ocr.read(path)
         record.update(ocr_confidence=confidence, ocr_seconds=round(time.perf_counter() - started, 3))
+        if not text.split():  # ruling 53: no words at all is the readability check's case, not a short note
+            record["unreadable"] = "no words"
+            return PhotoHold(UNREADABLE)
         return text
 
     def decide_scene(self, item_id: str, text: str) -> SceneResult:

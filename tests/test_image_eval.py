@@ -232,3 +232,31 @@ def test_the_released_reports_word_floor_is_the_couriers():
     from ratatoskr_demo.cycle import MIN_TRANSCRIPT_WORDS
 
     assert run_images.MIN_WORDS == MIN_TRANSCRIPT_WORDS
+
+
+# --- the second addendum (Dan's ruling 53) ---
+
+def test_the_second_addendum_says_why_the_word_floor_went_and_reports_actions_and_writes_by_class():
+    images = {x["file"]: x for x in LABELS_V2["images"]}
+    rows = [row3(images[f], scene=images[f]["scene"], held="source-unsure" if f.startswith("n3") else "image-unsure")
+            for f in run_images.RELEASED]
+    data = {"addendum": 2, "labels_json": json.dumps(LABELS_V2), "labels_sha256": "0" * 16, "code": "abc1234",
+            "runner_blob": "b" * 16, "started": "2026-10-22 02:00 UTC", "finished": "2026-10-22 02:20 UTC",
+            "stopped": None, "versions": {"release": "the owner's tap"}, "memory_end": {},
+            "spend_before": {"total_usd": 0.1, "calls": 1},
+            "spend_after": {"total_usd": 0.11, "calls": 6, "hard_stop_usd": 5.0}, "images": rows}
+    text = run_images.render3(data)
+    assert text.startswith("# Image evaluation, second run: the released pictures, second addendum")
+    assert "No word floor for photos (ruling 53, after the first addendum)" in text
+    assert "The first addendum (`bench/IMAGE_EVAL_2026-10-23_released.md`) is unchanged." in text
+    assert "from bench/image_eval_2026-10-23_released2.json" in text and "--released2" in text
+    assert "## Actions and writes by scene answer" in text
+    assert "| owed_to_owner | 3 | extracted, waiting-on | 3 | 3 | 0 |" in text
+    del data["addendum"]  # the first addendum's report has neither
+    assert "ruling 53" not in run_images.render3(data)
+
+
+@pytest.mark.skipif(not run_images.EXPORT4.exists(), reason="the second addendum has not been run yet")
+def test_the_second_addendum_regenerates_from_its_export_byte_for_byte():
+    data = json.loads(run_images.EXPORT4.read_text(encoding="utf-8"))
+    assert run_images.render3(data) == run_images.REPORT4.read_text(encoding="utf-8")

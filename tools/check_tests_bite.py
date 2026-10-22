@@ -647,6 +647,20 @@ MUTATIONS = [
      '        if existing is not None and existing.status == "hold":\n',
      ['tests/test_release.py::test_a_photo_released_from_the_image_gate_and_held_by_the_text_gate_is_offered_a_second_release']),
 
+    # --- no word floor for photos (Dan's ruling 53, 21-22 Oct 2026) ---
+    ("Ruling 53: the recordings' word floor applied to a photo", 'ratatoskr_demo/cycle.py',
+     '        words = None if self._photo else too_short(str(text))\n',
+     '        words = too_short(str(text))\n',
+     ['tests/test_word_floor.py::test_a_four_word_photo_goes_on_to_the_tripwire_the_text_gate_and_the_scene']),
+    ("Ruling 53: a photo with no words goes on", 'ratatoskr_demo/devices/glasses_adapter.py',
+     '        if not text.split():  # ruling 53',
+     '        if False:  # ruling 53',
+     ['tests/test_word_floor.py::test_a_photo_with_no_words_is_held_unreadable_and_nothing_further_is_asked']),
+    ("Ruling 53: the word floor lifted for recordings too", 'ratatoskr_demo/cycle.py',
+     '        words = None if self._photo else too_short(str(text))\n',
+     '        words = None\n',
+     ['tests/test_word_floor.py::test_a_four_word_recording_is_still_closed_as_an_accidental_press']),
+
     # --- the fresh evaluation, replayable from its export (Dan's ruling 43, Part B) ---
     ("Ruling 43B: the replay asks git now instead of the run's record", "bench/replay_fresh.py",
      '        with _as_recorded(data["header"]):\n', "        if True:\n",
