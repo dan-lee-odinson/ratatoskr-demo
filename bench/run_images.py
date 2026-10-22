@@ -933,6 +933,14 @@ def _after_release(row: dict[str, Any]) -> dict[str, Any]:
 
 
 RELEASE_REASONS = ("image-unsure", "source-unsure")
+MIN_WORDS = 8  # ratatoskr_demo/cycle.py MIN_TRANSCRIPT_WORDS (ruling 14), as the report states it
+
+
+def _closed(row: dict[str, Any]) -> str:
+    """What became of a released picture the scene was not asked about."""
+    if row["status"] == "done" and row["reason"] == "too-short":
+        return f"closed: under {MIN_WORDS} words (ruling 14)"
+    return f"held ({row['reason']})"
 
 
 def render3(data: dict[str, Any]) -> str:
@@ -993,16 +1001,25 @@ def render3(data: dict[str, Any]) -> str:
         img = r["image"]
         options = img.get("scene_options") or {}
         probs = " / ".join(f"{options[k]:.2f}" if k in options else "-" for k in SCENES[:3])
-        scene = (f"{img['scene']} ({img['scene_p']:.2f})" if img.get("scene") else
-                 f"not asked ({r['reason']})")
-        action = img.get("scene_action") or f"held ({r['reason']})"
+        scene = ("not asked" if not img.get("scene") else
+                 f"unsure (top {img.get('scene_choice')}, {img['scene_p']:.2f})" if img["scene"] == "unsure" else
+                 f"{img['scene']} ({img['scene_p']:.2f})")
+        action = img.get("scene_action") or _closed(r)
         lines.append(f"| {r['file']} | {label['scene']} | {'; '.join(holds) or '-'} | {'; '.join(released) or '-'} | "
                      f"{recovery} | {text_p} | {scene} | {probs} | {action} | "
                      f"{img.get('extraction_calls', 0)} / {r['extraction_calls_spend_ledger']} | {len(r['written'])} |")
     lines += ["", "Bedrock calls: the courier's ledger / the spend ledger. After a release from the image gate the "
                   "photo goes to the OCR, the tripwire, the text gate and the scene; after a release from the text "
                   "gate, to the scene (its text read again on the laptop, the tripwire run again, neither gate "
-                  "asked again).", "",
+                  "asked again)."]
+    short = [r["file"] for r in rows if r["reason"] == "too-short"]
+    if short:
+        lines += ["", f"**Closed as too short:** {len(short)} of the {len(rows)} released pictures "
+                      f"({', '.join(short)}) were closed after the OCR, before the text gate: their text is under "
+                      f"{MIN_WORDS} words, which the courier reads as an accidental press (ruling 14) and closes with no "
+                      "read, no notice and nothing written. The rule was made for recordings; it applies to a "
+                      "photo's text unchanged, so these pictures never reached the scene."]
+    lines += ["",
               "## The scene over the released pictures", "",
               f"Asked of {len(asked)} of {len(rows)}. Rows: the label; columns: the answer.", "",
               "| label \\ answer | " + " | ".join(SCENES) + " |", "|---|" + "---|" * len(SCENES)]
@@ -1026,7 +1043,9 @@ def render3(data: dict[str, Any]) -> str:
             img = r["image"]
             options = img.get("scene_options") or {}
             probs = " / ".join(f"{options[k]:.2f}" if k in options else "-" for k in SCENES[:3])
-            answer = f"{img['scene']} ({img['scene_p']:.2f})" if img.get("scene") else f"not asked ({r['reason']})"
+            answer = (f"not asked ({_closed(r)})" if not img.get("scene") else
+                      f"unsure (top {img.get('scene_choice')}, {img['scene_p']:.2f})" if img["scene"] == "unsure"
+                      else f"{img['scene']} ({img['scene_p']:.2f})")
             lines.append(f"| {i} | {name} | {labels[name]['scene']} | {answer} | {probs} | "
                          f"{img.get('scene_action') or '-'} | {len(r['written'])} |")
     lines += ["", "## Cloud calls by scene answer", "",
@@ -1039,7 +1058,7 @@ def render3(data: dict[str, Any]) -> str:
                      f"{sum(r['extraction_calls_spend_ledger'] for r in group)} | {expect[scene]} |")
     held = [r for r in rows if r["image"].get("scene") is None]
     if held:
-        lines.append(f"| not asked (held by a later check) | {len(held)} | "
+        lines.append(f"| not asked (closed as too short, or held by a later check) | {len(held)} | "
                      f"{sum(r['image'].get('extraction_calls', 0) for r in held)} / "
                      f"{sum(r['extraction_calls_spend_ledger'] for r in held)} | 0 |")
     owed = [r for r in asked if r["image"]["scene"] == "owed_to_owner"]

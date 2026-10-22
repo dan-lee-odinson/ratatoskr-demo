@@ -226,3 +226,9 @@ def test_the_release_poller_hands_only_release_taps_to_the_resolver():
 def test_the_released_report_regenerates_from_its_export_byte_for_byte():
     data = json.loads(run_images.EXPORT3.read_text(encoding="utf-8"))
     assert run_images.render3(data) == run_images.REPORT3.read_text(encoding="utf-8")
+
+
+def test_the_released_reports_word_floor_is_the_couriers():
+    from ratatoskr_demo.cycle import MIN_TRANSCRIPT_WORDS
+
+    assert run_images.MIN_WORDS == MIN_TRANSCRIPT_WORDS
