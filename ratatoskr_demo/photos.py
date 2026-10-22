@@ -53,6 +53,13 @@ and the checkpoint was not trained on images):
                    three buttons, I owe, They owe, Reference; the owner's tap is
                    recorded (`scene_by: owner`) and the chosen path runs on the
                    next cycle; a second tap changes nothing
+
+A photo held as unsure by the image gate or the text gate (Dan's ruling 52) gets one
+button on its id-only notice, Release; one held as sensitive gets none. The owner's
+tap records the release and sends nothing anywhere; on the next cycle the photo
+continues from the check after the one that held it (from the image gate: the OCR,
+the tripwire, the text gate, the scene; from the text gate: the scene, its text read
+again on the laptop), and every later check runs as usual.
 """
 
 from __future__ import annotations
@@ -311,3 +318,74 @@ class SceneTaps:
             self.telegram.answer_callback(callback_id, text)
         except RatatoskrError as exc:
             log.warning("telegram: could not answer the scene button tap (%s)", exc)
+
+
+# --- the owner's release of an unsure hold (Dan's ruling 52) ---
+
+# A photo held as unsure by one of these gates gets a Release button; one held as sensitive (a yes) gets none.
+RELEASABLE = {"image-unsure": "image gate", "source-unsure": "text gate"}
+RELEASE_PREFIX = "release"
+
+
+def release_sid(item_id: str, gate: str) -> str:
+    """Ten hex characters standing for one picture's Release button at one gate."""
+    return hashlib.sha256(f"{RELEASE_PREFIX}:{item_id}:{gate}".encode("utf-8")).hexdigest()[:10]
+
+
+def release_keyboard(sid: str) -> dict[str, Any]:
+    return {"inline_keyboard": [[{"text": "Release", "callback_data": f"{RELEASE_PREFIX}:{sid}"}]]}
+
+
+def is_release_tap(data: str) -> bool:
+    return data.startswith(RELEASE_PREFIX + ":")
+
+
+def owner_release(entry: Any) -> str | None:
+    """The gate the owner's tap released this held photo from, so it continues from the check after it; or None."""
+    if entry is None or entry.status != "hold" or entry.reason not in RELEASABLE:
+        return None
+    last = (entry.image.get("releases") or [{}])[-1]
+    gate = RELEASABLE[entry.reason]
+    return gate if last.get("by") == "owner" and last.get("held_by") == gate else None
+
+
+class ReleaseTaps:
+    """The owner's Release on an unsure hold, on the Telegram receiver of ruling 43: only the owner's chat is
+    answered, and a second tap changes nothing. The tap sends nothing anywhere; the picture continues on the next
+    cycle from the check after the one that held it, and every later check runs as usual."""
+
+    def __init__(self, state: Any, telegram: Any, chat_id: int, *, clock: Callable[[], float] | None = None) -> None:
+        self.state, self.telegram, self.chat_id, self.clock = state, telegram, chat_id, clock
+
+    def handle(self, query: dict[str, Any]) -> None:
+        callback_id = str(query.get("id", ""))
+        message = query.get("message") or {}
+        if (message.get("chat") or {}).get("id") != self.chat_id:
+            log.warning("telegram: a release button tap from another chat was ignored")
+            self._answer(callback_id)
+            return
+        parts = str(query.get("data") or "").split(":")
+        found = self.state.release_find(parts[1]) if len(parts) == 2 and parts[1] else None
+        if found is None:
+            self._answer(callback_id, "unknown picture")
+            return
+        item_id, release = found
+        if release.get("by") == "owner":  # released already: nothing changes
+            self._answer(callback_id, "already released")
+            return
+        now = self.clock() if self.clock else datetime.now(timezone.utc).timestamp()
+        self.state.release_resolve(item_id, parts[1], {
+            "by": "owner", "at": datetime.fromtimestamp(now, tz=timezone.utc).isoformat(timespec="seconds")})
+        lines = (message.get("text") or "").split("\n")
+        lines[0] = f"{lines[0]} → released by owner; continues on the next cycle"
+        try:
+            self.telegram.edit_message(int(message["message_id"]), "\n".join(lines))
+        except (KeyError, TypeError, ValueError, RatatoskrError) as exc:  # the release stands; the message is stale
+            log.warning("telegram: could not edit the release message (%s)", type(exc).__name__)
+        self._answer(callback_id)
+
+    def _answer(self, callback_id: str, text: str | None = None) -> None:
+        try:
+            self.telegram.answer_callback(callback_id, text)
+        except RatatoskrError as exc:
+            log.warning("telegram: could not answer the release button tap (%s)", exc)

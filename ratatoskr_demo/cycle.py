@@ -91,8 +91,9 @@ from ratatoskr_demo.errors import ConfigurationError, RatatoskrError, TerminalEr
 from ratatoskr_demo.extract import Contact, ModelCall, Task
 from ratatoskr_demo.ledger import LedgerEntry
 from ratatoskr_demo.notify import Notifier
-from ratatoskr_demo.photos import (REFERENCE_LINE, SCENE_ACTIONS, SCENE_HOLD, UNSURE, PhotoHold, keep_reference,
-                                   scene_keyboard, scene_line, scene_sid, waiting_on_line)
+from ratatoskr_demo.photos import (REFERENCE_LINE, RELEASABLE, SCENE_ACTIONS, SCENE_HOLD, UNSURE, PhotoHold,
+                                   keep_reference, owner_release, release_keyboard, release_sid, scene_keyboard,
+                                   scene_line, scene_sid, waiting_on_line)
 from ratatoskr_demo.decider import DeciderRejected, DeciderUnavailable
 from ratatoskr_demo import resolve
 from ratatoskr_demo.route import (URGENT_SOURCE, Routed, RoutedTask, Router, load_route_questions, route,
@@ -170,6 +171,7 @@ class Cycle:
         self._image: dict[str, Any] | None = None
         self._photo = False  # ruling 49: a glasses envelope with an ImageRef; its hold notices name the folder
         self._scenes: Any = None  # ruling 50: the photo adapter, which asks the scene question about its pictures
+        self._released_from: str | None = None  # ruling 52: the gate the owner released this photo from
 
     # --- entry points ---
 
@@ -291,13 +293,25 @@ class Cycle:
                 demo: bool) -> Outcome:
         source = adapter.source(envelope)
         rid, title, recording_at = source.item_id, source.title, source.recorded_at
-        text = adapter.fetch_text(envelope)  # memory only, from here to the end of this call (C1)
+        photo = envelope.kind == "glasses" and isinstance(envelope.payload, ImageRef)
+        # ruling 52: the gate the owner released this held photo from; it continues from the check after it
+        self._released_from = owner_release(entry) if photo else None
+        if self._released_from is not None:
+            text = adapter.fetch_text(envelope, released_from=self._released_from)  # memory only (C1)
+        else:
+            text = adapter.fetch_text(envelope)  # memory only, from here to the end of this call (C1)
         self._image = (getattr(adapter, "records", None) or {}).get(rid)
-        self._photo = envelope.kind == "glasses" and isinstance(envelope.payload, ImageRef)
+        self._photo = photo
         self._scenes = adapter if self._photo and hasattr(adapter, "decide_scene") else None
+        if self._released_from is not None and self._image is not None:
+            earlier = entry.image  # the release and the image gate's earlier read stay in the ledger
+            self._image.update({k: earlier[k] for k in ("gate_p", "gate_seconds") if k in earlier})
+            self._image["releases"] = [dict(r) for r in earlier.get("releases") or []]
+            entry = None
         if isinstance(text, PhotoHold):  # ruling 47: unreadable (no model asked) or held by the image gate
             return self._hold(rid, title, recording_at, text.reason, demo=demo,
-                              notice=f"Held {rid}: {text.reason}. Nothing was written.")
+                              notice=f"Held {rid}: {text.reason}. Nothing was written.",
+                              keyboard=self._offer_release(rid, text.reason))
         if (self._photo and entry is not None and entry.status == "hold" and entry.reason == SCENE_HOLD
                 and entry.image.get("scene_by") == "owner"):
             entry = None  # ruling 50: the owner answered the scene question; the chosen path runs now
@@ -337,11 +351,13 @@ class Cycle:
                                                        scrubbable=not demo))
             return Outcome("skip", reason="too-short")
         urgent = self.settings.triage.tag_urgent.lower() in triage.tag_names(recording)
-        if self.deps.source_gate is not None and not released:  # before any Bedrock call
+        # before any Bedrock call; a photo the owner released from this gate (ruling 52) is not asked again
+        if self.deps.source_gate is not None and not released and self._released_from != RELEASABLE["source-unsure"]:
             verdict = self._gate_source(rid, text, urgent)
             if verdict is not None and verdict.hold:
                 return self._hold(rid, title, recording_at, verdict.reason, demo=demo,
-                                  notice=self._held_notice(rid, verdict.reason))
+                                  notice=self._held_notice(rid, verdict.reason),
+                                  keyboard=self._offer_release(rid, verdict.reason))
         waiting_on = False  # ruling 50: a picture of something owed to the owner; its tasks carry `waiting-on`
         if self._scenes is not None:  # after the text gate, before any cloud call
             scene = self._scene(rid, str(text))
@@ -556,18 +572,23 @@ class Cycle:
 
     # --- outcomes ---
 
-    def _hold(self, rid: str, title: str, recording_at: str, reason: str, *, notice: str, demo: bool) -> Outcome:
+    def _hold(self, rid: str, title: str, recording_at: str, reason: str, *, notice: str, demo: bool,
+              keyboard: dict[str, Any] | None = None) -> Outcome:
         if self.dry_run:
             self.deps.out(f"    would hold: {reason}")
             return Outcome("hold", reason=reason)
         existing = self.state.ledger_get(rid)
-        if existing is not None and existing.status == "hold":
+        if existing is not None and existing.status == "hold" and self._released_from is None:
             return Outcome("hold", reason=reason)  # already held and already announced: no second notice
         # Notice first: if Telegram is down, the ledger stays untouched and the
         # hold is re-decided next poll, so Dan is never left un-told (C7). A
-        # /demo hold is announced by the receiver's reply instead.
+        # /demo hold is announced by the receiver's reply instead. A photo released
+        # by the owner and held again by a later check is a new hold, announced.
         if not demo and self.deps.notifier is not None:  # no telegram output: logged only
-            self._notifier().send_message(notice)
+            if keyboard is not None:  # ruling 52: an unsure photo's Release
+                self._notifier().send_with_keyboard(notice, keyboard)
+            else:
+                self._notifier().send_message(notice)
         self.state.ledger_put(rid, self._entry("hold", title, recording_at, reason=reason))
         self.state.count("held")
         log.info("recording %s %r: held (%s)", rid, title, reason)
@@ -577,6 +598,18 @@ class Cycle:
         log.warning("recording %s: held by the leak guard; nothing written", rid)
         return self._hold(rid, title, recording_at, "leak-guard", demo=demo,
                           notice=self._held_notice(rid, "leak-guard"))  # ruling 28
+
+    def _offer_release(self, rid: str, reason: str) -> dict[str, Any] | None:
+        """Ruling 52: a photo held as unsure by the image gate or the text gate gets one button, Release; a photo
+        held as sensitive (a yes from either gate) gets none."""
+        if not self._photo or reason not in RELEASABLE or self._image is None:
+            return None
+        gate = RELEASABLE[reason]
+        sid = release_sid(rid, gate)
+        releases = self._image.setdefault("releases", [])
+        if not any(r.get("sid") == sid for r in releases):
+            releases.append({"held_by": gate, "sid": sid, "by": None, "at": None})
+        return release_keyboard(sid)
 
     # --- the scene of a photo (ruling 50) ---
 

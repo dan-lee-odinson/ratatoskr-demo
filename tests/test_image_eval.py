@@ -136,3 +136,93 @@ def test_the_second_report_is_drawn_from_an_export_alone():
 def test_the_second_committed_report_regenerates_from_its_export_byte_for_byte():
     data = json.loads(run_images.EXPORT2.read_text(encoding="utf-8"))
     assert run_images.render2(data) == run_images.REPORT2.read_text(encoding="utf-8")
+
+
+# --- the released pictures (Dan's ruling 52) ---
+
+def row3(label, *, scene="owed_to_owner", held="image-unsure"):
+    """A released picture as the runner records it: held as unsure, released by the owner, then the scene."""
+    releases = [{"held_by": "image gate" if held == "image-unsure" else "text gate", "sid": "x", "by": "owner",
+                 "at": "2026-10-22T14:00:00+00:00"}]
+    first = {"status": "hold", "reason": held, "picture_p": [0.5] if held == "image-unsure" else [0.2],
+             "ocr_ran": held != "image-unsure", "ocr_keywords_found": [], "text_gate_p": [] if held == "image-unsure"
+             else [0.46], "text_gate_seconds": [], "scene_reads": 0, "routing_seconds": [], "routing_waiting_p": []}
+    after = {"status": "done", "reason": None, "picture_p": [], "ocr_ran": True,
+             "ocr_keywords_found": label["ocr_keywords"], "text_gate_p": [0.2] if held == "image-unsure" else [],
+             "text_gate_seconds": [1.5], "scene_reads": 1, "routing_seconds": [11.0], "routing_waiting_p": [0.1]}
+    labels = ["pocket"] + (["waiting-on"] if scene == "owed_to_owner" else [])
+    return {"file": label["file"], "set": "ordinary", "id": "photo-x", "status": "done", "reason": None,
+            "image": {"gate_p": 0.5, "extraction_calls": 1, "releases": releases, "scene": scene, "scene_p": 0.8,
+                      "scene_options": {"owner_owes": 0.1, "owed_to_owner": 0.8, "reference": 0.1},
+                      "scene_action": "extracted, waiting-on" if scene == "owed_to_owner" else "extracted"},
+            "visits": [first, after], "extraction_calls_spend_ledger": 1,
+            "written": [{"content": "a task", "labels": labels, "priority": None}],
+            "telegram": [{"first_line": "Held photo-x: image-unsure. Nothing was written.", "buttons": ["Release"],
+                          "to_owner": True}], "reference_note": False}
+
+
+def test_the_released_pictures_report_is_drawn_from_an_export_alone():
+    images = {x["file"]: x for x in LABELS_V2["images"]}
+    rows = [row3(images[f], scene=images[f]["scene"], held="source-unsure" if f.startswith("n3") else "image-unsure")
+            for f in run_images.RELEASED]
+    data = {"labels_json": json.dumps(LABELS_V2), "labels_sha256": "0" * 16, "code": "abc1234", "runner_blob": "b" * 16,
+            "started": "2026-10-22 14:00 UTC", "finished": "2026-10-22 14:20 UTC", "stopped": None,
+            "versions": {"release": "the owner's tap"}, "memory_end": {},
+            "spend_before": {"total_usd": 0.1, "calls": 1},
+            "spend_after": {"total_usd": 0.11, "calls": 6, "hard_stop_usd": 5.0}, "images": rows}
+    text = run_images.render3(data)
+    assert text.startswith("# Image evaluation, second run: the released pictures")
+    assert "the owner's evaluation action, on pictures the labels call ordinary" in text
+    assert "No picture held as sensitive was released" in text
+    assert "| n3_owed_message.png | owed_to_owner | text gate (0.46) | owner, 2026-10-22T14:00:00 |" in text
+    assert "| n1_owed_note.png | owed_to_owner | image gate (0.50) | owner, 2026-10-22T14:00:00 | 3 of 3 | 0.20 |" in text
+    assert "Answer matches the label on 5 of 5." in text and "## The mirrored pairs" in text
+    assert "| owed_to_owner | 3 | 3 / 3 | one per picture |" in text
+
+
+def test_only_a_release_notice_leaves_the_laptop_in_the_released_run():
+    import httpx
+
+    sent_out = []
+
+    class Real:
+        def post(self, url, content, headers):
+            sent_out.append(json.loads(content))
+            return httpx.Response(200, json={"ok": True, "result": {"message_id": 9}})
+
+    owner = run_images._OwnerTelegram(Real())
+    url = "https://api.telegram.org/botTOKEN/sendMessage"
+    release = {"chat_id": 1, "text": "Held photo-x: image-unsure. Nothing was written.",
+               "reply_markup": {"inline_keyboard": [[{"text": "Release", "callback_data": "release:abc"}]]}}
+    owner.handler(httpx.Request("POST", url, json=release))
+    owner.handler(httpx.Request("POST", url, json={"chat_id": 1, "text": "reference · kept on the laptop"}))
+    assert sent_out == [release]
+    assert [m["to_owner"] for m in owner.sent] == [True, False]
+
+
+def test_the_release_poller_hands_only_release_taps_to_the_resolver():
+    import threading
+
+    stop, handled = threading.Event(), []
+    batches = [[{"update_id": 1, "message": {"text": "/status"}},
+                {"update_id": 2, "callback_query": {"data": "pick:abc:research"}},
+                {"update_id": 3, "callback_query": {"data": "release:abc"}}]]
+
+    def get_updates(offset):
+        if batches:
+            return batches.pop()
+        stop.set()
+        return []
+
+    class Resolver:
+        def handle(self, query):
+            handled.append(query["data"])
+
+    run_images._poll_releases(get_updates, Resolver(), stop)
+    assert handled == ["release:abc"]
+
+
+@pytest.mark.skipif(not run_images.EXPORT3.exists(), reason="the released pictures have not been run yet")
+def test_the_released_report_regenerates_from_its_export_byte_for_byte():
+    data = json.loads(run_images.EXPORT3.read_text(encoding="utf-8"))
+    assert run_images.render3(data) == run_images.REPORT3.read_text(encoding="utf-8")

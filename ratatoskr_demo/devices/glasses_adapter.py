@@ -114,8 +114,10 @@ class PhotoFolder:
         path = _path(envelope)
         return Source(item_id=photo_id(path), title="photo", tags=(), recorded_at=_mtime(path).isoformat())
 
-    def fetch_text(self, envelope: Envelope) -> Any:
-        """The OCR text, or a PhotoHold: unreadable (no model asked), or the image gate's yes or unsure."""
+    def fetch_text(self, envelope: Envelope, *, released_from: str | None = None) -> Any:
+        """The OCR text, or a PhotoHold: unreadable (no model asked), or the image gate's yes or unsure. A photo the
+        owner released from an unsure hold (ruling 52) is not asked of the image gate again: it passed it or was
+        released from it."""
         path = _path(envelope)
         record: dict[str, Any] = {"extraction_calls": 0}
         self.records[photo_id(path)] = record
@@ -124,14 +126,15 @@ class PhotoFolder:
         if problem is not None:
             record["unreadable"] = problem
             return PhotoHold(UNREADABLE)
-        try:
-            result = self.gate.check(path)
-        except (DeciderUnavailable, DeciderRejected) as exc:  # as the text gate: the photo waits, nothing sent
-            raise TransientError(f"image gate: Strands Decider (vision) could not be asked ({exc}); waiting",
-                                 kind="decider") from None
-        record.update(gate_p=round(result.p, 4), gate_seconds=round(result.seconds, 3))
-        if result.reason is not None:
-            return PhotoHold(result.reason, result.p)
+        if released_from is None:
+            try:
+                result = self.gate.check(path)
+            except (DeciderUnavailable, DeciderRejected) as exc:  # as the text gate: the photo waits, nothing sent
+                raise TransientError(f"image gate: Strands Decider (vision) could not be asked ({exc}); waiting",
+                                     kind="decider") from None
+            record.update(gate_p=round(result.p, 4), gate_seconds=round(result.seconds, 3))
+            if result.reason is not None:
+                return PhotoHold(result.reason, result.p)
         started = time.perf_counter()
         text, confidence = self.ocr.read(path)
         record.update(ocr_confidence=confidence, ocr_seconds=round(time.perf_counter() - started, 3))

@@ -56,8 +56,9 @@ class LedgerEntry:
     picks: dict[str, dict[str, Any]] = field(default_factory=dict)
     # A photo (ruling 47): the image gate's probability and time, the OCR's per-line confidence and time, the
     # extraction call count, or why it was unreadable; and (ruling 50) the scene: its answer, probability, time,
-    # who decided it, the action taken and, while it waits on the owner, its keyboard's short id. Numbers and
-    # labels only, never the picture's text.
+    # who decided it, the action taken and, while it waits on the owner, its keyboard's short id; and (ruling 52)
+    # each Release offered for an unsure hold: the gate that held it, its short id, who released it and when.
+    # Numbers and labels only, never the picture's text.
     image: dict[str, Any] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
@@ -135,6 +136,20 @@ class Ledger:
 
     def resolve_scene(self, recording_id: str, fields: dict[str, Any]) -> None:
         self._entries[recording_id].image.update(fields)
+        self._save()
+
+    def find_release(self, sid: str) -> tuple[str, dict[str, Any]] | None:
+        """The held photo a Release button's short id stands for, and that release's record (ruling 52)."""
+        for rid, entry in self._entries.items():
+            for release in entry.image.get("releases") or []:
+                if release.get("sid") == sid:
+                    return rid, dict(release)
+        return None
+
+    def resolve_release(self, recording_id: str, sid: str, fields: dict[str, Any]) -> None:
+        for release in self._entries[recording_id].image.get("releases") or []:
+            if release.get("sid") == sid:
+                release.update(fields)
         self._save()
 
     def _save(self) -> None:

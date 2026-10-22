@@ -420,8 +420,10 @@ unreadable or blank is held before any model is asked; a second Strands Decider 
 `--vision`, answers "Is this picture of something that must never leave this machine?" and holds the photo on
 yes or unsure; then RapidOCR, on the laptop, reads the photo's text, which meets the stop-list tripwire and the
 text gate like any transcript before the extraction on Bedrock. The image gate uses the same checkpoint, which
-was not trained on images, at the text gate's floor, a starting point rather than a tuned value. A photo held by
-one of these checks stays in the folder; this version has no way to release one. After the text gate and before
+was not trained on images, at the text gate's floor, a starting point rather than a tuned value. A photo held as
+sensitive stays in the folder, with no way to release it. One held as unsure by the image gate or the text gate
+gets a Release button on its notice; the owner's tap sends nothing anywhere and lets the photo continue on the next
+cycle from the check after the one that held it, every later check running as usual. After the text gate and before
 anything is extracted, the vision server is asked what the picture represents, from the picture and its text, at
 the routing read's floor for a choice question (also a starting point). Something the owner owes goes on as
 before; something owed to the owner goes on and is written with a `waiting-on` label; reference material (a menu,

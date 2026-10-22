@@ -85,6 +85,12 @@ def test_notice_names_the_cuda_builds_nvidia_libraries_in_its_own_format():
     assert all(re.match(r"^.+ \S+ \(GPU server, optional[^)]*\): .+ \[.+\]$", line) for line in lines)
     named = set(re.findall(r"[\w.-]+\.dll", "\n".join(lines)))
     assert NVIDIA_DLLS <= named
+    # ruling 52: each NVIDIA binary names its licence; the version and copyright are the files' own
+    binaries = [line for line in lines[1:] if not line.startswith("NVTX ")]
+    assert all("no licence stated" not in line for line in lines)
+    assert all(("NVIDIA cuDNN Software License Agreement; " if line.startswith("NVIDIA cuDNN")
+                else "NVIDIA CUDA Toolkit End User License Agreement; ") in line for line in binaries)
+    assert all(line.endswith("[version and copyright: the files' version information]") for line in binaries)
     lib = REPO / ".venv-decider-cuda" / "Lib" / "site-packages" / "torch" / "lib"
     if lib.is_dir():  # where the CUDA venv is installed, every NVIDIA library in it is named
         assert {p.name for p in lib.glob("*.dll") if re.match(r"(cu|nv|cudnn)", p.name)} <= named

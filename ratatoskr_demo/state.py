@@ -103,6 +103,14 @@ class State:
         with self._lock:
             self._ledger.resolve_scene(recording_id, fields)
 
+    def release_find(self, sid: str) -> tuple[str, dict[str, Any]] | None:
+        with self._lock:
+            return self._ledger.find_release(sid)
+
+    def release_resolve(self, recording_id: str, sid: str, fields: dict[str, Any]) -> None:
+        with self._lock:
+            self._ledger.resolve_release(recording_id, sid, fields)
+
     # --- today's counts ---
 
     def count(self, name: str, amount: int = 1, *, recording_id: str | None = None) -> None:
