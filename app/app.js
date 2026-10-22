@@ -49,6 +49,11 @@
       self.state = S.build(self.data, self.actions);
       self.render();
       return self;
+    }, function (e) { // the owner service did not answer: say so, and offer to disconnect
+      self.el.innerHTML = "<header class=\"top\"><div class=\"brand\">Ratatoskr</div><div class=\"sub\">" +
+        "Companion · mobile web prototype</div></header><main class=\"main\"><p class=\"notice\">" +
+        esc(String(e && e.message || e)) + "</p><button class=\"btn\" data-disconnect>Disconnect</button></main>";
+      return self;
     });
   };
 
@@ -88,7 +93,8 @@
     });
     return chain.then(function () {
       self.busy = false;
-      self.notice = done || "Saved.";
+      var failed = recorded.filter(function (a) { return a.status === "failed"; })[0];
+      self.notice = failed ? "Not applied: " + (failed.error || "the update failed") + "." : done || "Saved.";
       self.render();
       return recorded;
     });
@@ -96,7 +102,7 @@
 
   App.prototype.onClick = function (e) {
     var t = e.target.closest("[data-tab],[data-review],[data-act],[data-open],[data-close],[data-close-viewer]," +
-      "[data-add-tag],[data-remove-tag],[data-reset],a[href]");
+      "[data-add-tag],[data-remove-tag],[data-reset],[data-connect],[data-disconnect],a[href]");
     if (!t || this.busy) {
       if (t && t.matches("a[href]")) {
         e.preventDefault();
@@ -148,6 +154,15 @@
       var gone = t.getAttribute("data-remove-tag");
       this.draft = this.draft.filter(function (x) { return x !== gone; });
       this.render();
+    } else if (t.hasAttribute("data-connect")) { // the owner service's token, kept in this browser
+      var field = this.el.querySelector("[data-token]");
+      if (field && field.value.trim()) {
+        root.RatatoskrAdapter.browserStorage().setItem(root.RatatoskrAdapter.TOKEN_KEY, field.value.trim());
+        root.location.reload();
+      }
+    } else if (t.hasAttribute("data-disconnect")) {
+      root.RatatoskrAdapter.browserStorage().removeItem(root.RatatoskrAdapter.TOKEN_KEY);
+      root.location.reload();
     } else if (t.hasAttribute("data-reset")) {
       var app = this;
       this.adapter.reset().then(function () {
@@ -235,10 +250,14 @@
         reviewLink(view, "View privately") + "</div></article>";
     }
     return "<article class=\"card task\" data-card=\"" + esc(view.id) + "\"><div class=\"kind\">" +
-      esc(INPUT[view.input]) + " · task · category uncertain</div><div class=\"text\">" + esc(view.text) + "</div>" +
+      esc(INPUT[view.input]) + " · task · category uncertain</div><div class=\"text\">" + esc(taskText(view)) + "</div>" +
       "<div class=\"state\">" + esc(S.modelLine(view)) + "</div>" + badge(view) + "<div class=\"actions\">" +
       "<button class=\"btn primary\" data-open=\"" + esc(view.id) + "\">Categorize</button></div></article>";
   };
+
+  function taskText(view) { // a live task's text only where this courier sent it to Telegram (ruling 61 P1)
+    return view.text || "Task text: on Telegram and in Todoist, not kept on the laptop";
+  }
 
   function outcome(view) {
     if (view.kind === "task") {
@@ -275,7 +294,7 @@
       c.value + (c.by === "owner" ? " · by owner" : " · by Decider");
     var status = c.by === "owner" ? outcome(view) : "";
     return "<article class=\"card task\" data-card=\"" + esc(view.id) + "\"><button class=\"cardlink\" data-open=\"" +
-      esc(view.id) + "\"><div class=\"text\">" + esc(view.text) + "</div><div class=\"meta\">" +
+      esc(view.id) + "\"><div class=\"text\">" + esc(taskText(view)) + "</div><div class=\"meta\">" +
       (view.due ? "Due: " + esc(view.due) + " · " : "") + esc(INPUT[view.input]) + " " + esc(view.ref) +
       (view.from ? " · " + esc(view.from) : "") + "</div><div class=\"chips\"><span class=\"chip cat\">" + esc(cat) +
       "</span>" + view.tags.map(function (t) { return "<span class=\"chip tag\">#" + esc(t) + "</span>"; }).join("") +
@@ -335,29 +354,46 @@
        ["Tags", "Saved in app, not in Todoist"],
        ["Notifications", "None: this prototype needs no Telegram"]].map(function (r) {
         return "<tr><td>" + esc(r[0]) + "</td><td>" + esc(r[1]) + "</td></tr>";
-      }).join("") + "</table><p><button class=\"btn\" data-reset>Clear prototype data</button></p>";
+      }).join("") + "</table>" + this.renderConnection() +
+      "<p><button class=\"btn\" data-reset>Clear prototype data</button></p>";
+  };
+
+  // The owner service (P1): connected, connectable (the page came from a server), or not from here (a file).
+  App.prototype.renderConnection = function () {
+    if (this.adapter.name === "service") {
+      return "<h3>Owner service</h3><p class=\"fine\">Connected to the courier on this machine. A category change " +
+        "is acknowledged only when the courier has updated the Todoist task.</p><button class=\"btn\" " +
+        "data-disconnect>Disconnect</button>";
+    }
+    if (!/^https?:$/.test(root.location.protocol)) {
+      return "<h3>Owner service</h3><p class=\"fine\">To connect, open this page from the courier's owner service " +
+        "(<code>ratatoskr-demo --loop --owner-service</code>).</p>";
+    }
+    return "<h3>Owner service</h3><p class=\"fine\">The token from the courier's secrets file " +
+      "(OWNER_SERVICE_TOKEN):</p><div class=\"addtag\"><input data-token type=\"password\" autocomplete=\"off\">" +
+      "<button class=\"btn\" data-connect>Connect</button></div>";
   };
 
   App.prototype.renderSheet = function (view) {
     var self = this;
     var chosen = view.ownerCategory;
-    var order = Object.keys(view.project.probabilities).sort(function (a, b) {
-      return view.project.probabilities[b] - view.project.probabilities[a];
-    });
+    var probs = view.project.probabilities || {};
+    var order = Object.keys(probs).length ? Object.keys(probs).sort(function (a, b) { return probs[b] - probs[a]; }) :
+      this.state.projects.slice(); // no probabilities sent with a live task: the courier's order
     var current = S.category(view).value;
     var radios = order.map(function (p) {
-      var prob = view.project.probabilities[p];
+      var prob = probs[p];
       var checked = chosen ? chosen.value === p : (view.project.sure && current === p);
       return "<label class=\"opt\"><input type=\"radio\" name=\"category\" value=\"" + esc(p) + "\"" +
         (checked ? " checked" : "") + (chosen ? " disabled" : "") + "> <span class=\"name\">" + esc(p) + "</span>" +
-        "<span class=\"bar\"><span style=\"width:" + Math.round(prob * 100) + "%\"></span></span><span class=\"num\">" +
-        S.pct(prob) + "</span></label>";
+        "<span class=\"bar\"><span style=\"width:" + Math.round((prob || 0) * 100) + "%\"></span></span>" +
+        "<span class=\"num\">" + S.pct(prob) + "</span></label>";
     }).join("") + "<label class=\"opt leave\"><input type=\"radio\" name=\"category\" value=\"" + S.LEAVE + "\"" +
       (chosen && chosen.value === S.LEAVE ? " checked" : "") + (chosen ? " disabled" : "") +
       "> <span class=\"name\">Leave unsorted</span></label>";
     var history = S.activity(this.state).filter(function (e) { return e.item === view.id; });
     return "<div class=\"sheet\" role=\"dialog\" aria-label=\"Task\"><div class=\"sheethead\"><button class=\"btn\" " +
-      "data-close>Back</button><h2>Task</h2></div><div class=\"text\">" + esc(view.text) + "</div><div class=\"meta\">" +
+      "data-close>Back</button><h2>Task</h2></div><div class=\"text\">" + esc(taskText(view)) + "</div><div class=\"meta\">" +
       (view.due ? "Due: " + esc(view.due) + " · " : "") + esc(INPUT[view.input]) + " " + esc(view.ref) +
       (view.from ? " · " + esc(view.from) : "") + "</div>" + badge(view) +
       "<div class=\"model\">" + esc(S.modelLine(view)) + "</div><p class=\"fine\">Decider's answer as recorded in " +
@@ -380,12 +416,13 @@
 
   App.prototype.renderViewer = function (view) {
     var actions = S.availableActions(view);
-    var content = view.viewer.type === "photo" ? "<img class=\"photo\" src=\"" + esc(view.viewer.src) +
+    var content = !view.viewer ? "<p class=\"fine\">The held content stays on the laptop: a private review " +
+      "connection is not built in this prototype, so nothing of it is shown here.</p>" :
+      view.viewer.type === "photo" ? "<img class=\"photo\" src=\"" + esc(view.viewer.src) +
       "\" alt=\"Fictional picture held for review\">" : "<div class=\"transcript\"><div class=\"ttitle\">" +
       esc(view.viewer.title) + "</div><p>" + esc(view.viewer.text) + "</p></div>";
     var r = view.resolution;
-    var status = view.kind === "scene" ? S.modelLine(view) : "Held by the " + view.gate + ": " + view.verdict +
-      ", p " + S.pct(view.p) + " (floor " + S.pct(view.floor) + ")";
+    var status = S.modelLine(view);
     var buttons = "";
     if (view.kind === "hold") {
       if (actions.indexOf("keep-held") >= 0) {
@@ -395,7 +432,8 @@
       if (actions.indexOf("release") >= 0) {
         buttons += "<button class=\"btn warn\" data-act=\"release\" data-item=\"" + esc(view.id) + "\">Release " +
           "(owner authorization)</button><p class=\"fine\">An owner release resumes the remaining checks for this " +
-          "photo; it is not a model clear and not permission to upload. Prototype only: the courier is not told.</p>";
+          "photo; it is not a model clear and not permission to upload. Prototype only: the courier is not told" +
+          (this.adapter.name === "service" ? ", even with the owner service connected" : "") + ".</p>";
       }
       if (view.verdict === "sensitive") {
         buttons += "<p class=\"fine\">A sensitive verdict has no release, as in the courier.</p>";

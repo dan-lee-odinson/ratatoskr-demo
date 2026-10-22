@@ -300,6 +300,126 @@ test("an illustrative item is marked on its card", function () {
   });
 });
 
+// --- the owner service (P1), through a fake fetch: the same views, live items, external updates ---
+
+var LIVE = { projects: F.projects, items: [
+  { id: "pick-abc", kind: "task", input: "recording", ref: "rec_live #1", text: "Email the reviewer the revised figure",
+    due: null, from: null, project: { choice: "research", confidence: 0.55, floor: 0.7, sure: false,
+    probabilities: { research: 0.48, writing: 0.31 } }, labels: ["pocket"], pick: "abc", resolved: null,
+    source: { export: "the courier's ledger, live" }, illustrative: false },
+  { id: "pick-def", kind: "task", input: "recording", ref: "rec_old #2", text: null, due: null, from: null,
+    project: { choice: null, confidence: 0.5, floor: 0.7, sure: false, probabilities: {} }, labels: ["pocket"],
+    pick: "def", resolved: { project: "work", by: "owner", via: "telegram", at: "2026-10-22T09:00:00+00:00" },
+    source: { export: "the courier's ledger, live" }, illustrative: false },
+  { id: "hold-rec_live", kind: "hold", input: "recording", ref: "rec_held", gate: "text gate", verdict: "unsure",
+    p: null, floor: null, reason: "source-unsure", viewer: null, source: { export: "the courier's ledger, live" },
+    illustrative: false }] };
+
+function fakeService(answers) {
+  var calls = [];
+  var fetchImpl = function (url, init) {
+    calls.push({ url: url, init: init });
+    var next = /\/owner\/pending$/.test(url) ? { status: 200, body: LIVE } : answers.shift();
+    return Promise.resolve(next).then(function (n) {
+      if (n === "unreachable") { throw new Error("no route"); }
+      return { ok: n.status < 300, status: n.status, json: function () { return Promise.resolve(n.body); } };
+    });
+  };
+  return { calls: calls, adapter: A.ServiceAdapter("http://127.0.0.1:8788", "tok-123", A.memoryStorage(), fetchImpl) };
+}
+
+function startWith(adapter) {
+  return new RatatoskrApp.App(freshRoot(), adapter).start();
+}
+
+test("the service adapter: live items, the ledger's answers as acknowledged, and a pick acknowledged by the courier", function () {
+  var svc = fakeService([{ status: 200, body: { status: "acknowledged", project: "writing", by: "owner", via: "app" } }]);
+  var app;
+  return startWith(svc.adapter).then(function (a) {
+    app = a;
+    eq(svc.calls[0].init.headers.Authorization, "Bearer tok-123", "the token");
+    eq(S.category(app.state.views["pick-def"]), { value: "work", by: "owner", status: "acknowledged" },
+       "the ledger's answer from Telegram");
+    return click("[data-tab=tasks]");
+  }).then(function () {
+    var card = $("[data-card='pick-def']").textContent;
+    ok(/not kept on the laptop/.test(card) && /work · by owner/.test(card), "a task this courier did not send, filed");
+    return click("[data-open='pick-abc']");
+  }).then(function () {
+    $("input[name=category][value=writing]").checked = true;
+    return submit();
+  }).then(function () {
+    var post = svc.calls[1];
+    eq([post.url, post.init.method, JSON.parse(post.init.body)], ["http://127.0.0.1:8788/owner/pick", "POST",
+       { sid: "abc", project: "writing" }], "the pick");
+    eq(S.category(app.state.views["pick-abc"]).status, "acknowledged", "acknowledged");
+    ok(/Acknowledged: the courier updated the Todoist task/.test($(".sheet").textContent), "shown as acknowledged");
+  });
+});
+
+test("a pick stays pending until the courier answers, and a refusal is failed with its reason", function () {
+  var release;
+  var later = new Promise(function (r) { release = r; });
+  var svc = fakeService([later.then(function () { return { status: 409, body: { status: "already answered",
+    project: "research", via: "telegram" } }; })]);
+  var app;
+  return startWith(svc.adapter).then(function (a) {
+    app = a;
+    return click("[data-open='pick-abc']");
+  }).then(function () {
+    $("input[name=category][value=writing]").checked = true;
+    return submit();
+  }).then(function () {
+    ok(/Pending: waiting for the courier/.test($(".sheet").textContent), "pending while it waits");
+    release();
+    return tick().then(tick).then(tick);
+  }).then(function () {
+    ok(/Not applied: already filed as research via telegram/.test($(".sheet").textContent), "the refusal, with why");
+    eq(S.category(app.state.views["pick-abc"]).by, null, "nothing applied");
+  });
+});
+
+test("with the service, an unreachable courier fails the pick, and tags and reviews stay in the page", function () {
+  var svc = fakeService(["unreachable"]);
+  var app;
+  return startWith(svc.adapter).then(function (a) {
+    app = a;
+    return click("[data-open='pick-abc']");
+  }).then(function () {
+    $("input[name=category][value=writing]").checked = true;
+    $("[data-tag-input]").value = "grant";
+    return click("[data-add-tag]");
+  }).then(function () {
+    $("input[name=category][value=writing]").checked = true;
+    return submit();
+  }).then(function () {
+    var byType = {};
+    app.actions.forEach(function (x) { byType[x.type] = x; });
+    eq([byType.categorize.status, byType.categorize.error], ["failed", "the owner service could not be reached"], "the pick");
+    eq([byType["tag-add"].status, S.statusText(byType["tag-add"])], ["saved", "Saved in app, not in Todoist"], "the tag");
+    eq(svc.calls.filter(function (c) { return /pick$/.test(c.url); }).length, 1, "only the category was sent");
+    return click("[data-close]");
+  }).then(function () {
+    return click("[data-review='hold-rec_live']");
+  }).then(function () {
+    ok(/stays on the laptop/.test($(".viewer").textContent), "a live hold's content is not in the page");
+    ok(/even with the owner service connected/.test($(".viewer").textContent), "its release is prototype-only");
+  });
+});
+
+test("the adapter is the service only for a page served over http that holds the token", function () {
+  var store = A.memoryStorage();
+  eq(A.choose(F, store, { protocol: "file:", hash: "", origin: "null", pathname: "/", search: "" }).name, "fixtures",
+     "a file, no token");
+  store.setItem(A.TOKEN_KEY, "tok");
+  eq(A.choose(F, store, { protocol: "file:", hash: "", origin: "null", pathname: "/", search: "" }).name, "fixtures",
+     "a file, with a token");
+  var fresh = A.memoryStorage();
+  eq(A.choose(F, fresh, { protocol: "http:", hash: "#token=abc%20def", origin: "http://127.0.0.1:8788",
+    pathname: "/", search: "" }).name, "service", "served, a token in the fragment");
+  eq(fresh.getItem(A.TOKEN_KEY), "abc def", "the fragment's token kept");
+});
+
 // --- run ---
 
 (function run() {

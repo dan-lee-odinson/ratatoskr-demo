@@ -14,9 +14,10 @@
 <script src="adapter.js"></script>
 <script src="app.js"></script>
 <script>
-  // Fixtures and this browser's storage (P0). Nothing here reaches the network.
-  new RatatoskrApp.App(document.getElementById("app"),
-    RatatoskrAdapter.FixtureAdapter(RATATOSKR_FIXTURES, RatatoskrAdapter.browserStorage())).start();
+  // The fixtures and this browser's storage (P0), or, when the page came from the courier's owner service and holds
+  // its token, the service (P1). Opened as a file, nothing here reaches the network.
+  new RatatoskrApp.App(document.getElementById("app"), RatatoskrAdapter.choose(RATATOSKR_FIXTURES,
+    RatatoskrAdapter.browserStorage(), window.location)).start();
 </script>
 </body>
 </html>

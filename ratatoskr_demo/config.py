@@ -145,6 +145,13 @@ class PathSettings:
 
 
 @dataclass(frozen=True)
+class OwnerSettings:
+    """The companion app's owner service (Dan's ruling 61): on 127.0.0.1 only, with --loop --owner-service."""
+
+    port: int = 8788
+
+
+@dataclass(frozen=True)
 class Secrets:
     """Read from .env (or the given environment) only. `None` means not provided."""
 
@@ -154,6 +161,7 @@ class Secrets:
     telegram_chat_id: int | None = None
     bedrock_api_key: str | None = None
     typesafe_api_key: str | None = None  # only the bench's Jev column needs it
+    owner_service_token: str | None = None  # only --owner-service needs it (ruling 61)
 
     def __repr__(self) -> str:  # never print a secret, even in a traceback
         present = [f.name for f in fields(self) if getattr(self, f.name) is not None]
@@ -171,6 +179,7 @@ class Settings:
     route: RouteSettings = field(default_factory=RouteSettings)
     devices: DevicesSettings = field(default_factory=DevicesSettings)
     paths: PathSettings = field(default_factory=PathSettings)
+    owner: OwnerSettings = field(default_factory=OwnerSettings)
     secrets: Secrets = field(default_factory=Secrets)
     fixtures_dir: Path | None = None
 
@@ -193,11 +202,12 @@ _SECTIONS: dict[str, type] = {
     "route": RouteSettings,
     "devices": DevicesSettings,
     "paths": PathSettings,
+    "owner": OwnerSettings,
 }
 
 SECRET_NAMES = (
     "POCKET_API_KEY", "TODOIST_API_TOKEN", "TELEGRAM_BOT_TOKEN", "TELEGRAM_CHAT_ID",
-    "BEDROCK_API_KEY", "TYPESAFE_API_KEY",
+    "BEDROCK_API_KEY", "TYPESAFE_API_KEY", "OWNER_SERVICE_TOKEN",
 )
 
 
@@ -358,6 +368,7 @@ def _secrets_from_env(env: Mapping[str, str]) -> Secrets:
         telegram_chat_id=chat_id_int,
         bedrock_api_key=get("BEDROCK_API_KEY"),
         typesafe_api_key=get("TYPESAFE_API_KEY"),
+        owner_service_token=get("OWNER_SERVICE_TOKEN"),
     )
 
 
@@ -369,6 +380,8 @@ def _validate(s: Settings) -> None:
         )
     if not 0.0 < s.route.min_confidence <= 1.0:
         raise ConfigurationError("[route] min_confidence must be above 0 and at most 1")
+    if not 1024 <= s.owner.port <= 65535:
+        raise ConfigurationError("[owner] port must be between 1024 and 65535")
     decider = urlsplit(s.route.decider_url)
     if decider.scheme != "http" or decider.hostname not in LOOPBACK_HOSTS:
         raise ConfigurationError("[route] decider_url must be http:// on this machine (127.0.0.1)")

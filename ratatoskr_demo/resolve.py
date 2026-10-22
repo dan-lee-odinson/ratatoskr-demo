@@ -45,6 +45,7 @@ from __future__ import annotations
 
 import hashlib
 import logging
+import threading
 from datetime import datetime, timezone
 from typing import Any, Callable, Iterable, Mapping, Protocol
 
@@ -60,6 +61,9 @@ UNSORTED_LINE = "unsorted"
 CALLBACK_LIMIT = 64  # bytes, Telegram's limit on callback_data
 ROW = 4  # buttons per row
 SEP = " · "
+# One pick applied at a time, from Telegram or from the app's owner service (ruling 61): the check that a task is not
+# answered yet and the answer's Todoist update and ledger record happen under it, so two taps leave one change.
+_PICK_LOCK = threading.Lock()
 
 
 class Telegram(Protocol):
@@ -134,10 +138,11 @@ class Resolver:
     """Applies the owner's tap on an unsorted task's keyboard. Runs on the Telegram receiver's thread."""
 
     def __init__(self, state: Any, telegram: Telegram, todoist: Todoist | None, chat_id: int,
-                 projects: Iterable[str], *, clock: Callable[[], float] | None = None) -> None:
+                 projects: Iterable[str], *, clock: Callable[[], float] | None = None, via: str | None = None) -> None:
         self.state, self.telegram, self.todoist, self.chat_id = state, telegram, todoist, chat_id
         self.projects = list(projects)
         self.clock = clock
+        self.via = via  # recorded with the answer when given: "app" from the owner service (ruling 61)
         self.scenes = SceneTaps(state, telegram, chat_id, clock=clock)  # an unsure photo's buttons (ruling 50)
         self.releases = ReleaseTaps(state, telegram, chat_id, clock=clock)  # an unsure hold's Release (ruling 52)
 
@@ -155,6 +160,10 @@ class Resolver:
             log.warning("telegram: a button tap from another chat was ignored")
             self._answer(callback_id)
             return
+        with _PICK_LOCK:
+            self._pick(query, callback_id, message)
+
+    def _pick(self, query: Mapping[str, Any], callback_id: str, message: Mapping[str, Any]) -> None:
         parsed = parse(str(query.get("data") or ""))
         found = self.state.pick_find(parsed[0]) if parsed else None
         if parsed is None or found is None or (parsed[1] != LEAVE and parsed[1] not in self.projects):
@@ -191,8 +200,11 @@ class Resolver:
 
     def _record(self, rid: str, sid: str, key: str) -> None:
         now = self.clock() if self.clock else datetime.now(timezone.utc).timestamp()
-        self.state.pick_resolve(rid, sid, {"project_by": "owner", "project": key,
-                                           "at": datetime.fromtimestamp(now, tz=timezone.utc).isoformat(timespec="seconds")})
+        fields = {"project_by": "owner", "project": key,
+                  "at": datetime.fromtimestamp(now, tz=timezone.utc).isoformat(timespec="seconds")}
+        if self.via:
+            fields["via"] = self.via
+        self.state.pick_resolve(rid, sid, fields)
 
     def _edit(self, message_id: Any, text: str, reply_markup: dict[str, Any] | None = None) -> None:
         if message_id is None:

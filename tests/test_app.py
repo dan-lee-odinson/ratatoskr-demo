@@ -72,11 +72,14 @@ def test_a_hold_carries_its_content_only_into_the_simulated_viewer_and_its_id_is
             assert re.fullmatch(r"photo-[0-9a-f]{12}|rec_\d{3}", item["ref"])
 
 
-def test_the_page_loads_nothing_from_the_network():
+def test_the_page_loads_nothing_from_the_network_and_calls_only_the_owner_service_it_came_from():
     for path in APP.iterdir():
-        if path.suffix in (".html", ".js", ".css"):
+        if path.suffix in (".html", ".js", ".css") and path.name != "tests.html":
             text = path.read_text(encoding="utf-8")
-            assert not re.search(r"https?://|//cdn|@import|fetch\(", text), path.name
+            assert not re.search(r"https?://|//cdn|@import|XMLHttpRequest|WebSocket", text), path.name
+            assert "fetch(" not in text or path.name == "adapter.js", path.name
+    adapter = (APP / "adapter.js").read_text(encoding="utf-8")
+    assert adapter.count("fetch(") == 1 and "ServiceAdapter(location.origin, token" in adapter  # its own origin only
 
 
 def browser():

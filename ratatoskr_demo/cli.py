@@ -96,6 +96,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         parser.error("--dry-run goes with --once")
     if (args.save_tasks or args.demo_text) and not args.dry_run:
         parser.error("--save-tasks and --demo-text go with --once --dry-run")
+    if args.owner_service and not args.loop:
+        parser.error("--owner-service goes with --loop")
     configure_logging()
     try:
         settings = load_settings()
@@ -121,10 +123,12 @@ def main(argv: Sequence[str] | None = None) -> int:
             return rotate_options(settings, questions, args.rotate_options)
         if args.loop:
             require_secrets(settings)
+            if args.owner_service:
+                owner_token(settings)  # before anything starts: refused without a usable token
             runtime = build_runtime(settings, dry_run=False)
             check_startup(runtime)
             with hold_loop_lock(settings.paths.state_dir):  # the bench and the checks wait for it
-                return run_loop(runtime)
+                return run_loop(runtime, owner_service=args.owner_service)
         if not args.dry_run:
             require_secrets(settings)
         runtime = build_runtime(settings, dry_run=args.dry_run)
@@ -182,6 +186,8 @@ def _parser() -> argparse.ArgumentParser:
     mode.add_argument("--decider-check", action="store_true", help="one canonical task to the local Decider")
     mode.add_argument("--rotate-options", type=int, metavar="N", help="the option-order test, N rotations")
     p.add_argument("--dry-run", action="store_true", help="with --once: show what would happen, write nothing")
+    p.add_argument("--owner-service", action="store_true",
+                   help="with --loop: serve the companion app and its owner routes on 127.0.0.1 (ruling 61)")
     p.add_argument("--save-tasks", action="store_true",
                    help="with --once --dry-run: save each guarded extraction to bench/raw/ for the bench's --real-tasks")
     p.add_argument("--demo-text", metavar="TEXT", help="with --once --dry-run: also take TEXT through, as /demo would")
@@ -308,13 +314,44 @@ def start_receiver(runtime: Runtime, stop: threading.Event, *, get_updates=None)
     return receiver
 
 
-def run_loop(runtime: Runtime, *, stop: threading.Event | None = None, get_updates=None) -> int:
+OWNER_TOKEN_MIN = 16  # characters: a guessable token would open the owner routes to anything on this machine
+
+
+def owner_token(settings: Settings) -> str:
+    token = settings.secrets.owner_service_token or ""
+    if len(token) < OWNER_TOKEN_MIN:
+        raise ConfigurationError(f"--owner-service needs OWNER_SERVICE_TOKEN in the secrets file, at least "
+                                 f"{OWNER_TOKEN_MIN} characters (any long random string)")
+    return token
+
+
+def start_owner_service(runtime: Runtime, stop: threading.Event, *, port: int | None = None,
+                        on_ready: Any = None) -> Any:
+    """Ruling 61: the companion app's owner service, on 127.0.0.1, on threads of its own. It files a task through
+    the same resolver as the Telegram buttons, and sees what an unsorted task's message carried, in memory only."""
+    from ratatoskr_demo import owner_service
+
+    s = runtime.settings
+    project = load_route_questions(s)["project"]
+    todoist = (TodoistClient(s.secrets.todoist_api_token, http=httpx.Client(timeout=httpx.Timeout(45.0, connect=10.0)))
+               if "todoist" in s.devices.outputs else None)
+    service = owner_service.OwnerService(runtime.state, todoist, s.secrets.telegram_chat_id or 0,
+                                         list(project.criteria), project.min_confidence, owner_token(s))
+    runtime.cycle.deps.on_unsorted = service.remember
+    owner_service.serve(service, s.owner.port if port is None else port, stop, on_ready=on_ready)
+    return service
+
+
+def run_loop(runtime: Runtime, *, stop: threading.Event | None = None, get_updates=None,
+             owner_service: bool = False) -> int:
     stop = stop or threading.Event()
     if threading.current_thread() is threading.main_thread():
         for sig in (signal.SIGTERM, signal.SIGINT):
             signal.signal(sig, lambda *_: stop.set())
     if "telegram" in runtime.settings.devices.outputs:
         start_receiver(runtime, stop, get_updates=get_updates)
+    if owner_service:
+        start_owner_service(runtime, stop)
     log.info("ratatoskr-demo started: inputs %s, outputs %s; polling every %ds",
              ", ".join(runtime.settings.devices.inputs), ", ".join(runtime.settings.devices.outputs) or "none",
              runtime.settings.poll.interval_seconds)

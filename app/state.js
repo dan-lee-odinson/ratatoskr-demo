@@ -73,9 +73,9 @@
       views[item.id] = fresh(item);
       order.push(item.id);
     });
-    (actions || []).forEach(function (a) {
+    (actions || []).forEach(function (a, i) {
       if (views[a.item]) {
-        apply(views[a.item], a);
+        apply(views[a.item], Object.assign({ order: i + 1 }, a));
       }
     });
     return { projects: data.projects || [], views: views, order: order, actions: (actions || []).slice() };
@@ -134,8 +134,8 @@
       .sort(function (a, b) { return last(b) - last(a); });
   }
 
-  function last(view) {
-    return view.actions.length ? view.actions[view.actions.length - 1].seq : 0;
+  function last(view) { // the order its latest action was recorded in (a live item's seq may be a string)
+    return view.actions.length ? view.actions[view.actions.length - 1].order : 0;
   }
 
   function normaliseTag(tag) {
@@ -244,14 +244,15 @@
   // What the model said about an item, as recorded: kept apart from what the owner chose.
   function modelLine(view) {
     if (view.kind === "hold") {
-      return "Decider (" + view.gate + "): " + view.verdict + ", p " + pct(view.p) + " (floor " + pct(view.floor) + ")";
+      return "Decider (" + view.gate + "): " + view.verdict + (typeof view.p === "number" ? ", p " + pct(view.p) +
+        " (floor " + pct(view.floor) + ")" : " (its probability is not in the ledger)");
     }
     if (view.kind === "scene") {
       return "Decider (scene): unsure, top " + view.scene.choice + ", confidence " + pct(view.scene.confidence) +
         " (floor " + pct(view.scene.floor) + ")";
     }
     if (view.kind === "task") {
-      return "Decider (project): " + (view.project.sure ? "" : "unsure, top ") + view.project.choice +
+      return "Decider (project): " + (view.project.sure ? "" : "unsure, top ") + (view.project.choice || "-") +
         ", confidence " + pct(view.project.confidence) + " (floor " + pct(view.project.floor) + ")";
     }
     return "";

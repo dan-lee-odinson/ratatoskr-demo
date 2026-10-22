@@ -124,6 +124,9 @@ class CycleDeps:
     decider_health: Callable[[], bool] | None = None  # set when [route] backend is "decider": GET /health
     # --save-tasks (dry runs only): handed each guarded extraction, never the transcript (ruling 15)
     on_extraction: Callable[[str, str, Any], None] | None = None
+    # ruling 61: an unsorted task's id, text and Decider's probabilities as its Telegram message carried them, for
+    # the owner service to show the app (memory only; the ledger keeps no task text)
+    on_unsorted: Callable[[str, str, dict[str, float]], None] | None = None
     clock: Callable[[], float] = time.time
     out: Callable[[str], None] = field(default=print)
 
@@ -482,6 +485,9 @@ class Cycle:
                 sid = resolve.short_id(rid, i)
                 if sid in picks:  # unsorted: the owner can file it from the message (ruling 43)
                     self._tell_dan_with_keyboard(text, self._unsorted_keyboard(sid, task.routed))
+                    if self.deps.on_unsorted is not None:  # or from the companion app (ruling 61)
+                        judged = {j.question: j for j in task.routed.trace}.get("project")
+                        self.deps.on_unsorted(sid, task.content, dict(judged.options) if judged else {})
                 else:
                     self._tell_dan(text)
         return outcome
