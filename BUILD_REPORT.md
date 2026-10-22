@@ -993,8 +993,8 @@ added by ruling 49. Each gives its commits in both histories, the private one fi
     Median and p90 reads: image gate 2.83 and 2.96 s, OCR 1.51 and 2.99 s, text gate 1.72 and
     2.00 s, routing 12.47 and 13.34 s. Bedrock: $0.000507 over 5 calls. The highest ordinary picture
     scored 0.43 and the lowest sensitive one 0.59; the floor stays the text gate's.
-    `python bench/run_images.py --check` regenerates `bench/IMAGE_EVAL_2026-10-22.md` from
-    `bench/image_eval_2026-10-22.json` byte for byte with no network, model or key. Private
+    `python bench/run_images.py --check` regenerates `bench/IMAGE_EVAL_2026-10-21.md` from
+    `bench/image_eval_2026-10-21.json` byte for byte with no network, model or key. Private
     `6fc60f2` and `d15d29c`, public `544dab0` and `79c559a`. The public clone of `79c559a`: 860
     passed, 3 skipped, and 186 of 186 mutations caught; the private working copy: 862 passed,
     1 skipped, and 186 of 186. After it, ruling 49: a photo held by the tripwire, the text gate,

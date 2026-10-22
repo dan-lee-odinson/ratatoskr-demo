@@ -433,7 +433,7 @@ page) is kept as a note in `ledger/reference/` with nothing written to Todoist; 
 nothing is sent anywhere and the owner is asked on Telegram, with two buttons, which it is. Reference material never
 leaves the laptop. Who owes whom is read by the extraction and by the owner, not decided from the picture: the
 image evaluation showed the checkpoint could not tell the direction of a promise from a picture and its text. For the evaluation
-(`bench/IMAGE_EVAL_2026-10-22.md`) the folder was fed from the desktop with rendered pictures. The vision server
+(`bench/IMAGE_EVAL_2026-10-21.md`) the folder was fed from the desktop with rendered pictures. The vision server
 runs from its own venv, beside the published one:
 
 ```bash

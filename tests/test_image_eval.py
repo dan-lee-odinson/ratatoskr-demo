@@ -1,6 +1,6 @@
 """Dan's ruling 47: the image evaluation's runner. Its rules (the OCR's key words, an OCR miss told apart from a
 model miss), a report drawn from a synthetic export, and, once the run is committed, the report regenerated from
-bench/image_eval_2026-10-22.json byte for byte with no network, no model and no key."""
+bench/image_eval_2026-10-21.json byte for byte with no network, no model and no key."""
 
 import importlib.util
 import json
@@ -248,8 +248,8 @@ def test_the_second_addendum_says_why_the_word_floor_went_and_reports_actions_an
     text = run_images.render3(data)
     assert text.startswith("# Image evaluation, second run: the released pictures, second addendum")
     assert "No word floor for photos (ruling 53, after the first addendum)" in text
-    assert "The first addendum (`bench/IMAGE_EVAL_2026-10-23_released.md`) is unchanged." in text
-    assert "from bench/image_eval_2026-10-23_released2.json" in text and "--released2" in text
+    assert "The first addendum (`bench/IMAGE_EVAL_2026-10-22_released.md`) is unchanged." in text
+    assert "from bench/image_eval_2026-10-22_released2.json" in text and "--released2" in text
     assert "## Actions and writes by scene answer" in text
     assert "| owed_to_owner | 3 | extracted, waiting-on | 3 | 3 | 0 |" in text
     del data["addendum"]  # the first addendum's report has neither
