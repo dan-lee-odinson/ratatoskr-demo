@@ -45,7 +45,8 @@ from ratatoskr_demo.decider import DeciderRejected, DeciderUnavailable
 from ratatoskr_demo.devices.envelope import Envelope, ImageRef, VideoRef
 from ratatoskr_demo.devices.registry import Source
 from ratatoskr_demo.errors import TransientError
-from ratatoskr_demo.photos import UNREADABLE, ImageGate, Ocr, PhotoHold, SceneDecision, SceneResult, unreadable
+from ratatoskr_demo.photos import (UNREADABLE, ImageGate, Ocr, PhotoHold, SceneDecision, SceneResult, file_sha256,
+                                   passed_gates, unreadable)
 
 DEVICE_ID = "glasses"
 IS_STUB = True  # the video slot (GlassesStub); the photo folder is real (ruling 47)
@@ -114,10 +115,10 @@ class PhotoFolder:
         path = _path(envelope)
         return Source(item_id=photo_id(path), title="photo", tags=(), recorded_at=_mtime(path).isoformat())
 
-    def fetch_text(self, envelope: Envelope, *, released_from: str | None = None) -> Any:
-        """The OCR text, or a PhotoHold: unreadable (no model asked), or the image gate's yes or unsure. A photo the
-        owner released from an unsure hold (ruling 52) is not asked of the image gate again: it passed it or was
-        released from it."""
+    def fetch_text(self, envelope: Envelope, *, earlier: dict[str, Any] | None = None) -> Any:
+        """The OCR text, or a PhotoHold: unreadable (no model asked), or the image gate's yes or unsure. `earlier` is
+        the photo's ledger record from a previous cycle: when the owner released this unchanged file from the image
+        gate, or has answered its scene, the image gate is not asked again (rulings 52 and 57)."""
         path = _path(envelope)
         record: dict[str, Any] = {"extraction_calls": 0}
         self.records[photo_id(path)] = record
@@ -126,7 +127,8 @@ class PhotoFolder:
         if problem is not None:
             record["unreadable"] = problem
             return PhotoHold(UNREADABLE)
-        if released_from is None:
+        record["sha256"] = file_sha256(path)  # what an owner's release is recorded against (ruling 57)
+        if "image gate" not in passed_gates(earlier, record["sha256"]):
             try:
                 result = self.gate.check(path)
             except (DeciderUnavailable, DeciderRejected) as exc:  # as the text gate: the photo waits, nothing sent

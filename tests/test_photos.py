@@ -235,7 +235,9 @@ def test_a_photo_the_image_gate_holds_reaches_no_model_and_no_list(tmp_path, ser
     entry, model, fake, vision, todoist, telegram = photo_cycle(tmp_path, services, clock, p=0.8)
     assert (entry["status"], entry["reason"]) == ("hold", "image-sensitive")
     assert model.calls == [] and fake.gate_bodies == [] and todoist.tasks == {}
-    assert entry["image"] == {"extraction_calls": 0, "gate_p": 0.8, "gate_seconds": entry["image"]["gate_seconds"]}
+    assert entry["image"] == {"extraction_calls": 0, "gate_p": 0.8, "gate_seconds": entry["image"]["gate_seconds"],
+                              "sha256": entry["image"]["sha256"]}  # the file's hash (ruling 57); numbers, no text
+    assert len(entry["image"]["sha256"]) == 64
     assert telegram.texts == [f"Held {photo_id(Path('whiteboard.png'))}: image-sensitive. Nothing was written."]
 
 

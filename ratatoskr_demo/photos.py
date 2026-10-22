@@ -63,7 +63,11 @@ button on its id-only notice, Release; one held as sensitive gets none. The owne
 tap records the release and sends nothing anywhere; on the next cycle the photo
 continues from the check after the one that held it (from the image gate: the OCR,
 the tripwire, the text gate, the scene; from the text gate: the scene, its text read
-again on the laptop), and every later check runs as usual.
+again on the laptop), and every later check runs as usual. A release is recorded with
+the file's sha256 and carried forward for that unchanged file on every later cycle
+(ruling 57), so a released photo whose scene the owner then answers is not stopped by
+the gate he released it from; a file whose hash differs inherits nothing. An owner's
+release is not a model's clear, and the ledger records it as the owner's.
 """
 
 from __future__ import annotations
@@ -318,6 +322,7 @@ class SceneTaps:
 
 # A photo held as unsure by one of these gates gets a Release button; one held as sensitive (a yes) gets none.
 RELEASABLE = {"image-unsure": "image gate", "source-unsure": "text gate"}
+GATE_ORDER = ("image gate", "text gate")  # the order a photo meets them in
 RELEASE_PREFIX = "release"
 
 
@@ -334,13 +339,24 @@ def is_release_tap(data: str) -> bool:
     return data.startswith(RELEASE_PREFIX + ":")
 
 
-def owner_release(entry: Any) -> str | None:
-    """The gate the owner's tap released this held photo from, so it continues from the check after it; or None."""
-    if entry is None or entry.status != "hold" or entry.reason not in RELEASABLE:
-        return None
-    last = (entry.image.get("releases") or [{}])[-1]
-    gate = RELEASABLE[entry.reason]
-    return gate if last.get("by") == "owner" and last.get("held_by") == gate else None
+def file_sha256(path: Path) -> str:
+    """The photo file's sha256: an owner's release holds for this file, unchanged, and for no other (ruling 57)."""
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def passed_gates(earlier: dict[str, Any] | None, sha: str | None) -> frozenset[str]:
+    """The gates this photo need not meet again on this cycle (ruling 57), from its ledger record: each gate the owner
+    released for this file (a release recorded by the owner with the file's sha256), and both gates once the owner
+    has answered its scene (they had cleared, or been released, before the scene was asked). Only for the same
+    unchanged file: a file whose hash differs from the recorded one is a new picture and inherits nothing."""
+    if not earlier or not sha or earlier.get("sha256") != sha:
+        return frozenset()
+    released = [GATE_ORDER.index(r["held_by"]) for r in earlier.get("releases") or []
+                if r.get("by") == "owner" and r.get("sha256") == sha and r.get("held_by") in GATE_ORDER]
+    if earlier.get("scene_by") == "owner":
+        released.append(len(GATE_ORDER) - 1)
+    # a gate is only reached once every gate before it has cleared or been released for this file
+    return frozenset(GATE_ORDER[: max(released) + 1]) if released else frozenset()
 
 
 class ReleaseTaps:
