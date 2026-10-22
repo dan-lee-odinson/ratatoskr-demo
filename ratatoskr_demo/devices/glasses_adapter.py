@@ -45,7 +45,7 @@ from ratatoskr_demo.decider import DeciderRejected, DeciderUnavailable
 from ratatoskr_demo.devices.envelope import Envelope, ImageRef, VideoRef
 from ratatoskr_demo.devices.registry import Source
 from ratatoskr_demo.errors import TransientError
-from ratatoskr_demo.photos import UNREADABLE, ImageGate, Ocr, PhotoHold, unreadable
+from ratatoskr_demo.photos import UNREADABLE, ImageGate, Ocr, PhotoHold, SceneDecision, SceneResult, unreadable
 
 DEVICE_ID = "glasses"
 IS_STUB = True  # the video slot (GlassesStub); the photo folder is real (ruling 47)
@@ -95,9 +95,10 @@ class PhotoFolder:
 
     name = "glasses"
 
-    def __init__(self, folder: Path, gate: ImageGate, ocr: Ocr) -> None:
-        self.folder, self.gate, self.ocr = Path(folder), gate, ocr
+    def __init__(self, folder: Path, gate: ImageGate, ocr: Ocr, scene: SceneDecision | None = None) -> None:
+        self.folder, self.gate, self.ocr, self.scene = Path(folder), gate, ocr, scene
         self.records: dict[str, dict[str, Any]] = {}  # per photo id: what goes in the ledger (numbers, no text)
+        self._paths: dict[str, Path] = {}  # per photo id: its file, for the scene read (ruling 50); memory only
 
     def list_new(self) -> list[Envelope]:
         """Every file in the folder that looks like a photo, oldest first; the ledger skips what is finished.
@@ -118,6 +119,7 @@ class PhotoFolder:
         path = _path(envelope)
         record: dict[str, Any] = {"extraction_calls": 0}
         self.records[photo_id(path)] = record
+        self._paths[photo_id(path)] = path
         problem = unreadable(path)
         if problem is not None:
             record["unreadable"] = problem
@@ -134,6 +136,17 @@ class PhotoFolder:
         text, confidence = self.ocr.read(path)
         record.update(ocr_confidence=confidence, ocr_seconds=round(time.perf_counter() - started, 3))
         return text
+
+    def decide_scene(self, item_id: str, text: str) -> SceneResult:
+        """Ruling 50: what the picture represents, one read of the vision server with the picture and its OCR
+        text. Unreachable or unreadable: the photo waits, as at the image gate, with nothing sent."""
+        if self.scene is None:
+            raise TransientError("scene: no scene decision configured; waiting", kind="decider")
+        try:
+            return self.scene.decide(self._paths[item_id], text)
+        except (DeciderUnavailable, DeciderRejected) as exc:
+            raise TransientError(f"scene: Strands Decider (vision) could not be asked ({exc}); waiting",
+                                 kind="decider") from None
 
 
 def _path(envelope: Envelope) -> Path:

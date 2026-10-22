@@ -75,3 +75,64 @@ def test_a_report_is_drawn_from_an_export_alone():
 def test_the_committed_report_regenerates_from_its_export_byte_for_byte():
     data = json.loads(run_images.EXPORT.read_text(encoding="utf-8"))
     assert run_images.render(data) == run_images.REPORT.read_text(encoding="utf-8")
+
+
+# --- the second run (Dan's ruling 50) ---
+
+LABELS_V2 = json.loads((REPO / "bench" / "images" / "labels_v2.json").read_text(encoding="utf-8"))
+
+
+def row2(label, *, scene=None, p=0.8):
+    """A second-run row as the runner records it: the scene from the label, or `scene` where given."""
+    base = {"file": label["file"], "set": label["set"], "id": "photo-x", "extraction_calls_spend_ledger": 0,
+            "written": [], "ocr_keywords_found": label["ocr_keywords"], "text_gate_p": [0.1], "text_gate_seconds": [2.0],
+            "routing_seconds": [], "seconds": 20.0, "telegram": [], "routing_waiting_p": [], "reference_note": False}
+    if label["set"] == "sensitive":
+        return base | {"status": "hold", "reason": "image-sensitive", "text_gate_p": [], "text_gate_seconds": [],
+                       "image": {"gate_p": 0.8, "gate_seconds": 3.0, "extraction_calls": 0}}
+    scene = scene or label["scene"]
+    image = {"gate_p": 0.2, "gate_seconds": 3.0, "ocr_seconds": 1.5, "ocr_confidence": [0.98], "extraction_calls": 0,
+             "scene": scene, "scene_p": p if scene != "unsure" else 0.55, "scene_seconds": 4.0, "scene_by": "decider",
+             "scene_options": {"owner_owes": 0.1, "owed_to_owner": 0.1, "reference": 0.8},
+             "scene_action": {"owner_owes": "extracted", "owed_to_owner": "extracted, waiting-on",
+                              "reference": "kept on the laptop", "unsure": "asked the owner"}[scene]}
+    if scene == "reference":
+        return base | {"status": "done", "reason": "reference", "image": image, "reference_note": True,
+                       "telegram": [{"first_line": "reference · kept on the laptop", "buttons": []}]}
+    if scene == "unsure":
+        return base | {"status": "hold", "reason": "scene-unsure", "image": image,
+                       "telegram": [{"first_line": "scene unsure · 0.55", "buttons": ["I owe", "They owe", "Reference"]}]}
+    labels = ["pocket"] + (["waiting-on"] if scene == "owed_to_owner" else [])
+    written = [{"content": " ".join(t["match"][0][0] for _ in range(1)) + " task", "labels": labels, "priority": None}
+               for t in label["expected_tasks"]] or [{"content": "Met an unnamed contact — no follow-ups",
+                                                       "labels": labels, "priority": None}]
+    return base | {"status": "done", "reason": None, "image": image | {"extraction_calls": 1},
+                   "extraction_calls_spend_ledger": 1, "written": written, "routing_seconds": [11.0],
+                   "routing_waiting_p": [0.2] if scene == "owed_to_owner" else [],
+                   "telegram": [{"first_line": ("waiting-on · - · 0.80" if scene == "owed_to_owner" else
+                                                "unsorted · - · 0.40"), "buttons": []}]}
+
+
+def test_the_second_report_is_drawn_from_an_export_alone():
+    rows = [row2(x) for x in LABELS_V2["images"]]
+    data = {"labels_json": json.dumps(LABELS_V2), "labels_sha256": "0" * 16, "code": "abc1234", "runner_blob": "b" * 16,
+            "started": "2026-10-22 00:00 UTC", "finished": "2026-10-22 00:10 UTC", "stopped": None,
+            "versions": {"hardware": "a laptop", "scene": "the scene question"},
+            "memory_end": {"text server": None, "vision server": None},
+            "spend_before": {"total_usd": 0.1, "calls": 1},
+            "spend_after": {"total_usd": 0.11, "calls": 9, "hard_stop_usd": 5.0}, "images": rows}
+    text = run_images.render2(data)
+    assert text.startswith("# Image evaluation, second run") and "nothing in it is restated" in text
+    assert "| sensitive pictures wrongly cleared (sent to Bedrock or written to Todoist) | 0 of 8 |" in text
+    assert "| label \\ answer | owner_owes | owed_to_owner | reference | unsure |" in text
+    assert "| reference | 6 | 0 / 0 | 0 |" in text and "| unsure | 1 | 0 / 0 | 0 |" in text  # no cloud call
+    assert "### The mirrored pairs" in text and "n2_owed_whiteboard.png" in text and "n7_owes_whiteboard.png" in text
+    assert "| scene read, median / p90 | 4.00 s / 4.00 s (16) |" in text
+    assert "Answer matches the label on 16 of 16." in text
+    assert text.count("\n| o") + text.count("\n| s") + text.count("\n| n") >= 24
+
+
+@pytest.mark.skipif(not run_images.EXPORT2.exists(), reason="the second image evaluation has not been run yet")
+def test_the_second_committed_report_regenerates_from_its_export_byte_for_byte():
+    data = json.loads(run_images.EXPORT2.read_text(encoding="utf-8"))
+    assert run_images.render2(data) == run_images.REPORT2.read_text(encoding="utf-8")

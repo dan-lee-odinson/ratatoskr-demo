@@ -49,6 +49,7 @@ from datetime import datetime, timezone
 from typing import Any, Callable, Iterable, Mapping, Protocol
 
 from ratatoskr_demo.errors import RatatoskrError
+from ratatoskr_demo.photos import SceneTaps, is_scene_tap
 
 log = logging.getLogger(__name__)
 
@@ -137,8 +138,12 @@ class Resolver:
         self.state, self.telegram, self.todoist, self.chat_id = state, telegram, todoist, chat_id
         self.projects = list(projects)
         self.clock = clock
+        self.scenes = SceneTaps(state, telegram, chat_id, clock=clock)  # an unsure photo's buttons (ruling 50)
 
     def handle(self, query: Mapping[str, Any]) -> None:
+        if is_scene_tap(str(query.get("data") or "")):  # its own owner-only check and first-answer-stands rule
+            self.scenes.handle(dict(query))
+            return
         callback_id = str(query.get("id", ""))
         message = query.get("message") or {}
         chat = (message.get("chat") or {}).get("id")

@@ -86,9 +86,11 @@ def build_inputs(settings: Any, *, http: Any, clock: Callable[[], float]) -> dic
                 built[name] = GlassesStub(fixture)
             else:  # photos from the watched folder (ruling 47)
                 from ratatoskr_demo.devices.glasses_adapter import PhotoFolder
-                from ratatoskr_demo.photos import Ocr, make_image_gate
+                from ratatoskr_demo.photos import Ocr, make_image_gate, make_scene_decision
                 from ratatoskr_demo.route import load_route_questions
 
+                questions = load_route_questions(settings)
                 built[name] = PhotoFolder(settings.paths.state_dir / "inbox" / "photos",
-                                          make_image_gate(settings, load_route_questions(settings)), Ocr())
+                                          make_image_gate(settings, questions), Ocr(),
+                                          make_scene_decision(settings, questions))  # ruling 50
     return built

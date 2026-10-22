@@ -53,18 +53,27 @@ class FakeOcr:
 
 
 class Vision:
-    """The vision server's /v1/systemone, answering the picture question with p."""
+    """The vision server's /v1/systemone: the picture question answered with p, the scene question (ruling 50)
+    with `scene` at `scene_p`."""
 
-    def __init__(self, p=0.2, status=200):
+    def __init__(self, p=0.2, status=200, scene="owner_owes", scene_p=0.9):
         self.p, self.status, self.bodies = p, status, []
+        self.scene, self.scene_p = scene, scene_p
 
     def reply(self, request):
         body = json.loads(request.content)
         self.bodies.append(body)
         if self.status != 200:
             return httpx.Response(self.status, json={"detail": "simulated"})
-        return httpx.Response(200, json={"model": "strands-decider-2B-hobson-v21",
-                                         "answers": {"picture": {"type": "noul", "noul": self.p}},
+        answers = {}
+        if "picture" in body["questions"]:
+            answers["picture"] = {"type": "noul", "noul": self.p}
+        if "scene" in body["questions"]:
+            rest = (1 - self.scene_p) / 2
+            answers["scene"] = {"type": "choice", "choice": self.scene, "confidence": self.scene_p,
+                                "probabilities": {k: (self.scene_p if k == self.scene else rest)
+                                                  for k in photos.SCENE_CRITERIA}}
+        return httpx.Response(200, json={"model": "strands-decider-2B-hobson-v21", "answers": answers,
                                          "usage": {"input_tokens": 260, "output_tokens": 1}, "latency_ms": 3500.0})
 
 
@@ -214,7 +223,8 @@ def photo_cycle(tmp_path, services, clock, *, p, ocr_lines=TEXT, name="whiteboar
 def test_a_cleared_photo_passes_three_checks_then_is_written_and_its_numbers_are_in_the_ledger(tmp_path, services, clock):
     entry, model, fake, vision, todoist, telegram = photo_cycle(tmp_path, services, clock, p=0.2)
     assert entry["status"] == "done" and len(todoist.tasks) == 1
-    assert len(vision.bodies) == 1 and len(fake.gate_bodies) >= 1  # the image gate, then the text gate
+    assert len(vision.bodies) == 2 and len(fake.gate_bodies) >= 1  # the image gate, the text gate, the scene
+    assert "picture" in vision.bodies[0]["questions"] and "scene" in vision.bodies[1]["questions"]
     assert len(model.calls) == 1  # then the one cloud call
     image = entry["image"]
     assert image["gate_p"] == 0.2 and image["extraction_calls"] == 1 and image["ocr_confidence"] == [0.97] * 3

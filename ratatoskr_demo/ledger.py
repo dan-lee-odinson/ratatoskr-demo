@@ -55,7 +55,9 @@ class LedgerEntry:
     # labels as written, priority and p shown; and, once the owner taps, project_by, project and at. No text.
     picks: dict[str, dict[str, Any]] = field(default_factory=dict)
     # A photo (ruling 47): the image gate's probability and time, the OCR's per-line confidence and time, the
-    # extraction call count, or why it was unreadable. Numbers and labels only, never the picture's text.
+    # extraction call count, or why it was unreadable; and (ruling 50) the scene: its answer, probability, time,
+    # who decided it, the action taken and, while it waits on the owner, its keyboard's short id. Numbers and
+    # labels only, never the picture's text.
     image: dict[str, Any] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
@@ -122,6 +124,17 @@ class Ledger:
 
     def resolve_pick(self, recording_id: str, sid: str, fields: dict[str, Any]) -> None:
         self._entries[recording_id].picks[sid].update(fields)
+        self._save()
+
+    def find_scene(self, sid: str) -> tuple[str, dict[str, Any]] | None:
+        """The photo an unsure scene keyboard's short id stands for, and its image record (ruling 50)."""
+        for rid, entry in self._entries.items():
+            if entry.image.get("scene_sid") == sid:
+                return rid, dict(entry.image)
+        return None
+
+    def resolve_scene(self, recording_id: str, fields: dict[str, Any]) -> None:
+        self._entries[recording_id].image.update(fields)
         self._save()
 
     def _save(self) -> None:

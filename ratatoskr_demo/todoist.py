@@ -80,6 +80,7 @@ def task_temp_id(recording_id: str, ordinal: int) -> str:
 
 
 UNROUTED_LABEL = "unrouted"
+WAITING_ON = "waiting-on"  # ruling 50: the photo showed someone owing the owner (ratatoskr_demo/photos.py)
 
 
 def build_task_args(
@@ -91,6 +92,7 @@ def build_task_args(
     project_id: str,
     label: str,
     ungated: bool = False,
+    waiting_on: bool = False,
 ) -> dict[str, Any]:
     """The item_add args for one task. Pure, so it is easy to test.
 
@@ -109,6 +111,8 @@ def build_task_args(
         labels.append(UNROUTED_LABEL)  # ruling 12: written under the urgent tag while Decider was unreachable
     if ungated:
         labels.append(UNGATED)  # ruling 37: backend "none", no sensitivity check ran
+    if waiting_on:
+        labels.append(WAITING_ON)  # ruling 50: a photo of something owed to the owner
 
     args: dict[str, Any] = {
         "content": content,

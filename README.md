@@ -420,8 +420,14 @@ unreadable or blank is held before any model is asked; a second Strands Decider 
 `--vision`, answers "Is this picture of something that must never leave this machine?" and holds the photo on
 yes or unsure; then RapidOCR, on the laptop, reads the photo's text, which meets the stop-list tripwire and the
 text gate like any transcript before the extraction on Bedrock. The image gate uses the same checkpoint, which
-was not trained on images, at the text gate's floor, a starting point rather than a tuned value. A held photo
-stays in the folder; this version has no way to release one. For the evaluation
+was not trained on images, at the text gate's floor, a starting point rather than a tuned value. A photo held by
+one of these checks stays in the folder; this version has no way to release one. After the text gate and before
+anything is extracted, the vision server is asked what the picture represents, from the picture and its text, at
+the routing read's floor for a choice question (also a starting point). Something the owner owes goes on as
+before; something owed to the owner goes on and is written with a `waiting-on` label; reference material (a menu,
+a poster, a catalog page) is kept as a note in `ledger/reference/` with nothing written to Todoist; and when the
+answer is unsure, nothing is sent anywhere and the owner is asked on Telegram, with three buttons, which path to
+take. Reference material never leaves the laptop. For the evaluation
 (`bench/IMAGE_EVAL_2026-10-22.md`) the folder was fed from the desktop with rendered pictures. The vision server
 runs from its own venv, beside the published one:
 

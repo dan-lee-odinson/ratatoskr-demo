@@ -91,7 +91,8 @@ from ratatoskr_demo.errors import ConfigurationError, RatatoskrError, TerminalEr
 from ratatoskr_demo.extract import Contact, ModelCall, Task
 from ratatoskr_demo.ledger import LedgerEntry
 from ratatoskr_demo.notify import Notifier
-from ratatoskr_demo.photos import PhotoHold
+from ratatoskr_demo.photos import (REFERENCE_LINE, SCENE_ACTIONS, SCENE_HOLD, UNSURE, PhotoHold, keep_reference,
+                                   scene_keyboard, scene_line, scene_sid, waiting_on_line)
 from ratatoskr_demo.decider import DeciderRejected, DeciderUnavailable
 from ratatoskr_demo import resolve
 from ratatoskr_demo.route import (URGENT_SOURCE, Routed, RoutedTask, Router, load_route_questions, route,
@@ -168,6 +169,7 @@ class Cycle:
         # extraction call count go in its ledger entry (numbers only)
         self._image: dict[str, Any] | None = None
         self._photo = False  # ruling 49: a glasses envelope with an ImageRef; its hold notices name the folder
+        self._scenes: Any = None  # ruling 50: the photo adapter, which asks the scene question about its pictures
 
     # --- entry points ---
 
@@ -292,9 +294,13 @@ class Cycle:
         text = adapter.fetch_text(envelope)  # memory only, from here to the end of this call (C1)
         self._image = (getattr(adapter, "records", None) or {}).get(rid)
         self._photo = envelope.kind == "glasses" and isinstance(envelope.payload, ImageRef)
+        self._scenes = adapter if self._photo and hasattr(adapter, "decide_scene") else None
         if isinstance(text, PhotoHold):  # ruling 47: unreadable (no model asked) or held by the image gate
             return self._hold(rid, title, recording_at, text.reason, demo=demo,
                               notice=f"Held {rid}: {text.reason}. Nothing was written.")
+        if (self._photo and entry is not None and entry.status == "hold" and entry.reason == SCENE_HOLD
+                and entry.image.get("scene_by") == "owner"):
+            entry = None  # ruling 50: the owner answered the scene question; the chosen path runs now
         recording = {"id": rid, "title": title, "tags": [{"name": tag} for tag in source.tags],
                      "transcript": None if text is NOT_READY else text}
         decision = triage.decide(recording, entry, self.settings)
@@ -336,6 +342,14 @@ class Cycle:
             if verdict is not None and verdict.hold:
                 return self._hold(rid, title, recording_at, verdict.reason, demo=demo,
                                   notice=self._held_notice(rid, verdict.reason))
+        waiting_on = False  # ruling 50: a picture of something owed to the owner; its tasks carry `waiting-on`
+        if self._scenes is not None:  # after the text gate, before any cloud call
+            scene = self._scene(rid, str(text))
+            if scene == "reference":
+                return self._keep_reference(rid, title, recording_at, str(text), demo=demo)
+            if scene == UNSURE:
+                return self._ask_scene(rid, title, recording_at, demo=demo)
+            waiting_on = scene == "owed_to_owner"
         # Routing will need Decider: while it is unreachable, a recording waits with nothing extracted or
         # written (ruling 9), unless it is tagged urgent (ruling 12: written unrouted, below)
         without_decider = not self._decider_usable(rid, urgent)
@@ -402,7 +416,8 @@ class Cycle:
             project_id = self._todoist().ensure_project(project) if writes else "(todoist output off)"
         payloads = [
             build_task_args(task, recording_id=rid, ordinal=i, contact=routed.contact,
-                            project_id=project_id, label=self.settings.todoist.label, ungated=ungated)
+                            project_id=project_id, label=self.settings.todoist.label, ungated=ungated,
+                            waiting_on=waiting_on)
             for i, task in enumerate(tasks, start=1)
         ]
         # Check the final strings too: joining notes and context into one
@@ -443,6 +458,8 @@ class Cycle:
         if not demo:
             for i, task in enumerate(outcome.tasks, start=1):  # one wrist-shaped message per task
                 text = format_task(task.routed, task.content, sensitivity_unchecked=unchecked, ungated=ungated)
+                if waiting_on:  # ruling 50: `waiting-on · <priority> · <scene p>`
+                    text = waiting_on_line(text, first_line(task.routed), (self._image or {}).get("scene_p"))
                 sid = resolve.short_id(rid, i)
                 if sid in picks:  # unsorted: the owner can file it from the message (ruling 43)
                     self._tell_dan_with_keyboard(text, self._unsorted_keyboard(sid, task.routed))
@@ -560,6 +577,54 @@ class Cycle:
         log.warning("recording %s: held by the leak guard; nothing written", rid)
         return self._hold(rid, title, recording_at, "leak-guard", demo=demo,
                           notice=self._held_notice(rid, "leak-guard"))  # ruling 28
+
+    # --- the scene of a photo (ruling 50) ---
+
+    def _scene(self, rid: str, text: str) -> str:
+        """The owner's answer to an earlier unsure scene, or one read of the vision server. Goes in the ledger."""
+        record = self._image if self._image is not None else {}
+        earlier = self.state.ledger_get(rid)
+        if earlier is not None and earlier.image.get("scene_by") == "owner":
+            answer = str(earlier.image["scene"])
+            record.update(scene=answer, scene_by="owner", scene_p=earlier.image.get("scene_p"))
+        else:
+            result = self._scenes.decide_scene(rid, text)
+            answer = result.answer
+            record.update(scene=answer, scene_choice=result.choice, scene_p=round(result.p, 4),
+                          scene_options=dict(result.options), scene_seconds=round(result.seconds, 3),
+                          scene_by="decider")
+        record["scene_action"] = SCENE_ACTIONS[answer]
+        log.info("photo %s: scene %s (p %s, by %s)", rid, answer, record.get("scene_p"), record["scene_by"])
+        return answer
+
+    def _keep_reference(self, rid: str, title: str, recording_at: str, text: str, *, demo: bool) -> Outcome:
+        """Reference material: kept on the laptop, nothing sent to any cloud service, nothing written to Todoist."""
+        if self.dry_run:
+            self.deps.out("    would keep it on the laptop as reference")
+            return Outcome("dry-run", reason="reference")
+        keep_reference(self.settings.paths.state_dir / "reference", rid, recording_at[:10], text)
+        if not demo:
+            self._tell_dan(REFERENCE_LINE)
+        self.state.ledger_put(rid, self._entry("done", title, recording_at, reason="reference"))
+        self.state.count("processed")
+        log.info("photo %s: reference, kept on the laptop", rid)
+        return Outcome("done", reason="reference")
+
+    def _ask_scene(self, rid: str, title: str, recording_at: str, *, demo: bool) -> Outcome:
+        """Unsure: nothing sent anywhere but the question to the owner, with three buttons (ruling 43's receiver)."""
+        record = self._image if self._image is not None else {}
+        sid = scene_sid(rid)
+        record["scene_sid"] = sid
+        if self.dry_run:
+            self.deps.out("    would ask the owner: scene unsure")
+            return Outcome("hold", reason=SCENE_HOLD)
+        # The question first: if Telegram is down, nothing is recorded and it is asked again next poll (C7).
+        if not demo and self.deps.notifier is not None:
+            self._notifier().send_with_keyboard(scene_line(record.get("scene_p")), scene_keyboard(sid))
+        self.state.ledger_put(rid, self._entry("hold", title, recording_at, reason=SCENE_HOLD))
+        self.state.count("held")
+        log.info("photo %s: scene unsure; the owner is asked", rid)
+        return Outcome("hold", reason=SCENE_HOLD)
 
     def _held_notice(self, rid: str, reason: str) -> str:
         """A recording is released by its ok tag in Pocket; a photo has no release yet and stays in the inbox

@@ -35,18 +35,41 @@ From the transcript on, the courier's path is unchanged: the stop-list tripwire,
 the text gate on the published Decider server, the extraction, the routing read,
 the rule, Todoist, Telegram. So a photo passes the image gate and both text checks
 before any cloud call.
+
+Then, after the text gate and before anything is extracted (Dan's ruling 50), the
+scene: one read of the vision server, the picture and its OCR text as the state,
+one choice question, "What does this picture represent?", at the routing read's
+floor for a choice question (route.toml's project floor, 0.70: a starting point,
+and the checkpoint was not trained on images):
+
+    owner_owes     the courier's path as it is
+    owed_to_owner  the same, each task written with the `waiting-on` label and its
+                   wrist line reading `waiting-on · <priority> · <scene p>`
+    reference      no cloud call: the OCR text is kept on the laptop as
+                   ledger/reference/<id>.txt with the picture's id and date, the
+                   wrist line reads `reference · kept on the laptop`, nothing goes
+                   to Todoist
+    unsure         nothing sent anywhere: the wrist line `scene unsure · <p>` with
+                   three buttons, I owe, They owe, Reference; the owner's tap is
+                   recorded (`scene_by: owner`) and the chosen path runs on the
+                   next cycle; a second tap changes nothing
 """
 
 from __future__ import annotations
 
 import base64
+import hashlib
+import logging
 import time
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable
 
 from ratatoskr_demo.decider import DeciderClient, DeciderRejected
-from ratatoskr_demo.errors import TerminalError
+from ratatoskr_demo.errors import RatatoskrError, TerminalError
+
+log = logging.getLogger(__name__)
 
 FORMATS = ("PNG", "JPEG", "WEBP", "GIF")
 BLANK_STDDEV = 2.0  # of 255: below it, the picture is near-uniform and holds as blank
@@ -143,3 +166,148 @@ class Ocr:
             raise TerminalError(f"photo: the OCR could not read it ({type(exc).__name__})") from None
         lines = [(str(r[1]), float(r[2])) for r in (result or []) if str(r[1]).strip()]
         return "\n".join(text for text, _ in lines), [round(score, 4) for _, score in lines]
+
+
+# --- the scene: what the picture represents (Dan's ruling 50) ---
+
+SCENE_QUESTION = "What does this picture represent?"
+SCENE_CRITERIA = {
+    "owner_owes": "The owner promised something to a specific person, or owes an action by a date.",
+    "owed_to_owner": "A specific person promised the owner something, or the owner is waiting on them.",
+    "reference": ("Information worth keeping, with no promise in either direction: a menu, a poster, a schedule, a "
+                  "catalog page, a card with contact details and nothing owed."),
+}
+UNSURE = "unsure"
+SCENE_ACTIONS = {"owner_owes": "extracted", "owed_to_owner": "extracted, waiting-on",
+                 "reference": "kept on the laptop", UNSURE: "asked the owner"}
+SCENE_HOLD = "scene-unsure"
+WAITING_ON = "waiting-on"
+REFERENCE_LINE = "reference · kept on the laptop"
+SCENE_PREFIX = "scene"
+SCENE_BUTTONS = (("I owe", "owner_owes"), ("They owe", "owed_to_owner"), ("Reference", "reference"))
+SEP = " · "
+
+
+@dataclass(frozen=True)
+class SceneResult:
+    answer: str  # one of SCENE_CRITERIA, or UNSURE when the top choice is below the floor
+    choice: str  # Decider's top choice
+    p: float  # its confidence
+    seconds: float
+    options: tuple[tuple[str, float], ...] = ()  # each option's probability as Decider gave it (numbers only)
+
+
+class SceneDecision:
+    """The scene question, asked of the vision server: the picture and its OCR text as the state."""
+
+    def __init__(self, client: DeciderClient, floor: float) -> None:
+        self.client = client
+        self.floor = float(floor)  # the routing read's floor for a choice question, from route.toml
+        self.question = {"type": "choice", "instructions": SCENE_QUESTION, "criteria": dict(SCENE_CRITERIA)}
+
+    def decide(self, path: Path, text: str) -> SceneResult:
+        image = base64.b64encode(path.read_bytes()).decode("ascii")
+        started = time.perf_counter()
+        response = self.client.systemone({"state": text, "images": [image], "questions": {"scene": self.question}})
+        seconds = time.perf_counter() - started
+        try:
+            answer = response["answers"]["scene"]
+            choice, p = str(answer["choice"]), float(answer["confidence"])
+        except (KeyError, TypeError, ValueError):
+            raise DeciderRejected("the scene reply had no choice answer") from None
+        if choice not in SCENE_CRITERIA or not 0.0 <= p <= 1.0:
+            raise DeciderRejected("the scene answer was not one of the three options with a probability")
+        given = answer.get("probabilities") if isinstance(answer.get("probabilities"), dict) else {}
+        options = tuple((k, round(float(v), 4)) for k, v in given.items()
+                        if k in SCENE_CRITERIA and isinstance(v, (int, float)))
+        return SceneResult(choice if p >= self.floor else UNSURE, choice, p, seconds, options)
+
+
+def make_scene_decision(settings: Any, questions: dict[str, Any]) -> SceneDecision:
+    r = settings.route
+    return SceneDecision(DeciderClient(r.vision_url, timeout=r.decider_timeout_seconds),
+                         questions["project"].min_confidence)
+
+
+def keep_reference(folder: Path, item_id: str, date: str, text: str) -> Path:
+    """The OCR text of a reference picture, kept on the laptop and nowhere else, with the picture's id and date."""
+    folder.mkdir(parents=True, exist_ok=True)
+    note = folder / f"{item_id}.txt"
+    note.write_text(f"id: {item_id}\ndate: {date}\n\n{text}\n", encoding="utf-8")
+    return note
+
+
+def waiting_on_line(wrist_text: str, priority_line: str, p: float | None) -> str:
+    """The wrist message of an owed_to_owner task: its first line becomes `waiting-on · <priority> · <scene p>`."""
+    parts = priority_line.split(SEP)
+    priority = parts[1] if len(parts) > 1 else "-"
+    rest = wrist_text.split("\n")[1:]
+    return "\n".join([SEP.join([WAITING_ON, priority, f"{p:.2f}" if p is not None else "-"]), *rest])
+
+
+def scene_sid(item_id: str) -> str:
+    """Ten hex characters standing for one picture's scene keyboard."""
+    return hashlib.sha256(f"{SCENE_PREFIX}:{item_id}".encode("utf-8")).hexdigest()[:10]
+
+
+def scene_line(p: float | None) -> str:
+    return SEP.join(["scene unsure", f"{p:.2f}" if p is not None else "-"])
+
+
+def scene_keyboard(sid: str) -> dict[str, Any]:
+    return {"inline_keyboard": [[{"text": text, "callback_data": f"{SCENE_PREFIX}:{sid}:{key}"}
+                                 for text, key in SCENE_BUTTONS]]}
+
+
+def is_scene_tap(data: str) -> bool:
+    return data.startswith(SCENE_PREFIX + ":")
+
+
+def parse_scene(data: str) -> tuple[str, str] | None:
+    parts = data.split(":")
+    if len(parts) != 3 or parts[0] != SCENE_PREFIX or not parts[1] or parts[2] not in SCENE_CRITERIA:
+        return None
+    return parts[1], parts[2]
+
+
+class SceneTaps:
+    """The owner's answer to an unsure scene, from its buttons, on the Telegram receiver of ruling 43. Only the
+    owner's chat is answered; the first answer stands, and a second tap changes nothing. No model is asked."""
+
+    def __init__(self, state: Any, telegram: Any, chat_id: int, *, clock: Callable[[], float] | None = None) -> None:
+        self.state, self.telegram, self.chat_id, self.clock = state, telegram, chat_id, clock
+
+    def handle(self, query: dict[str, Any]) -> None:
+        callback_id = str(query.get("id", ""))
+        message = query.get("message") or {}
+        if (message.get("chat") or {}).get("id") != self.chat_id:
+            log.warning("telegram: a scene button tap from another chat was ignored")
+            self._answer(callback_id)
+            return
+        parsed = parse_scene(str(query.get("data") or ""))
+        found = self.state.scene_find(parsed[0]) if parsed else None
+        if parsed is None or found is None:
+            self._answer(callback_id, "unknown picture")
+            return
+        (_, answer), (item_id, image) = parsed, found
+        label = dict((key, text) for text, key in SCENE_BUTTONS)
+        if image.get("scene_by") == "owner":  # answered already: the first answer stands
+            self._answer(callback_id, f"already answered: {label.get(image.get('scene'), image.get('scene'))}")
+            return
+        now = self.clock() if self.clock else datetime.now(timezone.utc).timestamp()
+        self.state.scene_resolve(item_id, {"scene": answer, "scene_by": "owner",
+                                           "scene_at": datetime.fromtimestamp(now, tz=timezone.utc)
+                                           .isoformat(timespec="seconds")})
+        rest = (message.get("text") or "").split("\n")[1:]
+        line = f"{scene_line(image.get('scene_p'))} → {label[answer]}, by owner; runs on the next cycle"
+        try:
+            self.telegram.edit_message(int(message["message_id"]), "\n".join([line, *rest]))
+        except (KeyError, TypeError, ValueError, RatatoskrError) as exc:  # the answer stands; the message is stale
+            log.warning("telegram: could not edit the scene message (%s)", type(exc).__name__)
+        self._answer(callback_id)
+
+    def _answer(self, callback_id: str, text: str | None = None) -> None:
+        try:
+            self.telegram.answer_callback(callback_id, text)
+        except RatatoskrError as exc:
+            log.warning("telegram: could not answer the scene button tap (%s)", exc)
