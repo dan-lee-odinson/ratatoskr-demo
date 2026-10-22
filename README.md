@@ -54,6 +54,9 @@ and a hold whenever the answer to "is this sensitive?" is yes or unsure. It ship
 standard-library Decider client (`gate_source_text()` and `triage()`), a Strands Agents
 `BeforeToolCallEvent` hook that blocks a pending tool call, the questions as TOML, and a
 twenty-line example. See [`patterns/gatekeeper_triage/README.md`](patterns/gatekeeper_triage/README.md).
+A second recipe, [`patterns/photo_scene/`](patterns/photo_scene/README.md), decides with one read of a Strands
+Decider vision server whether a picture is a commitment or reference material, hands an unsure one to the owner, and
+wires the answer so that reference never reaches the extraction step.
 
 ## What you need
 

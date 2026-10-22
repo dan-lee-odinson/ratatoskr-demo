@@ -1,0 +1,21 @@
+# questions.toml — the photo scene recipe's one typed question, asked of a Strands Decider vision server.
+#
+# The question and its criteria are Ratatoskr Demo's scene question as the courier asks it
+# (ratatoskr_demo/photos.py, SCENE_QUESTION and SCENE_CRITERIA; the tests keep them identical). Adapt it: rename
+# the options and rewrite their criteria for your domain, keep each option one kind of thing, and keep them distinct
+# from one another, or the confidence spreads across them and falls under the floor.
+#
+#   commitment   a promise: the extraction step runs
+#   reference    information to keep: the extraction step never runs
+#   unsure       the top option under the floor: nothing runs until the owner answers commitment or reference
+
+[scene]
+type = "choice"
+# The floor: Ratatoskr Demo's routing read's floor for a choice question (route.toml's project floor), used here as
+# a starting point. It is not tuned for pictures: the checkpoint was not trained on images.
+min_confidence = 0.70
+instructions = "What does this picture represent?"
+
+[scene.criteria]
+commitment = "A promise in either direction: something the owner promised a specific person or owes by a date, or something a specific person promised the owner or owes the owner."
+reference = "Information worth keeping, with no promise in either direction: a menu, a poster, a schedule, a catalog page, a card with contact details and nothing owed."
