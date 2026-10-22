@@ -98,3 +98,4 @@ Every model number is Decider's own; nothing is invented and shown as a model an
 | `app.css` | phone-width styles |
 | `fixtures.js`, `fixtures/` | generated data and pictures |
 | `tests.html` | the page's own tests, run headless by `tests/test_app.py` |
+| `demo/record.py` | the recording: the brief's section 8 steps in the installed Chrome at 390 × 844, to an H.264 MP4 (`--live` against the owner service); see its docstring |
