@@ -570,7 +570,18 @@ def render2(data: dict[str, Any]) -> str:
         lines.append(f"| {want} | " + " | ".join(str(c) for c in cells) + " |")
     lines += ["", f"Answer matches the label on {sum(1 for r in asked if labels[r['file']]['scene'] == r['image']['scene'])} "
                   f"of {len(asked)}.", "",
-              "### Cloud calls by scene answer", "",
+              "### Each scene read", "",
+              "Decider's top choice and its confidence (the floor applies to this), and each option's probability as "
+              "Decider gave it.", "",
+              "| picture | label | top choice | confidence | owner_owes / owed_to_owner / reference | answer | action |",
+              "|---|---|---|---|---|---|---|"]
+    for r in asked:
+        img = r["image"]
+        options = img.get("scene_options") or {}
+        probs = " / ".join(f"{options[k]:.2f}" if k in options else "-" for k in SCENES[:3])
+        lines.append(f"| {r['file']} | {labels[r['file']]['scene']} | {img.get('scene_choice', '-')} | "
+                     f"{img['scene_p']:.2f} | {probs} | {img['scene']} | {img.get('scene_action', '-')} |")
+    lines += ["", "### Cloud calls by scene answer", "",
               "| scene answer | pictures | Bedrock extraction calls (the courier's ledger / the spend ledger) | expected |",
               "|---|---|---|---|"]
     expect = {"owner_owes": "one per picture", "owed_to_owner": "one per picture", "reference": "0", "unsure": "0"}
@@ -612,7 +623,8 @@ def render2(data: dict[str, Any]) -> str:
             options = img.get("scene_options") or {}
             probs = " / ".join(f"{options[k]:.2f}" if k in options else "-" for k in SCENES[:3])
             answer = (f"{img['scene']} ({img['scene_p']:.2f})" if img.get("scene") else f"not asked ({cats[name]})")
-            lines.append(f"| {i} | {name} | {labels[name]['scene']} | {img.get('gate_p', '-')} | {answer} | {probs} | "
+            gate = f"{img['gate_p']:.2f}" if img.get("gate_p") is not None else "-"
+            lines.append(f"| {i} | {name} | {labels[name]['scene']} | {gate} | {answer} | {probs} | "
                          f"{img.get('scene_action', '-')} |")
     owed = [r for r in asked if r["image"]["scene"] == "owed_to_owner"]
     lines += ["", "### owed_to_owner and the waiting question", "",
@@ -638,7 +650,9 @@ def render2(data: dict[str, Any]) -> str:
         tripwire = ("held" if cats[r["file"]] == "tripwire" else "passed") if ran_tripwire else "-"
         text_p = ", ".join(f"{x:.2f}" for x in r["text_gate_p"]) or "-"
         scene = r["image"].get("scene")
-        answer = f"{scene} ({r['image']['scene_p']:.2f})" if scene else "-"
+        answer = "-" if not scene else (
+            f"unsure (top {r['image'].get('scene_choice')}, {r['image']['scene_p']:.2f})" if scene == "unsure"
+            else f"{scene} ({r['image']['scene_p']:.2f})")
         outcome = {"written": "written", "kept as reference": "kept as reference"}.get(cats[r["file"]]) or (
             f"held ({r['reason']}" + (f": {r['image']['unreadable']}" if r["image"].get("unreadable") else "") + ")")
         verdict, projects, priorities = _judged(r, label) if r in extracted else ("-", [], [])
