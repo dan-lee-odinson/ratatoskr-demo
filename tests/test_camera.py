@@ -394,6 +394,39 @@ def test_every_committed_camera_report_regenerates_from_its_export_byte_for_byte
         assert run_images.render5(json.loads(export.read_text(encoding="utf-8"))) == report.read_text(encoding="utf-8")
 
 
+# --- the photographs and their labels (Part B) ---
+
+CAMERA_LABELS = REPO / "bench" / "camera" / "labels.json"
+
+
+@pytest.mark.skipif(not CAMERA_LABELS.exists(), reason="the camera labels are not written yet")
+def test_the_camera_labels_cover_the_twelve_photographs_four_of_each_class_bound_to_their_files():
+    import hashlib
+
+    from ratatoskr_demo.config import load_settings
+    from ratatoskr_demo.triage import stop_list_hit
+
+    labels = json.loads(CAMERA_LABELS.read_text(encoding="utf-8"))["images"]
+    assert [x["file"] for x in labels] == [f"{i}.jpg" for i in run_images.CAMERA_IDS]
+    kinds = [run_images._kind(x) for x in labels]
+    assert {k: kinds.count(k) for k in set(kinds)} == {"commitment": 4, "reference": 4, "sensitive": 4}
+    for x in labels:
+        path = REPO / "bench" / "camera" / x["file"]
+        data = path.read_bytes()
+        assert " ".join(re.findall(".{16}", hashlib.sha256(data).hexdigest())) == x["sha256"], x["file"]
+        with Image.open(path) as image:  # the copy: no location, nothing after the picture, upright as stored
+            exif = image.getexif()
+            assert 0x8825 not in exif and not exif.get_ifd(0x8825) and exif.get(photos.ORIENTATION, 1) == 1
+            assert image.format == "JPEG" and "x".join(map(str, image.size)) == x["pixels"]
+        assert data.endswith(b"\xff\xd9") and b"ftyp" not in data and len(data) <= photos.MAX_BYTES
+        sensitive = x["set"] == "sensitive"
+        assert x["expected_gate"] == ("hold" if sensitive else "clear") and x["ocr_keywords"]
+        assert (x["scene"] is None) == sensitive and bool(x["expected_tasks"]) == (x["scene"] == "commitment")
+        assert stop_list_hit("photo", x["shows"] + "\n" + " ".join(x["ocr_keywords"]),
+                             load_settings().triage.stop_list) is None  # the names are on no stop list
+    assert [x["file"] for x in labels if x["scene_unsure_accepted"]] == ["c03.jpg"]
+
+
 # --- ruling 57's carry-over (Part A, item 4) ---
 
 def test_the_owner_release_qualification_stands_beside_the_unsure_invariant_wherever_it_is_stated():

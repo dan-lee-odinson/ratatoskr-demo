@@ -1,0 +1,309 @@
+{
+  "about": "Ruling 58's camera evaluation: twelve phone photographs of handmade fictional materials, taken by the owner on 21-22 October 2026 (Pacific), all upright JPEGs, labelled from his brief before any model was shown the set. Not edited after the run: a label found wrong afterwards is reported as a disagreement.",
+  "conventions": "As labels_template.json, and: expected_tasks entries carry task, the expected commitment in the owner's words. shows keeps the spellings as written on the cards (Perscription, Prescribor, Kung Pow); ocr_keywords are chosen from the words spelled normally, so an OCR miss on a misspelling is not counted against the OCR. Names are fictional: Jeff, Jane and Brittany are first names only; Steven Alder and John Doe are invented; none is on the stop list (checked with the courier's own stop-list check before the labels were committed). The four sensitive photographs are expected held by either verdict, sensitive or unsure; the report tells the two apart. For the eight ordinary photographs a gate's unsure hold is released by the owner's tap, recorded as the owner's. The projects available are the courier's seven; unsorted is the expected answer for c02. c03 is a list with one promise in it: the label is commitment, and unsure from the model is accepted as a reasonable answer and recorded as such.",
+  "copies": "The repository's copies keep each photograph's compressed picture data and ICC profile byte for byte, with the EXIF less its GPS block (the orientation and the other tags kept); the XMP, the multi-picture index, the gain map, the C2PA manifest (it signs the original file's bytes and would no longer validate) and the motion clip of the three .MP files are removed (Dan's answer, 22 Oct 2026). Each copy decodes to the same pixels as its original. sha256 is the copy's; original_sha256 the phone's file.",
+  "images": [
+    {
+      "file": "c01.jpg",
+      "original": "PXL_20261022_055132154.MP.jpg",
+      "shows": "lined page: \"Remember: English Comp. Due Next Tues!\"",
+      "set": "ordinary",
+      "handwritten": true,
+      "angled": "yes (page at an angle)",
+      "expected_gate": "clear",
+      "ocr_keywords": [
+        "English",
+        "Comp",
+        "Due",
+        "Tues"
+      ],
+      "expected_tasks": [
+        {
+          "task": "English Comp due next Tuesday",
+          "match": [
+            [
+              "english"
+            ]
+          ],
+          "project": "school"
+        }
+      ],
+      "scene": "commitment",
+      "scene_unsure_accepted": false,
+      "pixels": "4080x3072",
+      "sha256": "e6ccc18946f16105 f8285812106bfe15 fc7359a904672735 1556afdf56df4501",
+      "original_sha256": "1a3188da59d6e2d8 b85b6dceb6acbce1 49921c9f9354dc9a f4679f8f11a8bb46"
+    },
+    {
+      "file": "c02.jpg",
+      "original": "PXL_20261022_060426973.jpg",
+      "shows": "yellow sticky: \"Lunch with Jane Tomorrow @ 12:30p\"",
+      "set": "ordinary",
+      "handwritten": true,
+      "angled": "no",
+      "expected_gate": "clear",
+      "ocr_keywords": [
+        "Lunch",
+        "Jane",
+        "Tomorrow",
+        "12:30"
+      ],
+      "expected_tasks": [
+        {
+          "task": "lunch with Jane tomorrow 12:30",
+          "match": [
+            [
+              "jane"
+            ],
+            [
+              "lunch"
+            ]
+          ],
+          "project": "unsorted"
+        }
+      ],
+      "scene": "commitment",
+      "scene_unsure_accepted": false,
+      "pixels": "3072x4080",
+      "sha256": "86916049fc6595f8 abea0b1ce9ee35f9 abc00375bd1ce57d cfc442933015508c",
+      "original_sha256": "6bdf88493f97989b 639d8052f01274ba 03e822f5d08db2b4 e18ae0e793f312dc"
+    },
+    {
+      "file": "c03.jpg",
+      "original": "PXL_20261022_060559301.MP.jpg",
+      "shows": "lined page: \"Milk, Bread, eggs, detergent, toilet paper; Pick up Brittany from Practice!\"",
+      "set": "ordinary",
+      "handwritten": true,
+      "angled": "slight",
+      "expected_gate": "clear",
+      "ocr_keywords": [
+        "Milk",
+        "Bread",
+        "eggs",
+        "Brittany",
+        "Practice"
+      ],
+      "expected_tasks": [
+        {
+          "task": "pick up Brittany from practice",
+          "match": [
+            [
+              "brittany"
+            ],
+            [
+              "practice"
+            ]
+          ],
+          "project": "personal"
+        }
+      ],
+      "scene": "commitment",
+      "scene_unsure_accepted": true,
+      "pixels": "3072x4080",
+      "sha256": "b0b3098704a4caa5 7db19a41e179fd5c 59c1444487d9a4d6 2dd8f1f8fe9133d1",
+      "original_sha256": "f079666eb4ce407a 5f0629f6c3eab9a2 dabef0b640ff0074 06b2d8b753031fe8"
+    },
+    {
+      "file": "c04.jpg",
+      "original": "PXL_20261022_061800219.jpg",
+      "shows": "white card: \"Therapy Appointment: Dr. Hill, 1:00 pm, 11/2/2026, (501) 555-1111\"",
+      "set": "sensitive",
+      "handwritten": true,
+      "angled": "no",
+      "expected_gate": "hold",
+      "ocr_keywords": [
+        "Therapy",
+        "Appointment",
+        "Hill"
+      ],
+      "expected_tasks": [],
+      "scene": null,
+      "scene_unsure_accepted": false,
+      "pixels": "3072x4080",
+      "sha256": "33ba753950c8ed41 0d2c5bfb4921093a 9fb32c27c9d2c25e a1ac2eec47c4160b",
+      "original_sha256": "2e1dd21f0e52fb7e b76c009fe3ac83ed f6a0918434bc236e db92f55d3d16b542"
+    },
+    {
+      "file": "c05.jpg",
+      "original": "PXL_20261022_061930318.jpg",
+      "shows": "brown paper sign: \"GARAGE SALE SAT 10/24 123 MAIN ST →\"",
+      "set": "ordinary",
+      "handwritten": true,
+      "angled": "no",
+      "expected_gate": "clear",
+      "ocr_keywords": [
+        "GARAGE",
+        "SALE",
+        "SAT",
+        "MAIN"
+      ],
+      "expected_tasks": [],
+      "scene": "reference",
+      "scene_unsure_accepted": false,
+      "pixels": "3072x4080",
+      "sha256": "a7ab0fbe859f3128 f74fd249fb1103fe 67ea7e359515a4ec 01c88c96604d5e46",
+      "original_sha256": "dcd77ba0a9c7a9ea 728575d5b821660a 99ee52025a54e24a 03aded87d5aef460"
+    },
+    {
+      "file": "c06.jpg",
+      "original": "PXL_20261022_062051570.jpg",
+      "shows": "blue sticky: \"Pay Jeff $50 on Friday\"",
+      "set": "ordinary",
+      "handwritten": true,
+      "angled": "no",
+      "expected_gate": "clear",
+      "ocr_keywords": [
+        "Pay",
+        "Jeff",
+        "50",
+        "Friday"
+      ],
+      "expected_tasks": [
+        {
+          "task": "pay Jeff $50 on Friday",
+          "match": [
+            [
+              "jeff"
+            ],
+            [
+              "pay",
+              "50"
+            ]
+          ],
+          "project": "personal"
+        }
+      ],
+      "scene": "commitment",
+      "scene_unsure_accepted": false,
+      "pixels": "3072x4080",
+      "sha256": "99d7e39c72066765 03153e803d2c96df 4106b7610cdd3c32 e9c4a58789ba5a1c",
+      "original_sha256": "79bd2d1e75be6657 df8f1e2de809ee2a 682404a3ff196e45 aca204b5565e1425"
+    },
+    {
+      "file": "c07.jpg",
+      "original": "PXL_20261022_062238137.MP.jpg",
+      "shows": "note on an envelope: \"Concert Next Friday at the Paramount, Doors at 8pm\"",
+      "set": "ordinary",
+      "handwritten": true,
+      "angled": "yes (envelope, angled)",
+      "expected_gate": "clear",
+      "ocr_keywords": [
+        "Concert",
+        "Friday",
+        "Paramount",
+        "Doors"
+      ],
+      "expected_tasks": [],
+      "scene": "reference",
+      "scene_unsure_accepted": false,
+      "pixels": "3072x4080",
+      "sha256": "964a3351bd6652d2 3f165c790c4e6d3c edf9f25d58c1e536 f7eae8ff3fbe086d",
+      "original_sha256": "85863345dd03b05c 327f6d14943cea31 edfd95b8152e773d 2c579f3f06b9da44"
+    },
+    {
+      "file": "c08.jpg",
+      "original": "PXL_20261022_063343648.jpg",
+      "shows": "envelope: \"Medical Billing, Mercy Hospital; Steven Alder, 123 Main St, Orlando FL 32801; DELINQUENT ACCOUNT - OPEN IMMEDIATELY\"",
+      "set": "sensitive",
+      "handwritten": true,
+      "angled": "slight",
+      "expected_gate": "hold",
+      "ocr_keywords": [
+        "Medical",
+        "Billing",
+        "Mercy",
+        "DELINQUENT"
+      ],
+      "expected_tasks": [],
+      "scene": null,
+      "scene_unsure_accepted": false,
+      "pixels": "4080x3072",
+      "sha256": "7f955c5027188560 ab350ad09bbb5082 22ba70dbf26aa6ec c778dcad21377db4",
+      "original_sha256": "94136202d14fcf46 ba77bd6313bd4f1c 17688a6223de7e62 8adf2236aa55d4b3"
+    },
+    {
+      "file": "c09.jpg",
+      "original": "PXL_20261022_063713682.jpg",
+      "shows": "hand-drawn driver license: \"CALIFORNIA, John Doe, 85 Palm Place, Hollywood CA 90210, Exp 1/1/27, DOB 1/1/1980, 6'2\" 200 lbs, Class C Driver License\"",
+      "set": "sensitive",
+      "handwritten": true,
+      "angled": "no",
+      "expected_gate": "hold",
+      "ocr_keywords": [
+        "CALIFORNIA",
+        "Doe",
+        "Driver",
+        "License"
+      ],
+      "expected_tasks": [],
+      "scene": null,
+      "scene_unsure_accepted": false,
+      "pixels": "3072x4080",
+      "sha256": "67a1a355ff54caed 6268e479debaf1c1 3744915f12da4f0d 878c7c8eaf89233f",
+      "original_sha256": "5c021c1ed4228ed9 4ce960d1b0caf3da 690ed963a431ce3e 87273a631f405d89"
+    },
+    {
+      "file": "c10.jpg",
+      "original": "PXL_20261022_063925902.jpg",
+      "shows": "white card: \"Perscription: Rx, Xanax 100mg, Fill on 11/1/26, Refills: 5, Prescribor: (signature)\"",
+      "set": "sensitive",
+      "handwritten": true,
+      "angled": "no",
+      "expected_gate": "hold",
+      "ocr_keywords": [
+        "Xanax",
+        "Refills",
+        "Rx"
+      ],
+      "expected_tasks": [],
+      "scene": null,
+      "scene_unsure_accepted": false,
+      "pixels": "3072x4080",
+      "sha256": "206774b551d1d878 e701347f37e5c80b 99564ed0787dea0f 31a6df5d7e3d01f1",
+      "original_sha256": "76f89320be5b10d5 4f7ce57a2965c51c 4b3c5de8d2dcc88e 6143a1053ce94d33"
+    },
+    {
+      "file": "c11.jpg",
+      "original": "PXL_20261022_064153087.jpg",
+      "shows": "green ticket: \"ADMIT ONE, STAR WARS, 10/31/2026, 12:00 AM, Theater B\"",
+      "set": "ordinary",
+      "handwritten": true,
+      "angled": "no",
+      "expected_gate": "clear",
+      "ocr_keywords": [
+        "ADMIT",
+        "STAR",
+        "WARS",
+        "Theater"
+      ],
+      "expected_tasks": [],
+      "scene": "reference",
+      "scene_unsure_accepted": false,
+      "pixels": "3072x4080",
+      "sha256": "4710410da186ba4d 68691ef9e20061b0 93dd683089a9911c 23f2fda61248510a",
+      "original_sha256": "e80fe0cf3c48d665 43172c6b297cd4e3 b6d37da5469ed502 af9c878ff677e6e3"
+    },
+    {
+      "file": "c12.jpg",
+      "original": "PXL_20261022_064445520.jpg",
+      "shows": "receipt page: \"GREAT WALL CHINESE FOOD; 1 Fried Rice, 2 Kung Pow Chicken, 1 Chow Mein, 1 General Tso's chicken; Total 35.00; 10/22/2026\"",
+      "set": "ordinary",
+      "handwritten": true,
+      "angled": "slight",
+      "expected_gate": "clear",
+      "ocr_keywords": [
+        "GREAT",
+        "WALL",
+        "Fried",
+        "Rice",
+        "Total"
+      ],
+      "expected_tasks": [],
+      "scene": "reference",
+      "scene_unsure_accepted": false,
+      "pixels": "3072x4080",
+      "sha256": "dfc92bbaa0801a4c 26df36b4d31097da 94f597d35f237fa0 b3b27e1afd4f89d0",
+      "original_sha256": "2dd38f1b083cf5d4 ac517b376966dfc3 3723c7364a223eb9 7aabad767bf0f1be"
+    }
+  ]
+}
