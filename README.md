@@ -412,6 +412,8 @@ task, and a last button, `Leave unsorted`. A tap updates the existing Todoist ta
 again. The choice is recorded in the ledger as the owner's (`project_by: owner`), and a second tap changes
 nothing. Taps are handled by the loop's Telegram receiver: they take effect at once while `--loop` runs.
 
+A twelve-second clip of the tap: https://youtu.be/-QixQrUyyws
+
 ### Photos
 
 A second input: photos (PNG, JPEG, WebP or GIF) dropped in `ledger/inbox/photos/`, with `"glasses"` in
