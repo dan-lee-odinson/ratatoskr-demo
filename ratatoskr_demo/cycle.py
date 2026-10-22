@@ -624,7 +624,8 @@ class Cycle:
         if (earlier is not None and earlier.image.get("scene_by") == "owner"
                 and earlier.image.get("sha256") == record.get("sha256")):  # the same file (ruling 57)
             answer = str(earlier.image["scene"])
-            record.update(scene=answer, scene_by="owner", scene_p=earlier.image.get("scene_p"))
+            record.update(scene=answer, scene_by="owner", scene_p=earlier.image.get("scene_p"),
+                          scene_at=earlier.image.get("scene_at"))  # the owner's answer keeps its time (ruling 58)
         else:
             result = self._scenes.decide_scene(rid, text)
             answer = result.answer

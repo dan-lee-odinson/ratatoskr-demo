@@ -229,7 +229,10 @@ becoming a visible mistake, and what you are expected to do on your side of them
 - Pass an unsure privacy answer. A sensitivity answer below its floor holds the recording, at the
   gate and at routing, and a malformed sensitivity answer at routing holds it too. No answer at
   all, or a reply the courier cannot use, makes the recording wait for a healthy server; a wait is
-  never read as a yes or a no. The gate runs before extraction, so a recording the gate holds or
+  never read as a yes or a no. An explicit, recorded owner release (the Release button on a photo
+  held as unsure) authorizes continuation past a gate's unsure hold for that unchanged photo, and the
+  ledger records it as the owner's; a model clear and an owner release are never confused. The gate
+  runs before extraction, so a recording the gate holds or
   waits on has not left this machine.
 - Bypass a Decider verdict. The `urgent` tag skips the gate only while Decider is unreachable; a
   verdict, once given, stands.
@@ -424,7 +427,9 @@ A twelve-second clip of the tap: https://youtu.be/-QixQrUyyws
 ### Photos
 
 A second input: photos (PNG, JPEG, WebP or GIF) dropped in `ledger/inbox/photos/`, with `"glasses"` in
-`[devices] inputs`. Each passes three checks on the laptop before any cloud call: a file that is missing,
+`[devices] inputs`. A phone photograph is read upright (its EXIF orientation honoured) and at most 2000 px on its
+long side, from a copy in memory, the file untouched; a file over 12 MB, or a HEIC file, is held as unreadable
+before any model. Each passes three checks on the laptop before any cloud call: a file that is missing,
 unreadable or blank is held before any model is asked; a second Strands Decider server, started with
 `--vision`, answers "Is this picture of something that must never leave this machine?" and holds the photo on
 yes or unsure; then RapidOCR, on the laptop, reads the photo's text, which meets the stop-list tripwire and the

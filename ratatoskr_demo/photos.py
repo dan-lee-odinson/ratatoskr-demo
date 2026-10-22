@@ -58,6 +58,15 @@ image evaluation showed the checkpoint could not read it from a picture and its 
 (a mirrored pair with identical probabilities, a note owed to the owner answered as
 owed by him at 0.71), so it is read by the extraction and by the owner (ruling 54).
 
+Phone photographs (Dan's ruling 58): a file over MAX_BYTES (12 MB) holds as "too large"
+and a HEIC file as "unsupported format", both before any model, with the readability
+check's reasons and blank threshold otherwise as they were. What the image gate, the OCR
+and the scene read is upright (the EXIF orientation honoured: RapidOCR does not, the vision
+server does) with a long side of at most LONG_SIDE, 2000 px: RapidOCR's own limit, and the
+vision server fits what it is sent to its 448 px itself. A picture already upright and
+within it is read as its own bytes, unchanged; any other is read from a copy made in memory,
+and the file in the folder is never touched.
+
 A photo held as unsure by the image gate or the text gate (Dan's ruling 52) gets one
 button on its id-only notice, Release; one held as sensitive gets none. The owner's
 tap records the release and sends nothing anywhere; on the next cycle the photo
@@ -74,6 +83,7 @@ from __future__ import annotations
 
 import base64
 import hashlib
+import io
 import logging
 import time
 from dataclasses import dataclass
@@ -91,6 +101,10 @@ BLANK_STDDEV = 2.0  # of 255: below it, the picture is near-uniform and holds as
 PICTURE_QUESTION = "Is this picture of something that must never leave this machine?"
 UNREADABLE = "unreadable"
 GATE_REASONS = {"sensitive": "image-sensitive", "unsure": "image-unsure"}
+MAX_BYTES = 12 * 1024 * 1024  # ruling 58: a phone photo up to 12 MB is accepted; a larger file holds as too large
+LONG_SIDE = 2000  # ruling 58: the longest side read (RapidOCR's own max_side_len; the vision server fits to 448)
+ORIENTATION = 0x0112  # the EXIF orientation tag
+HEIF_BRANDS = (b"heic", b"heix", b"hevc", b"hevx", b"heim", b"heis", b"mif1", b"msf1")  # an ISO-BMFF ftyp box's brand
 
 
 @dataclass(frozen=True)
@@ -102,12 +116,18 @@ class PhotoHold:
 
 
 def unreadable(path: Path) -> str | None:
-    """Why the photo cannot be read, before any model: "missing", "not an image", "unsupported format" (not
-    PNG, JPEG, WebP or GIF) or "blank"; None if it can be."""
+    """Why the photo cannot be read, before any model: "missing", "too large" (over MAX_BYTES), "not an image",
+    "unsupported format" (not PNG, JPEG, WebP or GIF, a HEIC file among them) or "blank"; None if it can be."""
     from PIL import Image, ImageStat
 
     if not path.is_file():
         return "missing"
+    if path.stat().st_size > MAX_BYTES:  # before any decoding (ruling 58)
+        return "too large"
+    with path.open("rb") as fh:
+        head = fh.read(12)
+    if head[4:8] == b"ftyp" and head[8:12] in HEIF_BRANDS:  # HEIC: this machine's Pillow has no HEIF plugin
+        return "unsupported format"
     try:
         with Image.open(path) as image:
             if image.format not in FORMATS:
@@ -117,6 +137,44 @@ def unreadable(path: Path) -> str | None:
     except Exception:  # Pillow raises many kinds for a file it cannot decode
         return "not an image"
     return "blank" if spread < BLANK_STDDEV else None
+
+
+@dataclass(frozen=True)
+class Picture:
+    """What the image gate, the OCR and the scene read of one photo (ruling 58): the file itself when it is upright
+    and within LONG_SIDE, else an upright copy scaled down to it, in memory. The file is never touched."""
+
+    source: Path | bytes
+    size: tuple[int, int]  # the file's pixel size, as stored
+    orientation: int  # its EXIF orientation (1: as stored, or none given)
+    read: tuple[int, int]  # the pixel size read
+
+    def record(self) -> dict[str, Any]:
+        """For the ledger: numbers only."""
+        return {"pixels": "x".join(map(str, self.size)), "orientation": self.orientation,
+                "read_at": "x".join(map(str, self.read))}
+
+
+def load_picture(path: Path) -> Picture:
+    """The photo as it is to be read: EXIF orientation honoured, the long side at most LONG_SIDE (ruling 58)."""
+    from PIL import Image, ImageOps
+
+    with Image.open(path) as image:
+        size, orientation = image.size, int(image.getexif().get(ORIENTATION) or 1)
+        if orientation == 1 and max(size) <= LONG_SIDE:
+            return Picture(path, size, orientation, size)
+        upright = ImageOps.exif_transpose(image)
+        upright.thumbnail((LONG_SIDE, LONG_SIDE), Image.Resampling.LANCZOS)  # scaled down, never up
+        out = io.BytesIO()
+        if image.format == "JPEG":
+            upright.convert("RGB").save(out, "JPEG", quality=95)
+        else:
+            upright.save(out, "PNG")
+        return Picture(out.getvalue(), size, orientation, upright.size)
+
+
+def _encoded(source: Path | bytes) -> str:
+    return base64.b64encode(source if isinstance(source, bytes) else source.read_bytes()).decode("ascii")
 
 
 @dataclass(frozen=True)
@@ -138,8 +196,8 @@ class ImageGate:
         self.floor = float(sensitive.min_confidence)  # the text gate's floor, from route.toml
         self.question = {"type": "noul", "instructions": PICTURE_QUESTION, "criteria": sensitive.criteria}
 
-    def check(self, path: Path) -> GateResult:
-        image = base64.b64encode(path.read_bytes()).decode("ascii")
+    def check(self, source: Path | bytes) -> GateResult:
+        image = _encoded(source)
         started = time.perf_counter()
         response = self.client.systemone({"state": "", "images": [image], "questions": {"picture": self.question}})
         seconds = time.perf_counter() - started
@@ -170,13 +228,13 @@ class Ocr:
     def __init__(self, engine: Callable[[str], Any] | None = None) -> None:
         self._engine = engine
 
-    def read(self, path: Path) -> tuple[str, list[float]]:
+    def read(self, source: Path | bytes) -> tuple[str, list[float]]:
         if self._engine is None:
             from rapidocr_onnxruntime import RapidOCR  # the photos extra; loaded only when a photo is read
 
             self._engine = RapidOCR()
         try:
-            result, _ = self._engine(str(path))
+            result, _ = self._engine(source if isinstance(source, bytes) else str(source))
         except Exception as exc:  # a reader that fails on a picture the gate cleared: nothing was sent anywhere
             raise TerminalError(f"photo: the OCR could not read it ({type(exc).__name__})") from None
         lines = [(str(r[1]), float(r[2])) for r in (result or []) if str(r[1]).strip()]
@@ -218,8 +276,8 @@ class SceneDecision:
         self.floor = float(floor)  # the routing read's floor for a choice question, from route.toml
         self.question = {"type": "choice", "instructions": SCENE_QUESTION, "criteria": dict(SCENE_CRITERIA)}
 
-    def decide(self, path: Path, text: str) -> SceneResult:
-        image = base64.b64encode(path.read_bytes()).decode("ascii")
+    def decide(self, source: Path | bytes, text: str) -> SceneResult:
+        image = _encoded(source)
         started = time.perf_counter()
         response = self.client.systemone({"state": text, "images": [image], "questions": {"scene": self.question}})
         seconds = time.perf_counter() - started

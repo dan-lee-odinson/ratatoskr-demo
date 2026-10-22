@@ -48,7 +48,7 @@ By submitting a pull request you agree that your contribution is licensed under 
 
 Some behavior is the point of the project and is not up for change in a pull request. A change that does any of the following will be declined:
 
-- Passes an unsure privacy answer. A sensitivity answer below its floor holds; it is never read as a no.
+- Passes an unsure privacy answer. A sensitivity answer below its floor holds; it is never read as a no. An explicit, recorded owner release (the Release button on a photo held as unsure) authorizes continuation past a gate's unsure hold for that unchanged photo, and the ledger records it as the owner's; a model clear and an owner release are never confused.
 - Lets the `urgent` tag, or anything else, bypass a verdict Decider has given.
 - Stores a transcript, or puts recording text into a notice, a log, or the wrist line.
 - Binds the Decider server to anything other than the loopback address.

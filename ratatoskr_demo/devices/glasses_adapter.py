@@ -19,7 +19,8 @@ envelope carrying an ImageRef. Its text is what ratatoskr_demo.photos lets
 through: the file must be readable, the image gate on the vision server must
 clear it, and the OCR on the laptop reads it; any hold comes back as a
 PhotoHold, before any model or none at all. For the evaluation the folder was
-fed from the desktop.
+fed from the desktop. A phone photograph is read upright and at most 2000 px on
+its long side, from a copy in memory; the file itself is not touched (ruling 58).
 
 GlassesStub, below, is the video slot as it was. STUB: it does not work and is
 not part of the demo.
@@ -46,7 +47,7 @@ from ratatoskr_demo.devices.envelope import Envelope, ImageRef, VideoRef
 from ratatoskr_demo.devices.registry import Source
 from ratatoskr_demo.errors import TransientError
 from ratatoskr_demo.photos import (UNREADABLE, ImageGate, Ocr, PhotoHold, SceneDecision, SceneResult, file_sha256,
-                                   passed_gates, unreadable)
+                                   load_picture, passed_gates, unreadable)
 
 DEVICE_ID = "glasses"
 IS_STUB = True  # the video slot (GlassesStub); the photo folder is real (ruling 47)
@@ -83,7 +84,8 @@ class GlassesStub:
         return self._items[envelope]["caption"]
 
 
-IMAGE_SUFFIXES = (".png", ".jpg", ".jpeg", ".webp", ".gif")
+# HEIC is listed so that it is held as an unsupported format with its notice, never skipped unseen (ruling 58)
+IMAGE_SUFFIXES = (".png", ".jpg", ".jpeg", ".webp", ".gif", ".heic", ".heif")
 
 
 def photo_id(path: Path) -> str:
@@ -99,7 +101,8 @@ class PhotoFolder:
     def __init__(self, folder: Path, gate: ImageGate, ocr: Ocr, scene: SceneDecision | None = None) -> None:
         self.folder, self.gate, self.ocr, self.scene = Path(folder), gate, ocr, scene
         self.records: dict[str, dict[str, Any]] = {}  # per photo id: what goes in the ledger (numbers, no text)
-        self._paths: dict[str, Path] = {}  # per photo id: its file, for the scene read (ruling 50); memory only
+        # per photo id: what the scene reads (ruling 50), the file or its upright copy (ruling 58); memory only
+        self._pictures: dict[str, Path | bytes] = {}
 
     def list_new(self) -> list[Envelope]:
         """Every file in the folder that looks like a photo, oldest first; the ledger skips what is finished.
@@ -122,15 +125,22 @@ class PhotoFolder:
         path = _path(envelope)
         record: dict[str, Any] = {"extraction_calls": 0}
         self.records[photo_id(path)] = record
-        self._paths[photo_id(path)] = path
+        self._pictures.pop(photo_id(path), None)
         problem = unreadable(path)
         if problem is not None:
             record["unreadable"] = problem
             return PhotoHold(UNREADABLE)
         record["sha256"] = file_sha256(path)  # what an owner's release is recorded against (ruling 57)
+        try:
+            picture = load_picture(path)  # upright, the long side at most 2000 px; the file untouched (ruling 58)
+        except Exception:  # an orientation block Pillow cannot apply: as the readability check, no model asked
+            record["unreadable"] = "not an image"
+            return PhotoHold(UNREADABLE)
+        record.update(picture.record())
+        self._pictures[photo_id(path)] = picture.source
         if "image gate" not in passed_gates(earlier, record["sha256"]):
             try:
-                result = self.gate.check(path)
+                result = self.gate.check(picture.source)
             except (DeciderUnavailable, DeciderRejected) as exc:  # as the text gate: the photo waits, nothing sent
                 raise TransientError(f"image gate: Strands Decider (vision) could not be asked ({exc}); waiting",
                                      kind="decider") from None
@@ -138,7 +148,7 @@ class PhotoFolder:
             if result.reason is not None:
                 return PhotoHold(result.reason, result.p)
         started = time.perf_counter()
-        text, confidence = self.ocr.read(path)
+        text, confidence = self.ocr.read(picture.source)
         record.update(ocr_confidence=confidence, ocr_seconds=round(time.perf_counter() - started, 3))
         if not text.split():  # ruling 53: no words at all is the readability check's case, not a short note
             record["unreadable"] = "no words"
@@ -151,7 +161,7 @@ class PhotoFolder:
         if self.scene is None:
             raise TransientError("scene: no scene decision configured; waiting", kind="decider")
         try:
-            return self.scene.decide(self._paths[item_id], text)
+            return self.scene.decide(self._pictures[item_id], text)
         except (DeciderUnavailable, DeciderRejected) as exc:
             raise TransientError(f"scene: Strands Decider (vision) could not be asked ({exc}); waiting",
                                  kind="decider") from None
