@@ -93,7 +93,7 @@ from ratatoskr_demo.ledger import LedgerEntry
 from ratatoskr_demo.notify import Notifier
 from ratatoskr_demo.photos import (REFERENCE_LINE, RELEASABLE, SCENE_ACTIONS, SCENE_HOLD, UNSURE, PhotoHold,
                                    keep_reference, owner_release, release_keyboard, release_sid, scene_keyboard,
-                                   scene_line, scene_sid, waiting_on_line)
+                                   scene_line, scene_sid)
 from ratatoskr_demo.decider import DeciderRejected, DeciderUnavailable
 from ratatoskr_demo import resolve
 from ratatoskr_demo.route import (URGENT_SOURCE, Routed, RoutedTask, Router, load_route_questions, route,
@@ -359,14 +359,12 @@ class Cycle:
                 return self._hold(rid, title, recording_at, verdict.reason, demo=demo,
                                   notice=self._held_notice(rid, verdict.reason),
                                   keyboard=self._offer_release(rid, verdict.reason))
-        waiting_on = False  # ruling 50: a picture of something owed to the owner; its tasks carry `waiting-on`
-        if self._scenes is not None:  # after the text gate, before any cloud call
+        if self._scenes is not None:  # after the text gate, before any cloud call; a commitment goes on (ruling 54)
             scene = self._scene(rid, str(text))
             if scene == "reference":
                 return self._keep_reference(rid, title, recording_at, str(text), demo=demo)
             if scene == UNSURE:
                 return self._ask_scene(rid, title, recording_at, demo=demo)
-            waiting_on = scene == "owed_to_owner"
         # Routing will need Decider: while it is unreachable, a recording waits with nothing extracted or
         # written (ruling 9), unless it is tagged urgent (ruling 12: written unrouted, below)
         without_decider = not self._decider_usable(rid, urgent)
@@ -433,8 +431,7 @@ class Cycle:
             project_id = self._todoist().ensure_project(project) if writes else "(todoist output off)"
         payloads = [
             build_task_args(task, recording_id=rid, ordinal=i, contact=routed.contact,
-                            project_id=project_id, label=self.settings.todoist.label, ungated=ungated,
-                            waiting_on=waiting_on)
+                            project_id=project_id, label=self.settings.todoist.label, ungated=ungated)
             for i, task in enumerate(tasks, start=1)
         ]
         # Check the final strings too: joining notes and context into one
@@ -475,8 +472,6 @@ class Cycle:
         if not demo:
             for i, task in enumerate(outcome.tasks, start=1):  # one wrist-shaped message per task
                 text = format_task(task.routed, task.content, sensitivity_unchecked=unchecked, ungated=ungated)
-                if waiting_on:  # ruling 50: `waiting-on · <priority> · <scene p>`
-                    text = waiting_on_line(text, first_line(task.routed), (self._image or {}).get("scene_p"))
                 sid = resolve.short_id(rid, i)
                 if sid in picks:  # unsorted: the owner can file it from the message (ruling 43)
                     self._tell_dan_with_keyboard(text, self._unsorted_keyboard(sid, task.routed))

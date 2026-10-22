@@ -25,7 +25,7 @@ RID = photo_id(Path(NAME))
 class Run:
     """One photo in the watched folder and the courier around it; cycle() runs it once, as `--once` does."""
 
-    def __init__(self, tmp_path, services, clock, *, p=0.2, text_gate=None, scene="owner_owes", scene_p=0.9):
+    def __init__(self, tmp_path, services, clock, *, p=0.2, text_gate=None, scene="commitment", scene_p=0.9):
         self.todoist, self.telegram, router = services
         self.fake = attach(router)
         if text_gate is not None:

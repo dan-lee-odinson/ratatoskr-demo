@@ -260,3 +260,78 @@ def test_the_second_addendum_says_why_the_word_floor_went_and_reports_actions_an
 def test_the_second_addendum_regenerates_from_its_export_byte_for_byte():
     data = json.loads(run_images.EXPORT4.read_text(encoding="utf-8"))
     assert run_images.render3(data) == run_images.REPORT4.read_text(encoding="utf-8")
+
+
+# --- the final run (Dan's ruling 54) ---
+
+LABELS_V3 = json.loads((REPO / "bench" / "images" / "labels_v3.json").read_text(encoding="utf-8"))
+
+
+def row4(label):
+    """A final-run row: sensitive held by the image gate; ordinary by its label, released where a gate held it."""
+    visit = {"status": "done", "reason": None, "picture_p": [0.2], "ocr_ran": True, "ocr_keywords_found": [],
+             "text_gate_p": [0.2], "text_gate_seconds": [1.5], "scene_reads": 1, "routing_seconds": [],
+             "routing_waiting_p": []}
+    base = {"file": label["file"], "set": label["set"], "id": "photo-x", "extraction_calls_spend_ledger": 0,
+            "written": [], "telegram": [], "reference_note": False}
+    if label["set"] == "sensitive":
+        hold = visit | {"status": "hold", "reason": "image-sensitive", "picture_p": [0.8], "ocr_ran": False,
+                        "text_gate_p": [], "scene_reads": 0}
+        return base | {"status": "hold", "reason": "image-sensitive", "image": {"gate_p": 0.8}, "visits": [hold]}
+    scene = label["scene"]
+    image = {"gate_p": 0.45, "scene": scene, "scene_p": 0.9 if scene != "unsure" else 0.5, "scene_seconds": 2.5,
+             "scene_choice": "commitment" if scene != "reference" else "reference",
+             "scene_options": {"commitment": 0.9, "reference": 0.1}, "scene_action": {
+                 "commitment": "extracted", "reference": "kept on the laptop", "unsure": "asked the owner"}[scene],
+             "releases": [{"held_by": "image gate", "sid": "x", "by": "owner", "at": "2026-10-22T03:00:00+00:00"}],
+             "extraction_calls": 1 if scene == "commitment" else 0}
+    held = visit | {"status": "hold", "reason": "image-unsure", "picture_p": [0.45], "ocr_ran": False, "text_gate_p": []}
+    status, reason = {"commitment": ("done", None), "reference": ("done", "reference"),
+                      "unsure": ("hold", "scene-unsure")}[scene]
+    return base | {"status": status, "reason": reason, "image": image, "visits": [held, visit],
+                   "extraction_calls_spend_ledger": image["extraction_calls"],
+                   "written": [{"content": "a task", "labels": ["pocket"], "priority": None}] if scene == "commitment"
+                   else [], "reference_note": scene == "reference"}
+
+
+def test_the_final_report_is_drawn_from_an_export_alone():
+    rows = [row4(x) for x in LABELS_V3["images"]]
+    data = {"final": True, "labels_json": json.dumps(LABELS_V3), "labels_sha256": "0" * 16, "code": "abc1234",
+            "runner_blob": "b" * 16, "started": "2026-10-22 03:00 UTC", "finished": "2026-10-22 03:20 UTC",
+            "stopped": None, "versions": {"scene": "two-way"}, "memory_end": {},
+            "spend_before": {"total_usd": 0.1, "calls": 1},
+            "spend_after": {"total_usd": 0.11, "calls": 10, "hard_stop_usd": 5.0}, "images": rows}
+    text = run_images.render4(data)
+    assert text.startswith("# Image evaluation, final run") and "After four photo reports (ruling 54)" in text
+    assert all(f"`{x}`" in text for x in run_images.EARLIER) and "still rebuild from their exports" in text
+    assert "| sensitive pictures sent to Bedrock or written to Todoist | 0 of 8 |" in text
+    assert "| label \\ answer | commitment | reference | unsure |" in text
+    assert "| commitment | 9 | 0 | 0 |" in text and "Answer matches the label on 16 of 16." in text
+    assert "| commitment | 9 | extracted | 9 / 9 | 9 | 0 | a call, a write or more, per picture |" in text
+    assert "| reference | 6 | kept on the laptop | 0 / 0 | 0 | 6 | no call, no write |" in text
+    assert "| n1_owed_note.png | ordinary | commitment | 0.45 | image gate: owner | 0.20 | commitment (0.90) |" in text
+    assert "## The releases" in text and "| n1_owed_note.png | ordinary | image gate (0.45) | owner |" in text
+
+
+def test_a_sensitive_pictures_release_notice_stays_local_in_the_final_run():
+    import httpx
+
+    sent_out = []
+
+    class Real:
+        def post(self, url, content, headers):
+            sent_out.append(content)
+            return httpx.Response(200, json={"ok": True, "result": {}})
+
+    owner = run_images._OwnerTelegram(Real())
+    owner.forward = False  # the picture placed now is labelled sensitive
+    notice = {"chat_id": 1, "text": "Held photo-x: image-unsure. Nothing was written.",
+              "reply_markup": {"inline_keyboard": [[{"text": "Release", "callback_data": "release:abc"}]]}}
+    owner.handler(httpx.Request("POST", "https://api.telegram.org/botTOKEN/sendMessage", json=notice))
+    assert sent_out == [] and owner.sent == [{"first_line": notice["text"], "buttons": ["Release"], "to_owner": False}]
+
+
+@pytest.mark.skipif(not run_images.EXPORT5.exists(), reason="the final run has not been run yet")
+def test_the_final_report_regenerates_from_its_export_byte_for_byte():
+    data = json.loads(run_images.EXPORT5.read_text(encoding="utf-8"))
+    assert run_images.render4(data) == run_images.REPORT5.read_text(encoding="utf-8")

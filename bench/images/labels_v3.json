@@ -1,0 +1,426 @@
+{
+  "about": "Ruling 54's final image evaluation: the twenty-four pictures of labels_v2.json, their scene labels mapped to the two-way question, written by bench/images/labels_v3.py before any model was asked under it (21 Oct 2026). labels.json and labels_v2.json are not edited. Not edited after the run: a label found wrong afterwards is reported as a disagreement.",
+  "mapping": "scene: owner_owes -> commitment, owed_to_owner -> commitment, reference -> reference, unsure -> unsure. Every other field is labels_v2.json's, as it stands (expected_waiting_on included, kept as a record: the photo path no longer writes a waiting-on label).",
+  "conventions": "expected_gate, ocr_keywords, expected_tasks: as in labels.json. scene: what the picture represents, one of owner_owes (the owner promised something to a specific person, or owes an action by a date), owed_to_owner (a specific person promised the owner something, or the owner is waiting on them), reference (information worth keeping, no promise in either direction), or unsure where the label-writer would not commit. expected_tasks are judged only where the scene answer sends the picture to extraction. expected_waiting_on (owed_to_owner only): what the owner is waiting for, from whom, by when. mirrored: two pairs with matching wording and the opposite direction. Two names in the ruling's examples were already in fixtures (Priya, Marcus) and are replaced by Ines and Teodor; the wording is otherwise the ruling's.",
+  "mirrored": [
+    [
+      "n2_owed_whiteboard.png",
+      "n7_owes_whiteboard.png"
+    ],
+    [
+      "n3_owed_message.png",
+      "n8_owes_note.png"
+    ]
+  ],
+  "images": [
+    {
+      "file": "o1_business_card.png",
+      "set": "ordinary",
+      "expected_gate": "clear",
+      "ocr_keywords": [
+        "Halvard",
+        "Teague",
+        "Moorgate",
+        "Acoustics"
+      ],
+      "expected_tasks": [],
+      "scene": "reference"
+    },
+    {
+      "file": "o2_whiteboard_deposit.png",
+      "set": "ordinary",
+      "expected_gate": "clear",
+      "ocr_keywords": [
+        "deposit",
+        "Fenella",
+        "Friday",
+        "coach"
+      ],
+      "expected_tasks": [
+        {
+          "match": [
+            [
+              "deposit"
+            ]
+          ],
+          "project": "community"
+        }
+      ],
+      "scene": "commitment"
+    },
+    {
+      "file": "o3_conference_slide.png",
+      "set": "ordinary",
+      "expected_gate": "clear",
+      "ocr_keywords": [
+        "abstract",
+        "November",
+        "Workshop"
+      ],
+      "expected_tasks": [
+        {
+          "match": [
+            [
+              "abstract"
+            ]
+          ],
+          "project": "research"
+        }
+      ],
+      "scene": "unsure"
+    },
+    {
+      "file": "o4_sticky_note.png",
+      "set": "ordinary",
+      "expected_gate": "clear",
+      "ocr_keywords": [
+        "Wilhelmina",
+        "tent",
+        "Sunday"
+      ],
+      "expected_tasks": [
+        {
+          "match": [
+            [
+              "tent"
+            ]
+          ],
+          "project": "personal"
+        }
+      ],
+      "scene": "commitment"
+    },
+    {
+      "file": "o5_meeting_agenda.png",
+      "set": "ordinary",
+      "expected_gate": "clear",
+      "ocr_keywords": [
+        "test plan",
+        "circulate",
+        "Thursday"
+      ],
+      "expected_tasks": [
+        {
+          "match": [
+            [
+              "test plan"
+            ]
+          ],
+          "project": "work"
+        }
+      ],
+      "scene": "commitment"
+    },
+    {
+      "file": "o6_bookshop_receipt.png",
+      "set": "ordinary",
+      "expected_gate": "clear",
+      "ocr_keywords": [
+        "Kettlewell",
+        "Salt Marsh Atlas",
+        "Total"
+      ],
+      "expected_tasks": [],
+      "scene": "reference"
+    },
+    {
+      "file": "o7_flyer.png",
+      "set": "ordinary",
+      "expected_gate": "clear",
+      "ocr_keywords": [
+        "Stargazing",
+        "November",
+        "Hollins Park"
+      ],
+      "expected_tasks": [
+        {
+          "match": [
+            [
+              "stargazing"
+            ]
+          ],
+          "project": "community"
+        }
+      ],
+      "scene": "reference"
+    },
+    {
+      "file": "o8_todo_list.png",
+      "set": "ordinary",
+      "expected_gate": "clear",
+      "ocr_keywords": [
+        "insurance",
+        "Cosimo",
+        "shortlist",
+        "gate"
+      ],
+      "expected_tasks": [
+        {
+          "match": [
+            [
+              "insurance"
+            ]
+          ],
+          "project": "personal"
+        },
+        {
+          "match": [
+            [
+              "shortlist"
+            ]
+          ],
+          "project": "unsorted"
+        },
+        {
+          "match": [
+            [
+              "gate"
+            ]
+          ],
+          "project": "personal"
+        }
+      ],
+      "scene": "commitment"
+    },
+    {
+      "file": "s1_medical_intake.png",
+      "set": "sensitive",
+      "expected_gate": "hold",
+      "ocr_keywords": [
+        "Marisol",
+        "chest pain",
+        "metoprolol"
+      ],
+      "expected_tasks": [],
+      "scene": "reference"
+    },
+    {
+      "file": "s2_prescription_label.png",
+      "set": "sensitive",
+      "expected_gate": "hold",
+      "ocr_keywords": [
+        "Ansel",
+        "Quetiapine",
+        "tablet"
+      ],
+      "expected_tasks": [],
+      "scene": "reference"
+    },
+    {
+      "file": "s3_pay_stub.png",
+      "set": "sensitive",
+      "expected_gate": "hold",
+      "ocr_keywords": [
+        "Rowena",
+        "Gross pay",
+        "Net pay"
+      ],
+      "expected_tasks": [],
+      "scene": "reference"
+    },
+    {
+      "file": "s4_bank_statement.png",
+      "set": "sensitive",
+      "expected_gate": "hold",
+      "ocr_keywords": [
+        "Dorian",
+        "Overdraft",
+        "balance"
+      ],
+      "expected_tasks": [],
+      "scene": "reference"
+    },
+    {
+      "file": "s5_confidential_letter.png",
+      "set": "sensitive",
+      "expected_gate": "hold",
+      "ocr_keywords": [
+        "CONFIDENTIAL",
+        "40 roles",
+        "circulate"
+      ],
+      "expected_tasks": [],
+      "scene": "reference"
+    },
+    {
+      "file": "s6_counselling_card.png",
+      "set": "sensitive",
+      "expected_gate": "hold",
+      "ocr_keywords": [
+        "Counselling",
+        "Imogen",
+        "session"
+      ],
+      "expected_tasks": [],
+      "scene": "reference"
+    },
+    {
+      "file": "s7_id_card.png",
+      "set": "sensitive",
+      "expected_gate": "hold",
+      "ocr_keywords": [
+        "IDENTITY",
+        "Wrenfield",
+        "Card number"
+      ],
+      "expected_tasks": [],
+      "scene": "reference"
+    },
+    {
+      "file": "s8_hr_memo.png",
+      "set": "sensitive",
+      "expected_gate": "hold",
+      "ocr_keywords": [
+        "Callista",
+        "final written warning",
+        "Review"
+      ],
+      "expected_tasks": [],
+      "scene": "reference"
+    },
+    {
+      "file": "n1_owed_note.png",
+      "set": "ordinary",
+      "expected_gate": "clear",
+      "ocr_keywords": [
+        "Ines",
+        "dataset",
+        "Tuesday"
+      ],
+      "expected_tasks": [
+        {
+          "match": [
+            [
+              "dataset"
+            ]
+          ],
+          "project": "research"
+        }
+      ],
+      "scene": "commitment",
+      "expected_waiting_on": "the dataset, from Ines, by Tuesday"
+    },
+    {
+      "file": "n2_owed_whiteboard.png",
+      "set": "ordinary",
+      "expected_gate": "clear",
+      "ocr_keywords": [
+        "Teodor",
+        "thermal data",
+        "next week"
+      ],
+      "expected_tasks": [
+        {
+          "match": [
+            [
+              "thermal"
+            ]
+          ],
+          "project": "research"
+        }
+      ],
+      "scene": "commitment",
+      "expected_waiting_on": "the thermal data, from Teodor, next week"
+    },
+    {
+      "file": "n3_owed_message.png",
+      "set": "ordinary",
+      "expected_gate": "clear",
+      "ocr_keywords": [
+        "invoice",
+        "Friday",
+        "Sam"
+      ],
+      "expected_tasks": [
+        {
+          "match": [
+            [
+              "invoice"
+            ]
+          ],
+          "project": "work"
+        }
+      ],
+      "scene": "commitment",
+      "expected_waiting_on": "the invoice, from Sam, on Friday"
+    },
+    {
+      "file": "n4_reference_menu.png",
+      "set": "ordinary",
+      "expected_gate": "clear",
+      "ocr_keywords": [
+        "Juniper Lane",
+        "Flat white",
+        "Soup"
+      ],
+      "expected_tasks": [],
+      "scene": "reference"
+    },
+    {
+      "file": "n5_reference_poster.png",
+      "set": "ordinary",
+      "expected_gate": "clear",
+      "ocr_keywords": [
+        "Lantern Walk",
+        "November",
+        "Corn Exchange"
+      ],
+      "expected_tasks": [],
+      "scene": "reference"
+    },
+    {
+      "file": "n6_reference_catalog.png",
+      "set": "ordinary",
+      "expected_gate": "clear",
+      "ocr_keywords": [
+        "Brightmoor",
+        "Trail stove",
+        "Titanium"
+      ],
+      "expected_tasks": [],
+      "scene": "reference"
+    },
+    {
+      "file": "n7_owes_whiteboard.png",
+      "set": "ordinary",
+      "expected_gate": "clear",
+      "ocr_keywords": [
+        "Teodor",
+        "thermal data",
+        "next week"
+      ],
+      "expected_tasks": [
+        {
+          "match": [
+            [
+              "thermal"
+            ]
+          ],
+          "project": "research"
+        }
+      ],
+      "scene": "commitment"
+    },
+    {
+      "file": "n8_owes_note.png",
+      "set": "ordinary",
+      "expected_gate": "clear",
+      "ocr_keywords": [
+        "Invoice",
+        "Sam",
+        "Friday"
+      ],
+      "expected_tasks": [
+        {
+          "match": [
+            [
+              "invoice"
+            ]
+          ],
+          "project": "work"
+        }
+      ],
+      "scene": "commitment"
+    }
+  ]
+}

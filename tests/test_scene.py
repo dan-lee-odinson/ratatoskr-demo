@@ -1,8 +1,9 @@
-"""Dan's ruling 50: the scene of a photo, decided on the laptop after the text gate and before anything is extracted.
+"""Dan's rulings 50 and 54: the scene of a photo, decided on the laptop after the text gate and before anything is
+extracted; two-way since ruling 54 (commitment or reference), the direction of a promise left to the extraction.
 
-One test per answer (owner_owes, owed_to_owner, reference, unsure), the owner's tap and what runs on the next cycle,
-the repeat tap, a tap from another chat, the reference note's contents and place, the waiting-on label and line,
-no cloud call on reference or unsure, and the mirrored pairs of bench/images/labels_v2.json.
+One test per answer (commitment, reference, unsure), the two-button keyboard, the owner's tap and what runs on the
+next cycle, the repeat tap, a tap from another chat, the reference note's contents and place, no cloud call on
+reference or unsure, no waiting-on label anywhere, and the labels files: v2's mirrored pairs, v3 derived from v2.
 """
 
 import hashlib
@@ -67,30 +68,21 @@ class TapTelegram:
         self.answers.append((callback_id, text))
 
 
-def test_owner_owes_runs_the_existing_path(tmp_path, services, clock):
-    run = Run(tmp_path, services, clock, scene="owner_owes", scene_p=0.9)
+def test_a_commitment_runs_the_existing_path_with_no_direction_decided_from_the_picture(tmp_path, services, clock):
+    run = Run(tmp_path, services, clock, scene="commitment", scene_p=0.9)
     entry = run.cycle()
     assert entry["status"] == "done" and len(run.model.calls) == 1 and len(run.todoist.tasks) == 1
     [task] = run.todoist.tasks.values()
-    assert photos.WAITING_ON not in task["labels"]
+    assert not any(label.startswith("waiting") for label in task["labels"])  # the extraction's text carries it
+    assert not any(t.startswith("waiting-on") for t in run.telegram.texts)
     assert {k: entry["image"][k] for k in ("scene", "scene_p", "scene_by", "scene_action")} == {
-        "scene": "owner_owes", "scene_p": 0.9, "scene_by": "decider", "scene_action": "extracted"}
-    # the scene read carries the picture and its OCR text as the state, one choice question
+        "scene": "commitment", "scene_p": 0.9, "scene_by": "decider", "scene_action": "extracted"}
+    # the scene read carries the picture and its OCR text as the state, one two-way choice question
     [read] = run.scene_reads()
     assert read["state"] == "\n".join(TEXT) and len(read["images"]) == 1
-    assert read["questions"]["scene"]["type"] == "choice" and set(read["questions"]["scene"]["criteria"]) == {
-        "owner_owes", "owed_to_owner", "reference"}
-
-
-def test_owed_to_owner_is_written_with_the_waiting_on_label_and_line(tmp_path, services, clock):
-    run = Run(tmp_path, services, clock, scene="owed_to_owner", scene_p=0.85)
-    entry = run.cycle()
-    assert entry["status"] == "done" and len(run.model.calls) == 1
-    [task] = run.todoist.tasks.values()
-    assert photos.WAITING_ON in task["labels"]
-    [line] = [t.split("\n")[0] for t in run.telegram.texts if t.startswith("waiting-on")]
-    assert line.startswith("waiting-on · ") and line.endswith(" · 0.85")
-    assert entry["image"]["scene_action"] == "extracted, waiting-on"
+    question = read["questions"]["scene"]
+    assert question["type"] == "choice" and set(question["criteria"]) == {"commitment", "reference"}
+    assert "owes the owner" in question["criteria"]["commitment"] and "owner promised" in question["criteria"]["commitment"]
 
 
 def test_reference_is_kept_on_the_laptop_and_reaches_no_cloud_service(tmp_path, services, clock):
@@ -106,8 +98,8 @@ def test_reference_is_kept_on_the_laptop_and_reaches_no_cloud_service(tmp_path, 
     assert not any(line in json.dumps(entry) for line in TEXT)  # the ledger keeps numbers, not the text
 
 
-def test_unsure_sends_nothing_anywhere_but_the_question_with_three_buttons(tmp_path, services, clock):
-    run = Run(tmp_path, services, clock, scene="owner_owes", scene_p=0.5)  # under the 0.70 floor
+def test_unsure_sends_nothing_anywhere_but_the_question_with_two_buttons(tmp_path, services, clock):
+    run = Run(tmp_path, services, clock, scene="commitment", scene_p=0.5)  # under the 0.70 floor
     entry = run.cycle()
     assert run.model.calls == [] and run.fake.bodies == [] and run.todoist.tasks == {}
     assert (entry["status"], entry["reason"], entry["image"]["scene"]) == ("hold", "scene-unsure", "unsure")
@@ -116,35 +108,41 @@ def test_unsure_sends_nothing_anywhere_but_the_question_with_three_buttons(tmp_p
     [buttons] = message["reply_markup"]["inline_keyboard"]
     sid = photos.scene_sid(RID)
     assert [(b["text"], b["callback_data"]) for b in buttons] == [
-        ("I owe", f"scene:{sid}:owner_owes"), ("They owe", f"scene:{sid}:owed_to_owner"),
-        ("Reference", f"scene:{sid}:reference")]
+        ("Commitment", f"scene:{sid}:commitment"), ("Reference", f"scene:{sid}:reference")]
     assert not (run.settings.paths.state_dir / "reference").exists()
     run.cycle()  # still unanswered: nothing more is sent, nothing is asked again of the scene
     assert len(run.telegram.messages) == 1 and len(run.scene_reads()) == 1 and run.model.calls == []
 
 
 def test_the_owners_tap_is_recorded_and_the_chosen_path_runs_on_the_next_cycle(tmp_path, services, clock):
-    run = Run(tmp_path, services, clock, scene="owner_owes", scene_p=0.5)
+    run = Run(tmp_path, services, clock, scene="commitment", scene_p=0.5)
     run.cycle()
-    telegram = run.tap("owed_to_owner")
+    telegram = run.tap("commitment")
     image = run.runtime.state.ledger_get(RID).image
-    assert (image["scene"], image["scene_by"]) == ("owed_to_owner", "owner") and image["scene_at"].startswith("2026-")
+    assert (image["scene"], image["scene_by"]) == ("commitment", "owner") and image["scene_at"].startswith("2026-")
     [(message_id, text, markup)] = telegram.edits
-    assert message_id == 91 and markup is None and text.startswith("scene unsure · 0.50 → They owe, by owner")
+    assert message_id == 91 and markup is None and text.startswith("scene unsure · 0.50 → Commitment, by owner")
     assert telegram.answers == [("cb-9", None)] and run.model.calls == []  # nothing ran on the tap itself
     entry = run.cycle()
     assert entry["status"] == "done" and len(run.model.calls) == 1 and len(run.scene_reads()) == 1  # not re-asked
-    [task] = run.todoist.tasks.values()
-    assert photos.WAITING_ON in task["labels"]
-    assert (entry["image"]["scene"], entry["image"]["scene_by"]) == ("owed_to_owner", "owner")
+    assert len(run.todoist.tasks) == 1
+    assert (entry["image"]["scene"], entry["image"]["scene_by"]) == ("commitment", "owner")
+
+
+def test_a_tap_with_a_retired_answer_is_unknown(tmp_path, services, clock):
+    run = Run(tmp_path, services, clock, scene="commitment", scene_p=0.5)
+    run.cycle()
+    telegram = run.tap("owed_to_owner")  # an answer of the three-way question, retired by ruling 54
+    assert run.runtime.state.ledger_get(RID).image["scene_by"] == "decider"
+    assert telegram.answers == [("cb-9", "unknown picture")]
 
 
 def test_a_second_tap_on_the_same_message_changes_nothing(tmp_path, services, clock):
-    run = Run(tmp_path, services, clock, scene="owner_owes", scene_p=0.5)
+    run = Run(tmp_path, services, clock, scene="commitment", scene_p=0.5)
     run.cycle()
     run.tap("reference")
     before = dict(run.runtime.state.ledger_get(RID).image)
-    telegram = run.tap("owner_owes")
+    telegram = run.tap("commitment")
     assert run.runtime.state.ledger_get(RID).image == before  # the first answer stands
     assert telegram.edits == [] and telegram.answers == [("cb-9", "already answered: Reference")]
     entry = run.cycle()
@@ -152,9 +150,9 @@ def test_a_second_tap_on_the_same_message_changes_nothing(tmp_path, services, cl
 
 
 def test_a_scene_tap_from_another_chat_is_ignored(tmp_path, services, clock):
-    run = Run(tmp_path, services, clock, scene="owner_owes", scene_p=0.5)
+    run = Run(tmp_path, services, clock, scene="commitment", scene_p=0.5)
     run.cycle()
-    telegram = run.tap("owner_owes", chat=999)
+    telegram = run.tap("commitment", chat=999)
     assert run.runtime.state.ledger_get(RID).image["scene_by"] == "decider"  # the owner's answer was not recorded
     assert telegram.edits == [] and telegram.answers == [("cb-9", None)]
 
@@ -184,3 +182,13 @@ def test_labels_v2_keeps_the_first_labels_and_mirrors_two_pairs():
     for owed, owes in v2["mirrored"]:  # the wording matches, the direction differs
         assert (images[owed]["scene"], images[owes]["scene"]) == ("owed_to_owner", "owner_owes")
         assert {w.lower() for w in images[owed]["ocr_keywords"]} == {w.lower() for w in images[owes]["ocr_keywords"]}
+
+
+def test_labels_v3_is_labels_v2_with_the_two_way_mapping_and_nothing_else():
+    v2_raw = (REPO / "bench" / "images" / "labels_v2.json").read_bytes()
+    assert hashlib.sha256(v2_raw).hexdigest().startswith("c79b3dd16ff919dc")  # labels_v2.json, not edited
+    v2, v3 = json.loads(v2_raw), json.loads((REPO / "bench" / "images" / "labels_v3.json").read_text(encoding="utf-8"))
+    mapping = {"owner_owes": "commitment", "owed_to_owner": "commitment", "reference": "reference", "unsure": "unsure"}
+    assert [{**x, "scene": mapping[x["scene"]]} for x in v2["images"]] == v3["images"]
+    assert v3["mirrored"] == v2["mirrored"] and "owed_to_owner -> commitment" in v3["mapping"]
+    assert {x["scene"] for x in v3["images"]} <= {"commitment", "reference", "unsure"}

@@ -56,7 +56,7 @@ class Vision:
     """The vision server's /v1/systemone: the picture question answered with p, the scene question (ruling 50)
     with `scene` at `scene_p`."""
 
-    def __init__(self, p=0.2, status=200, scene="owner_owes", scene_p=0.9):
+    def __init__(self, p=0.2, status=200, scene="commitment", scene_p=0.9):
         self.p, self.status, self.bodies = p, status, []
         self.scene, self.scene_p = scene, scene_p
 

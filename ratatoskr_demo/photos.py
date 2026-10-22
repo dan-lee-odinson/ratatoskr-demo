@@ -36,23 +36,27 @@ the text gate on the published Decider server, the extraction, the routing read,
 the rule, Todoist, Telegram. So a photo passes the image gate and both text checks
 before any cloud call.
 
-Then, after the text gate and before anything is extracted (Dan's ruling 50), the
-scene: one read of the vision server, the picture and its OCR text as the state,
-one choice question, "What does this picture represent?", at the routing read's
-floor for a choice question (route.toml's project floor, 0.70: a starting point,
-and the checkpoint was not trained on images):
+Then, after the text gate and before anything is extracted (Dan's ruling 50, made
+two-way by ruling 54), the scene: one read of the vision server, the picture and its
+OCR text as the state, one choice question, "What does this picture represent?", at
+the routing read's floor for a choice question (route.toml's project floor, 0.70: a
+starting point, and the checkpoint was not trained on images):
 
-    owner_owes     the courier's path as it is
-    owed_to_owner  the same, each task written with the `waiting-on` label and its
-                   wrist line reading `waiting-on · <priority> · <scene p>`
+    commitment     a promise in either direction: the courier's path as it is; the
+                   extraction's own text carries who owes whom
     reference      no cloud call: the OCR text is kept on the laptop as
                    ledger/reference/<id>.txt with the picture's id and date, the
                    wrist line reads `reference · kept on the laptop`, nothing goes
                    to Todoist
     unsure         nothing sent anywhere: the wrist line `scene unsure · <p>` with
-                   three buttons, I owe, They owe, Reference; the owner's tap is
+                   two buttons, Commitment and Reference; the owner's tap is
                    recorded (`scene_by: owner`) and the chosen path runs on the
                    next cycle; a second tap changes nothing
+
+The direction of a promise is not a model answer here: the second addendum of the
+image evaluation showed the checkpoint could not read it from a picture and its text
+(a mirrored pair with identical probabilities, a note owed to the owner answered as
+owed by him at 0.71), so it is read by the extraction and by the owner (ruling 54).
 
 A photo held as unsure by the image gate or the text gate (Dan's ruling 52) gets one
 button on its id-only notice, Release; one held as sensitive gets none. The owner's
@@ -175,23 +179,21 @@ class Ocr:
         return "\n".join(text for text, _ in lines), [round(score, 4) for _, score in lines]
 
 
-# --- the scene: what the picture represents (Dan's ruling 50) ---
+# --- the scene: what the picture represents (Dan's ruling 50; two-way since ruling 54) ---
 
 SCENE_QUESTION = "What does this picture represent?"
 SCENE_CRITERIA = {
-    "owner_owes": "The owner promised something to a specific person, or owes an action by a date.",
-    "owed_to_owner": "A specific person promised the owner something, or the owner is waiting on them.",
+    "commitment": ("A promise in either direction: something the owner promised a specific person or owes by a date, "
+                   "or something a specific person promised the owner or owes the owner."),
     "reference": ("Information worth keeping, with no promise in either direction: a menu, a poster, a schedule, a "
                   "catalog page, a card with contact details and nothing owed."),
 }
 UNSURE = "unsure"
-SCENE_ACTIONS = {"owner_owes": "extracted", "owed_to_owner": "extracted, waiting-on",
-                 "reference": "kept on the laptop", UNSURE: "asked the owner"}
+SCENE_ACTIONS = {"commitment": "extracted", "reference": "kept on the laptop", UNSURE: "asked the owner"}
 SCENE_HOLD = "scene-unsure"
-WAITING_ON = "waiting-on"
 REFERENCE_LINE = "reference · kept on the laptop"
 SCENE_PREFIX = "scene"
-SCENE_BUTTONS = (("I owe", "owner_owes"), ("They owe", "owed_to_owner"), ("Reference", "reference"))
+SCENE_BUTTONS = (("Commitment", "commitment"), ("Reference", "reference"))
 SEP = " · "
 
 
@@ -223,7 +225,7 @@ class SceneDecision:
         except (KeyError, TypeError, ValueError):
             raise DeciderRejected("the scene reply had no choice answer") from None
         if choice not in SCENE_CRITERIA or not 0.0 <= p <= 1.0:
-            raise DeciderRejected("the scene answer was not one of the three options with a probability")
+            raise DeciderRejected("the scene answer was not one of its options with a probability")
         given = answer.get("probabilities") if isinstance(answer.get("probabilities"), dict) else {}
         options = tuple((k, round(float(v), 4)) for k, v in given.items()
                         if k in SCENE_CRITERIA and isinstance(v, (int, float)))
@@ -242,14 +244,6 @@ def keep_reference(folder: Path, item_id: str, date: str, text: str) -> Path:
     note = folder / f"{item_id}.txt"
     note.write_text(f"id: {item_id}\ndate: {date}\n\n{text}\n", encoding="utf-8")
     return note
-
-
-def waiting_on_line(wrist_text: str, priority_line: str, p: float | None) -> str:
-    """The wrist message of an owed_to_owner task: its first line becomes `waiting-on · <priority> · <scene p>`."""
-    parts = priority_line.split(SEP)
-    priority = parts[1] if len(parts) > 1 else "-"
-    rest = wrist_text.split("\n")[1:]
-    return "\n".join([SEP.join([WAITING_ON, priority, f"{p:.2f}" if p is not None else "-"]), *rest])
 
 
 def scene_sid(item_id: str) -> str:

@@ -427,11 +427,12 @@ cycle from the check after the one that held it, every later check running as us
 an accidental press on a recording does not apply to a photo: a note with four words on it goes on, and a photo whose
 text has no words at all is held as unreadable. After the text gate and before
 anything is extracted, the vision server is asked what the picture represents, from the picture and its text, at
-the routing read's floor for a choice question (also a starting point). Something the owner owes goes on as
-before; something owed to the owner goes on and is written with a `waiting-on` label; reference material (a menu,
-a poster, a catalog page) is kept as a note in `ledger/reference/` with nothing written to Todoist; and when the
-answer is unsure, nothing is sent anywhere and the owner is asked on Telegram, with three buttons, which path to
-take. Reference material never leaves the laptop. For the evaluation
+the routing read's floor for a choice question (also a starting point): a commitment, a promise in either
+direction, or reference material. A commitment goes on as before; reference material (a menu, a poster, a catalog
+page) is kept as a note in `ledger/reference/` with nothing written to Todoist; and when the answer is unsure,
+nothing is sent anywhere and the owner is asked on Telegram, with two buttons, which it is. Reference material never
+leaves the laptop. Who owes whom is read by the extraction and by the owner, not decided from the picture: the
+image evaluation showed the checkpoint could not tell the direction of a promise from a picture and its text. For the evaluation
 (`bench/IMAGE_EVAL_2026-10-22.md`) the folder was fed from the desktop with rendered pictures. The vision server
 runs from its own venv, beside the published one:
 

@@ -59,6 +59,8 @@ EXPORT3 = REPO / "bench" / "image_eval_2026-10-23_released.json"  # the released
 REPORT3 = REPO / "bench" / "IMAGE_EVAL_2026-10-23_released.md"
 EXPORT4 = REPO / "bench" / "image_eval_2026-10-23_released2.json"  # the second addendum (ruling 53)
 REPORT4 = REPO / "bench" / "IMAGE_EVAL_2026-10-23_released2.md"
+EXPORT5 = REPO / "bench" / "image_eval_2026-10-23_final.json"  # the final run (ruling 54)
+REPORT5 = REPO / "bench" / "IMAGE_EVAL_2026-10-23_final.md"
 COMMAND = "python bench/run_images.py --check"
 GATE_REASONS = ("image-sensitive", "image-unsure")
 SCENES = ("owner_owes", "owed_to_owner", "reference", "unsure")
@@ -308,13 +310,14 @@ class _OwnerTelegram:
 
     def __init__(self, real: Any) -> None:
         self.real, self.sent = real, []
+        self.forward = True  # the final run (ruling 54): False while a picture the labels call sensitive is placed
 
     def handler(self, request: Any) -> Any:
         import httpx
 
         payload = json.loads(request.content or b"{}")
         buttons = [b for row in (payload.get("reply_markup") or {}).get("inline_keyboard", []) for b in row]
-        to_owner = any(str(b.get("callback_data", "")).startswith("release:") for b in buttons)
+        to_owner = self.forward and any(str(b.get("callback_data", "")).startswith("release:") for b in buttons)
         if "text" in payload:
             self.sent.append({"first_line": str(payload["text"]).split("\n")[0],
                               "buttons": [b["text"] for b in buttons], "to_owner": to_owner})
@@ -387,9 +390,11 @@ def run_released(args: argparse.Namespace) -> dict[str, Any]:
     from ratatoskr_demo.runlock import refuse_while_loop_runs
     from ratatoskr_demo.source_gate import make_source_gate
 
-    labels_raw = (IMAGES / "labels_v2.json").read_bytes()
+    final = bool(getattr(args, "final", False))  # ruling 54: all twenty-four, the two-way scene, labels_v3.json
+    labels_file = "labels_v3.json" if final else "labels_v2.json"
+    labels_raw = (IMAGES / labels_file).read_bytes()
     labels = json.loads(labels_raw)
-    chosen = [x for x in labels["images"] if x["file"] in RELEASED]
+    chosen = labels["images"] if final else [x for x in labels["images"] if x["file"] in RELEASED]
     settings = load_settings()
     refuse_while_loop_runs(settings.paths.state_dir, "the image evaluation")
     if not (settings.secrets.telegram_bot_token and settings.secrets.telegram_chat_id):
@@ -408,7 +413,8 @@ def run_released(args: argparse.Namespace) -> dict[str, Any]:
         raise SystemExit("run_images: the server on the vision URL was not started with --vision")
     stamp = time.strftime("%Y%m%dT%H%M%S")
     again = bool(getattr(args, "released2", False))  # ruling 53: the second addendum, fresh copies
-    state_dir = bench.RAW_DIR / f"images-released{'2' if again else ''}-{stamp}" / "state"
+    state_dir = bench.RAW_DIR / (f"images-final-{stamp}" if final else
+                                 f"images-released{'2' if again else ''}-{stamp}") / "state"
     record = bench.TodoistRecord()
     telegram = _OwnerTelegram(httpx.Client(timeout=httpx.Timeout(30.0, connect=10.0)))
     courier = replace(settings, fixtures_dir=None, paths=replace(settings.paths, state_dir=state_dir),
@@ -448,6 +454,9 @@ def run_released(args: argparse.Namespace) -> dict[str, Any]:
             rid = photo_id(target)
             before = bench.extract_calls(settings.spend_path)
             sent_before = len(telegram.sent)
+            # the owner releases only what the labels call ordinary; a sensitive picture's notice stays local
+            releasable = label["set"] == "ordinary"
+            telegram.forward = releasable
             visits = []
             while len(visits) < 4:  # at most: held, released, held again by a later gate, released
                 reads.reset()
@@ -466,7 +475,7 @@ def run_released(args: argparse.Namespace) -> dict[str, Any]:
                 ocr.last_text = ""  # the picture's text leaves memory here
                 releases = (entry.image.get("releases") if entry else None) or []
                 if not (entry and entry.status == "hold" and entry.reason in RELEASABLE and releases
-                        and releases[-1].get("by") is None):
+                        and releases[-1].get("by") is None) or not releasable:
                     break
                 print(f"  {label['file']}: held ({entry.reason}); waiting for the owner's Release tap on {rid}",
                       flush=True)
@@ -507,13 +516,18 @@ def run_released(args: argparse.Namespace) -> dict[str, Any]:
 
     return {
         **({"addendum": 2} if again else {}),
-        "about": (("Ruling 53's second addendum, with no word floor for photos: " if again else
+        **({"final": True} if final else {}),
+        "about": (("Ruling 54's final image evaluation: the twenty-four pictures with the two-way scene, every "
+                   "picture the labels call ordinary and a gate held as unsure released by the owner's tap, as the "
+                   "run recorded it. bench/run_images.py draws bench/IMAGE_EVAL_2026-10-23_final.md from this file "
+                   "alone. Fictional pictures only.") if final else
+                  ("Ruling 53's second addendum, with no word floor for photos: " if again else
                    "Ruling 52's addendum to the second image evaluation: ") +
                   "the five new ordinary pictures the gates held as unsure, each released by the owner's tap, as the "
                   "run recorded it. bench/run_images.py draws "
                   f"bench/IMAGE_EVAL_2026-10-23_released{'2' if again else ''}.md from this file alone. Fictional "
                   "pictures only."),
-        "labels_file": "labels_v2.json",
+        "labels_file": labels_file,
         "labels_sha256": grouped(hashlib.sha256(labels_raw).hexdigest()),
         "labels_json": labels_raw.decode("utf-8"),
         "code": bench._git("rev-parse", "--short", "HEAD"),
@@ -1134,6 +1148,175 @@ def render3(data: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
+SCENES2 = ("commitment", "reference", "unsure")  # the two-way scene (ruling 54) and unsure below its floor
+EARLIER = ("bench/IMAGE_EVAL_2026-10-22.md", "bench/IMAGE_EVAL_2026-10-23.md", "bench/IMAGE_EVAL_2026-10-23_released.md",
+           "bench/IMAGE_EVAL_2026-10-23_released2.md")
+
+
+def render4(data: dict[str, Any]) -> str:
+    """The final image evaluation's report (ruling 54), from its export alone."""
+    parsed = json.loads(data["labels_json"])
+    labels = {x["file"]: x for x in parsed["images"]}
+    rows = data["images"]
+    sens = [r for r in rows if r["set"] == "sensitive"]
+    ordn = [r for r in rows if r["set"] == "ordinary"]
+    cats = {r["file"]: _category(r) for r in rows}
+    asked = [r for r in rows if r["image"].get("scene") is not None]
+    released = [(r, x) for r in rows for x in r["image"].get("releases") or []]
+    lines = [
+        "# Image evaluation, final run",
+        "",
+        "<!-- Generated by bench/run_images.py from bench/image_eval_2026-10-23_final.json. Do not edit by hand. -->",
+        f"Run {data['started']} to {data['finished']} by `bench/run_images.py --final` (git blob "
+        f"`{data['runner_blob']}`), at commit `{data['code']}`.",
+        "",
+        "- **After four photo reports (ruling 54):** this run follows " + ", ".join(f"`{x}`" for x in EARLIER) + ". "
+        "Since the first two: a photo held as unsure by the image gate or the text gate can be released by the owner "
+        "(ruling 52); the 8-word floor for recordings no longer applies to a photo (ruling 53); and the scene "
+        "question is two-way, `commitment` (a promise in either direction) or `reference`, with unsure below its "
+        "floor (ruling 54). Why the last: the second addendum showed the checkpoint could not read the direction of "
+        "a promise from a picture and its text (a mirrored pair with identical probabilities, the other pair leaning "
+        "the wrong way on both sides, and a note owed to the owner answered as owed by him at 0.71, above the "
+        "floor, which changed the action). The direction is now read by the extraction and by the owner. What the "
+        "measurement supported stays: reference against a commitment, and asking the owner when unsure. The four "
+        "earlier reports are unchanged and still rebuild from their exports.",
+        "- **Released by the owner:** every picture the labels call ordinary that a gate held as unsure was released "
+        "by Dan's tap on the Release button of its notice, as an evaluation action. A picture the labels call "
+        "sensitive was not released: a sensitive hold has no button, and a sensitive picture a gate held as unsure "
+        "kept its notice on the local record, not offered to the owner.",
+        "- **What left the laptop:** the Release notices of ordinary pictures went to the owner's Telegram chat and "
+        "the taps came back from it; every other Telegram line and every Todoist write went to local records. "
+        "Bedrock calls are counted below.",
+        "- **An experiment with an untrained checkpoint:** Strands Decider was not trained on images; the image gate "
+        "and the scene use the vision tower inside its base model, at floors that are starting points.",
+        f"- **The labels:** `bench/images/labels_v3.json`, derived from `labels_v2.json` by "
+        f"`bench/images/labels_v3.py` (owner_owes and owed_to_owner to commitment), sha256 "
+        f"`{data['labels_sha256']}`, committed before this run's first model call, not edited after it.",
+        f"- **Replay:** `{COMMAND}` draws this report again from `bench/image_eval_2026-10-23_final.json`, with no "
+        "network, no model and no key.",
+        "",
+        "| | |", "|---|---|",
+    ]
+    lines += [f"| {k} | {v} |" for k, v in data["versions"].items()]
+    lines.append("")
+    if data["stopped"]:
+        lines += [f"**Stopped (a partial run):** {data['stopped']}", ""]
+    first_hold = {r["file"]: next((v for v in r["visits"] if v["status"] == "hold"), None) for r in rows}
+    gate_unsure = [r for r in rows if (first_hold[r["file"]] or {}).get("reason") == "image-unsure"]
+    gate_sensitive = [r for r in rows if (first_hold[r["file"]] or {}).get("reason") == "image-sensitive"]
+    sent = lambda r: r["extraction_calls_spend_ledger"] > 0 or bool(r["written"])  # noqa: E731
+    lines += [f"## The counts ({len(rows)} pictures)", "", "| count | result |", "|---|---|",
+              f"| sensitive pictures sent to Bedrock or written to Todoist | "
+              f"{_frac(sum(1 for r in sens if sent(r)), len(sens))} |",
+              f"| sensitive pictures held by the image gate: as sensitive / as unsure (not released) | "
+              f"{sum(1 for r in gate_sensitive if r['set'] == 'sensitive')} / "
+              f"{sum(1 for r in gate_unsure if r['set'] == 'sensitive')} of {len(sens)} |",
+              f"| ordinary pictures the image gate held as unsure (then released) | "
+              f"{_frac(sum(1 for r in gate_unsure if r['set'] == 'ordinary'), len(ordn))} |",
+              f"| releases by the owner (pictures / taps) | {len({r['file'] for r, x in released if x.get('by') == 'owner'})}"
+              f" / {sum(1 for _, x in released if x.get('by') == 'owner')} |"]
+    for name in ("unreadable", "image gate", "tripwire", "text gate", "scene unsure", "task check", "leak guard"):
+        lines.append(f"| ordinary pictures held at the end: {name} | "
+                     f"{_frac(sum(1 for r in ordn if cats[r['file']] == name), len(ordn))} |")
+    lines += [f"| ordinary pictures kept on the laptop as reference | "
+              f"{_frac(sum(1 for r in ordn if cats[r['file']] == 'kept as reference'), len(ordn))} |",
+              f"| ordinary pictures written (a commitment) | "
+              f"{_frac(sum(1 for r in ordn if cats[r['file']] == 'written'), len(ordn))} |"]
+    every = lambda key: [v for r in rows for visit in r["visits"] for v in visit.get(key, [])]  # noqa: E731
+    lines += [f"| image gate read, median / p90 | {_ms([r['image']['gate_seconds'] for r in rows if 'gate_seconds' in r['image']])} |",
+              f"| text gate read, median / p90 | {_ms(every('text_gate_seconds'))} |",
+              f"| scene read, median / p90 | {_ms([r['image']['scene_seconds'] for r in rows if 'scene_seconds' in r['image']])} |",
+              f"| routing read, median / p90 | {_ms(every('routing_seconds'))} |"]
+    for name, m in data["memory_end"].items():
+        if m:
+            lines.append(f"| {name} memory at the end | {m['resident_gb']} GB resident, {m['private_gb']} GB private |")
+    spent = data["spend_after"]["total_usd"] - data["spend_before"]["total_usd"]
+    lines += [f"| Bedrock spend | ${spent:.6f} over {data['spend_after']['calls'] - data['spend_before']['calls']} "
+              f"call(s); the ledger at ${data['spend_after']['total_usd']:.6f} of the "
+              f"${data['spend_after']['hard_stop_usd']:.2f} hard stop |", ""]
+    lines += ["## The releases", "", "| picture | set | held by (p) | released by | at (UTC) |", "|---|---|---|---|---|"]
+    for r, x in released:
+        hold = next((v for v in r["visits"] if v["status"] == "hold" and v["reason"] in RELEASE_REASONS
+                     and ("image" if v["reason"] == "image-unsure" else "text") in x.get("held_by", "")), None)
+        p = None if hold is None else (hold["picture_p"][-1] if hold["reason"] == "image-unsure" and hold["picture_p"]
+                                       else (max(hold["text_gate_p"]) if hold["text_gate_p"] else None))
+        lines.append(f"| {r['file']} | {r['set']} | {x.get('held_by')} ({'-' if p is None else f'{p:.2f}'}) | "
+                     f"{x.get('by') or 'not released'} | {(x.get('at') or '-').replace('+00:00', '')} |")
+    lines += ["", "## The scene, two-way", "",
+              f"Asked of {len(asked)} pictures. Rows: the label; columns: the answer.", "",
+              "| label \\ answer | " + " | ".join(SCENES2) + " |", "|---|" + "---|" * len(SCENES2)]
+    for want in SCENES2:
+        cells = [sum(1 for r in asked if labels[r["file"]]["scene"] == want and r["image"]["scene"] == got)
+                 for got in SCENES2]
+        lines.append(f"| {want} | " + " | ".join(str(c) for c in cells) + " |")
+    lines += ["", f"Answer matches the label on "
+                  f"{sum(1 for r in asked if labels[r['file']]['scene'] == r['image']['scene'])} of {len(asked)}.", "",
+              "## Per picture", "",
+              "| picture | set | label | image gate p | released | text gate p | scene answer (confidence) | "
+              "commitment / reference | action | Bedrock calls | writes |",
+              "|---|---|---|---|---|---|---|---|---|---|---|"]
+    for r in rows:
+        img = r["image"]
+        gate_p = next((v["picture_p"][0] for v in r["visits"] if v["picture_p"]), img.get("gate_p"))
+        text_p = next((v["text_gate_p"] for v in reversed(r["visits"]) if v["text_gate_p"]), [])
+        rel = "; ".join(f"{x.get('held_by')}: {x.get('by') or 'not released'}" for x in img.get("releases") or []) or "-"
+        options = img.get("scene_options") or {}
+        probs = " / ".join(f"{options[k]:.2f}" if k in options else "-" for k in SCENES2[:2])
+        scene = ("-" if not img.get("scene") else
+                 f"unsure (top {img.get('scene_choice')}, {img['scene_p']:.2f})" if img["scene"] == "unsure" else
+                 f"{img['scene']} ({img['scene_p']:.2f})")
+        action = img.get("scene_action") or (f"held ({r['reason']})" if r["status"] == "hold" else _closed(r))
+        lines.append(f"| {r['file']} | {r['set']} | {labels[r['file']]['scene']} | "
+                     f"{'-' if gate_p is None else f'{gate_p:.2f}'} | {rel} | "
+                     f"{', '.join(f'{x:.2f}' for x in text_p) or '-'} | {scene} | {probs} | {action} | "
+                     f"{img.get('extraction_calls', 0)} / {r['extraction_calls_spend_ledger']} | {len(r['written'])} |")
+    lines += ["", "Bedrock calls: the courier's ledger / the spend ledger. The text gate p is the last read of the text "
+                  "gate; a picture released from the text gate is not asked again.", "",
+              "## Cloud calls and writes by scene answer", "",
+              "| scene answer | pictures | action | Bedrock extraction calls (the courier's ledger / the spend ledger) | "
+              "tasks written | reference notes kept | expected |", "|---|---|---|---|---|---|---|"]
+    expect = {"commitment": "a call, a write or more, per picture", "reference": "no call, no write",
+              "unsure": "no call, no write"}
+    for scene in SCENES2:
+        group = [r for r in asked if r["image"]["scene"] == scene]
+        lines.append(f"| {scene} | {len(group)} | "
+                     f"{'; '.join(sorted({r['image'].get('scene_action', '-') for r in group})) or '-'} | "
+                     f"{sum(r['image'].get('extraction_calls', 0) for r in group)} / "
+                     f"{sum(r['extraction_calls_spend_ledger'] for r in group)} | "
+                     f"{sum(len(r['written']) for r in group)} | {sum(1 for r in group if r.get('reference_note'))} | "
+                     f"{expect[scene]} |")
+    not_asked = [r for r in rows if not r["image"].get("scene")]
+    lines.append(f"| not asked (held before the scene) | {len(not_asked)} | - | "
+                 f"{sum(r['image'].get('extraction_calls', 0) for r in not_asked)} / "
+                 f"{sum(r['extraction_calls_spend_ledger'] for r in not_asked)} | "
+                 f"{sum(len(r['written']) for r in not_asked)} | 0 | no call, no write |")
+    by_file = {r["file"]: r for r in rows}
+    lines += ["", "## The mirrored pairs", "",
+              "The same wording, the opposite direction. Both should be a commitment; who owes whom is the "
+              "extraction's to read.", "",
+              "| pair | picture | answer | commitment / reference | task written |", "|---|---|---|---|---|"]
+    for i, pair in enumerate(parsed.get("mirrored", []), start=1):
+        for name in pair:
+            r = by_file.get(name)
+            if r is None:
+                continue
+            img = r["image"]
+            options = img.get("scene_options") or {}
+            probs = " / ".join(f"{options[k]:.2f}" if k in options else "-" for k in SCENES2[:2])
+            answer = ("not asked" if not img.get("scene") else
+                      f"unsure (top {img.get('scene_choice')}, {img['scene_p']:.2f})" if img["scene"] == "unsure" else
+                      f"{img['scene']} ({img['scene_p']:.2f})")
+            lines.append(f"| {i} | {name} | {answer} | {probs} | "
+                         f"{'; '.join(str(w['content']) for w in r['written']) or '-'} |")
+    lines += ["", "## What this run does not show", "",
+              "- Real photographs: the pictures are rendered, sharp and straight.",
+              "- The gates' own reading of the released pictures: each was let through by the owner after a gate held "
+              "it as unsure.",
+              "- A trained image gate or scene decision: the checkpoint's image answers come from its base model's "
+              "vision tower, untrained on images.", ""]
+    return "\n".join(lines)
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     parser.add_argument("--run", action="store_true", help="run the evaluation (both servers up) and write the export")
@@ -1147,11 +1330,14 @@ def main(argv: list[str] | None = None) -> int:
                         help="the released pictures (ruling 52): the owner's taps, the 2026-10-23_released files")
     parser.add_argument("--released2", action="store_true",
                         help="the second addendum (ruling 53): no word floor for photos, the _released2 files")
+    parser.add_argument("--final", action="store_true",
+                        help="the final run (ruling 54): all twenty-four, the two-way scene, the _final files")
     args = parser.parse_args(argv)
     if args.check:  # every report whose export exists, each against its own renderer
         failed = 0
         for export, report, draw in ((EXPORT, REPORT, render), (EXPORT2, REPORT2, render2),
-                                     (EXPORT3, REPORT3, render3), (EXPORT4, REPORT4, render3)):
+                                     (EXPORT3, REPORT3, render3), (EXPORT4, REPORT4, render3),
+                                     (EXPORT5, REPORT5, render4)):
             if not export.exists():
                 continue
             same = draw(json.loads(export.read_text(encoding="utf-8"))) == report.read_text(encoding="utf-8")
@@ -1159,11 +1345,12 @@ def main(argv: list[str] | None = None) -> int:
             print(f"{report.relative_to(REPO)}: regenerated from {export.relative_to(REPO)}; "
                   + ("identical, byte for byte" if same else "DIFFERS"))
         return 1 if failed else 0
-    export, report, draw = ((EXPORT4, REPORT4, render3) if args.released2 else
+    export, report, draw = ((EXPORT5, REPORT5, render4) if args.final else
+                            (EXPORT4, REPORT4, render3) if args.released2 else
                             (EXPORT3, REPORT3, render3) if args.released else
                             (EXPORT2, REPORT2, render2) if args.second else (EXPORT, REPORT, render))
     if args.run:
-        data = run_released(args) if args.released or args.released2 else run(args)
+        data = run_released(args) if args.released or args.released2 or args.final else run(args)
         export.write_bytes((json.dumps(data, indent=2, ensure_ascii=False) + "\n").encode("utf-8"))
         print(f"wrote {export.relative_to(REPO)}")
     data = json.loads(export.read_text(encoding="utf-8"))
