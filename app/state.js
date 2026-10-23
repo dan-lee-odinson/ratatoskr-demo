@@ -263,7 +263,7 @@
       case "keep-held": return "Owner kept it held after private review (simulated viewer)";
       case "release": return "Owner released the unsure hold (owner authorization; the remaining checks resume)";
       case "scene": return "Owner chose " + (action.value === "commitment" ? "Commitment" : "Reference");
-      case "categorize": return action.value === LEAVE ? "Owner left it unsorted" : "Owner chose " + action.value;
+      case "categorize": return action.value === LEAVE ? "Left unsorted by owner" : "Filed by owner: " + action.value;
       case "tag-add": return "Owner added tag \"" + action.value + "\"";
       case "tag-remove": return "Owner removed tag \"" + action.value + "\"";
     }

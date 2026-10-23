@@ -15,13 +15,18 @@
    state, never an external write.
 
    ServiceAdapter (P1): the courier's owner service (ratatoskr-demo --loop --owner-service), chosen when the page is
-   served by it and holds its token. */
+   served by it and holds its token.
+
+   The sandbox (Dan's ruling 65): on the public host, or with ?sandbox=1 for local testing, the fixtures under the
+   sandbox's own storage key, chosen before anything else; no address or query switches it off. */
 (function (root) {
   "use strict";
 
   var KEY = "ratatoskr-companion/v1";
   var SERVICE_KEY = "ratatoskr-companion/service/v1"; // the owner's local actions on live items
   var TOKEN_KEY = "ratatoskr-companion/token"; // the owner service's token, as the owner entered it
+  var SANDBOX_KEY = "ratatoskr-companion/sandbox/v1"; // the sandbox's actions, apart from the prototype's
+  var SANDBOX_HOSTS = ["dan-lee-odinson.github.io"]; // where the page is the public sandbox
 
   function memoryStorage() {
     var data = {};
@@ -166,9 +171,27 @@
     };
   }
 
-  // The service when the page came from it (http) and holds its token; the fixtures otherwise. A token in the
-  // address's fragment (#token=...) is kept and taken out of the address; a fragment never reaches a server.
+  function isSandbox(location) { // ?sandbox=1 only switches it on; on the public host nothing switches it off
+    return SANDBOX_HOSTS.indexOf(location.hostname) >= 0 || /(?:^\?|&)sandbox=1(?:&|$)/.test(location.search || "");
+  }
+
+  function SandboxAdapter(fixtures, storage) {
+    var adapter = FixtureAdapter(fixtures, storage, null, SANDBOX_KEY);
+    adapter.sandbox = true;
+    adapter.describe = "Interactive sandbox: fictional content with Decider's recorded answers from the committed " +
+      "exports";
+    adapter.writes = "Saved in this browser only, under the sandbox's own key; no model, courier, Todoist or " +
+      "Telegram request is made";
+    return adapter;
+  }
+
+  // The sandbox first, before any fragment is parsed or credential read. Then the service when the page came from it
+  // (http) and holds its token; the fixtures otherwise. A token in the address's fragment (#token=...) is kept and
+  // taken out of the address; a fragment never reaches a server.
   function choose(fixtures, storage, location, fetchImpl) {
+    if (isSandbox(location)) {
+      return SandboxAdapter(fixtures, storage);
+    }
     var match = /(?:^#|&)token=([^&]+)/.exec(location.hash || "");
     if (match) {
       storage.setItem(TOKEN_KEY, decodeURIComponent(match[1]));
@@ -183,8 +206,9 @@
     return FixtureAdapter(fixtures, storage);
   }
 
-  var api = { KEY: KEY, SERVICE_KEY: SERVICE_KEY, TOKEN_KEY: TOKEN_KEY, FixtureAdapter: FixtureAdapter,
-    ServiceAdapter: ServiceAdapter, choose: choose, memoryStorage: memoryStorage, browserStorage: browserStorage };
+  var api = { KEY: KEY, SERVICE_KEY: SERVICE_KEY, TOKEN_KEY: TOKEN_KEY, SANDBOX_KEY: SANDBOX_KEY,
+    FixtureAdapter: FixtureAdapter, ServiceAdapter: ServiceAdapter, SandboxAdapter: SandboxAdapter, choose: choose,
+    isSandbox: isSandbox, memoryStorage: memoryStorage, browserStorage: browserStorage };
   if (typeof module === "object" && module.exports) {
     module.exports = api;
   } else {

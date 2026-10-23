@@ -21,9 +21,18 @@
 
   var INPUT = { photo: "Photo", recording: "Recording" };
 
-  function App(el, adapter) {
+  // The sandbox (Dan's ruling 65): its label, on screen in every view, sheet and viewer, and the fixtures its guided
+  // scenario uses: an ordinary task Decider was unsure of, an unsure photo hold, a sensitive transcript hold.
+  var SANDBOX_LABEL = "Interactive sandbox: recorded Decider results, simulated integrations.";
+  var SCENARIO = { task: "task-rec_009-3", unsure: "hold-s6", sensitive: "hold-rec_014" };
+
+  function App(el, adapter, options) {
     this.el = el;
     this.adapter = adapter;
+    this.sandbox = !!adapter.sandbox;
+    this.scenario = { step: 0, card: null, arriving: false }; // the guided scenario's progress, never stored
+    this.timers = []; // its pending arrivals, cleared by a reset
+    this.delay = options && typeof options.delay === "number" ? options.delay : 700; // a notification's arrival, ms
     this.tab = "review";
     this.filter = { category: "", tag: "" };
     this.sheet = null; // the task open in its sheet
@@ -38,6 +47,12 @@
     this.el.addEventListener("click", function (e) { self.onClick(e); });
     this.el.addEventListener("submit", function (e) { e.preventDefault(); self.onSave(e.target); });
     this.el.addEventListener("change", function (e) { self.onChange(e); });
+    if (this.sandbox) {
+      this.el.classList.add("sandboxed");
+      if (this.el.id === "app") {
+        root.document.title = "Ratatoskr · interactive sandbox";
+      }
+    }
     return this.reload();
   };
 
@@ -102,7 +117,7 @@
 
   App.prototype.onClick = function (e) {
     var t = e.target.closest("[data-tab],[data-review],[data-act],[data-open],[data-close],[data-close-viewer]," +
-      "[data-add-tag],[data-remove-tag],[data-reset],[data-connect],[data-disconnect],a[href]");
+      "[data-add-tag],[data-remove-tag],[data-reset],[data-connect],[data-disconnect],[data-scenario],[data-file],a[href]");
     if (!t || this.busy) {
       if (t && t.matches("a[href]")) {
         e.preventDefault();
@@ -124,9 +139,16 @@
       var act = t.getAttribute("data-act");
       var self = this;
       var proposals = S.propose(this.state, item, { action: act });
-      var words = { "keep-held": "Kept held. Recorded in Activity.", release: "Released by owner (owner authorization).",
+      var words = { "keep-held": "Kept held. Recorded in Activity.", release: "Released by owner (owner authorization)." +
+        (this.sandbox ? " In the courier, the remaining checks would resume from the check after the one that held " +
+        "it; the sandbox shows no later result." : ""),
         commitment: "Scene answered: Commitment.", reference: "Scene answered: Reference." }[act];
       this.record(proposals, words).then(function () {
+        if (self.sandbox && item === SCENARIO.unsure) { // the scenario's private example, answered
+          self.scenario.step = 4;
+          self.scenario.card = null;
+          self.render();
+        }
         if (act === "keep-held") { // back to the inbox, as the brief's scenario A asks
           self.viewer = null;
           self.tab = "review";
@@ -154,6 +176,12 @@
       var gone = t.getAttribute("data-remove-tag");
       this.draft.tags = this.draft.tags.filter(function (x) { return x !== gone; });
       this.render();
+    } else if (t.hasAttribute("data-scenario")) {
+      this.onScenario(t.getAttribute("data-scenario"));
+    } else if (t.hasAttribute("data-file")) {
+      this.fileScenarioTask(t.getAttribute("data-file"));
+    } else if (this.sandbox && (t.hasAttribute("data-connect") || t.hasAttribute("data-disconnect"))) {
+      return; // the sandbox has no live connection, and no control reaches one
     } else if (t.hasAttribute("data-connect")) { // the owner service's token, kept in this browser
       var field = this.el.querySelector("[data-token]");
       if (field && field.value.trim()) {
@@ -164,12 +192,82 @@
       root.RatatoskrAdapter.browserStorage().removeItem(root.RatatoskrAdapter.TOKEN_KEY);
       root.location.reload();
     } else if (t.hasAttribute("data-reset")) {
+      if (this.sandbox) {
+        this.resetSandbox();
+        return;
+      }
       var app = this;
       this.adapter.reset().then(function () {
         app.notice = "Prototype data cleared.";
         return app.reload();
       });
     }
+  };
+
+  // --- the sandbox's guided scenario (ruling 65) ---
+
+  App.prototype.after = function (fn) { // a notification's arrival, cancelled by a reset
+    var self = this;
+    var id = root.setTimeout(function () {
+      self.timers = self.timers.filter(function (x) { return x !== id; });
+      fn();
+    }, this.delay);
+    this.timers.push(id);
+  };
+
+  App.prototype.onScenario = function (what) {
+    var self = this;
+    var sc = this.scenario;
+    if (what === "start") {
+      sc.step = 1;
+      this.render();
+    } else if ((what === "send-task" || what === "send-private") && !sc.arriving) {
+      sc.arriving = true;
+      sc.card = null;
+      this.render();
+      this.after(function () {
+        sc.arriving = false;
+        sc.card = what === "send-task" ? { type: "task", id: SCENARIO.task, arrived: true } :
+          { type: "hold", id: SCENARIO.unsure, arrived: true };
+        sc.step = what === "send-task" ? 2 : 3;
+        self.render();
+      });
+    } else if (what === "open-sensitive") {
+      sc.card = null;
+      this.openViewer(SCENARIO.sensitive);
+    } else if (what === "dismiss") {
+      sc.card = null;
+      this.render();
+    } else if (what === "reset") {
+      this.resetSandbox();
+    }
+  };
+
+  // The owner's tap on the notification: the same proposal and record as the task's sheet, so the first answer stands.
+  App.prototype.fileScenarioTask = function (value) {
+    var self = this;
+    var proposals = S.propose(this.state, SCENARIO.task, { category: value });
+    return this.record(proposals, value === S.LEAVE ? "Left unsorted by owner." : "Filed by owner: " + value + ".")
+      .then(function () {
+        self.scenario.card = { type: "task", id: SCENARIO.task };
+        self.scenario.step = 3;
+        self.render();
+      });
+  };
+
+  // Everything the sandbox holds: its actions, the scenario's progress, the open sheet or viewer, pending arrivals.
+  App.prototype.resetSandbox = function () {
+    var self = this;
+    this.timers.forEach(function (id) { root.clearTimeout(id); });
+    this.timers = [];
+    this.scenario = { step: 0, card: null, arriving: false };
+    this.sheet = this.viewer = this.draft = null;
+    this.tab = "review";
+    this.filter = { category: "", tag: "" };
+    return this.adapter.reset().then(function () {
+      self.notice = "Sandbox reset: every action and the scenario's progress cleared.";
+      return self.reload();
+    });
   };
 
   App.prototype.onChange = function (e) {
@@ -214,11 +312,12 @@
       about: this.renderAbout }[this.tab].call(this);
     var count = S.needsReview(this.state).length;
     this.el.innerHTML =
-      "<header class=\"top\"><div class=\"brand\">Ratatoskr</div><div class=\"sub\">Companion · mobile web prototype" +
-      "</div><div class=\"source\">" + esc(this.adapter.name === "fixtures" ? "Fixture data · prototype writes" :
+      "<header class=\"top\">" + this.labelHtml() + "<div class=\"brand\">Ratatoskr</div><div class=\"sub\">" +
+      "Companion · mobile web prototype</div><div class=\"source\">" + esc(this.sandbox ?
+        "Recorded results · no live connection" : this.adapter.name === "fixtures" ? "Fixture data · prototype writes" :
         "Owner service · live") + "</div></header>" +
       "<main class=\"main\">" + (this.notice && !this.sheet && !this.viewer ? "<p class=\"notice\" role=\"status\">" +
-        esc(this.notice) + "</p>" : "") + body + "</main>" +
+        esc(this.notice) + "</p>" : "") + this.renderScenario() + body + "</main>" + this.renderNotification() +
       "<nav class=\"tabs\">" + [["review", "Needs review" + (count ? " (" + count + ")" : "")], ["tasks", "Tasks"],
         ["activity", "Activity"], ["about", "About"]].map(function (x) {
           return "<button data-tab=\"" + x[0] + "\" class=\"" + (this.tab === x[0] ? "on" : "") + "\">" + esc(x[1]) +
@@ -231,6 +330,75 @@
   function badge(view) {
     return view.illustrative ? "<span class=\"badge illus\">Illustrative data, not a recorded model answer</span>" : "";
   }
+
+  App.prototype.labelHtml = function (where) { // the sandbox's label: in the header, every sheet and every viewer
+    return this.sandbox ? "<div class=\"sandbox-label" + (where ? " " + where : "") + "\" role=\"note\">" +
+      esc(SANDBOX_LABEL) + "</div>" : "";
+  };
+
+  App.prototype.renderScenario = function () {
+    if (!this.sandbox) {
+      return "";
+    }
+    var sc = this.scenario;
+    var holdArrived = sc.card && sc.card.type === "hold";
+    function button(label, what, waiting) {
+      return "<button class=\"btn primary\" data-scenario=\"" + what + "\"" + (waiting ? " disabled" : "") + ">" +
+        esc(waiting ? "Arriving…" : label) + "</button>";
+    }
+    var step = [
+      ["A one-minute guided scenario", "An ordinary task Decider was unsure of, filed by the owner in one tap; then " +
+        "an item held for privacy, reviewed in the simulated viewer.", button("Start the scenario", "start")],
+      ["Step 1 of 4 · Send a sample commitment", "A task from a recorded conversation that Decider was unsure where " +
+        "to file.", button("Send a sample commitment", "send-task", sc.arriving)],
+      ["Step 2 of 4 · Choose a project", "On the notification: Decider's recorded probabilities, in its order, one " +
+        "button per project, and Leave unsorted.", ""],
+      ["Step 3 of 4 · Try a private example", holdArrived ? "Press Review privately on the notification." :
+        "An item held for privacy arrives as an ID-only notification.",
+        holdArrived ? "" : button("Send a private example", "send-private", sc.arriving)],
+      ["Step 4 of 4 · Compare, or reset and try again", "A sensitive hold offers no release; an unsure one offers the " +
+        "owner's Release.", button("Open a sensitive hold", "open-sensitive")]
+    ][sc.step];
+    return "<section class=\"scenario\" aria-label=\"Guided scenario\"><div class=\"stitle\">" + esc(step[0]) +
+      "</div><p class=\"fine\">" + esc(step[1]) + "</p><div class=\"actions\">" + step[2] +
+      "<button class=\"btn\" data-scenario=\"reset\">Reset the sandbox</button></div></section>";
+  };
+
+  // A phone-style notification inside the page (no browser notification API): the scenario's task, or an ID-only hold.
+  App.prototype.renderNotification = function () {
+    var card = this.sandbox && this.scenario.card;
+    var view = card && this.state.views[card.id];
+    if (!view || this.sheet || this.viewer) {
+      return "";
+    }
+    var inner;
+    if (card.type === "task") {
+      var probs = view.project.probabilities || {};
+      var order = Object.keys(probs).sort(function (a, b) { return probs[b] - probs[a]; });
+      var chosen = view.ownerCategory;
+      var filed = view.actions.filter(function (a) { return a.type === "categorize"; })[0];
+      inner = "<div class=\"text\">" + esc(taskText(view)) + "</div><div class=\"model\">" + esc(S.modelLine(view)) +
+        "</div>" + (chosen ? "<div class=\"state done\">" + esc(chosen.value === S.LEAVE ? "Left unsorted by owner" :
+        "Filed by owner: " + chosen.value) + "</div><p class=\"fine\">" + esc(filed ? S.statusText(filed) : "") +
+        ". Decider's answer stays recorded apart from the owner's.</p><div class=\"actions\"><button class=\"btn\" " +
+        "data-tab=\"tasks\">See it in Tasks</button><button class=\"btn\" data-tab=\"activity\">See Activity</button>" +
+        "</div>" : "<p class=\"fine\">Decider's recorded probabilities, in its order:</p><div class=\"actions picks\">" +
+        order.map(function (p) {
+          return "<button class=\"btn\" data-file=\"" + esc(p) + "\">" + esc(p) + " <span class=\"num\">" +
+            S.pct(probs[p]) + "</span></button>";
+        }).join("") + "<button class=\"btn\" data-file=\"" + S.LEAVE + "\">Leave unsorted</button></div>");
+    } else {
+      inner = "<div class=\"kind\">" + esc(INPUT[view.input]) + " · held for privacy</div><div class=\"ref mono\">" +
+        esc(view.ref) + "</div><p class=\"fine\">ID only: no excerpt, title or thumbnail in the notification.</p>" +
+        "<div class=\"actions\">" + reviewLink(view) + "</div>";
+    }
+    var arriving = card.arrived; // the slide-in plays once, when it arrives, not on every redraw
+    card.arrived = false;
+    return "<aside class=\"notif " + esc(card.type) + (arriving ? " arrive" : "") + "\" role=\"status\" " +
+      "aria-live=\"polite\" data-notif=\"" + esc(view.id) + "\"><div class=\"nhead\"><span>Ratatoskr · now</span>" +
+      "<button class=\"x\" data-scenario=" +
+      "\"dismiss\" aria-label=\"Dismiss\">×</button></div>" + inner + "</aside>";
+  };
 
   function reviewLink(view, label) {
     return "<a class=\"btn primary\" href=\"" + REVIEW_LINK + esc(view.ref) + "\" data-review=\"" + esc(view.id) +
@@ -342,8 +510,11 @@
 
   App.prototype.renderAbout = function () {
     var a = this.adapter;
-    return "<h2>About this prototype</h2><p>A <strong>mobile web prototype</strong> of the owner's interface to " +
-      "Ratatoskr: one page of plain HTML, CSS and JavaScript. It is not a native app.</p>" +
+    return "<h2>About this " + (this.sandbox ? "sandbox" : "prototype") + "</h2><p>A <strong>mobile web prototype" +
+      "</strong> of the owner's interface to Ratatoskr: one page of plain HTML, CSS and JavaScript. It is not a native " +
+      "app.</p>" + (this.sandbox ? "<p>This is its <strong>interactive sandbox</strong>: the same page, served " +
+      "publicly, playing Decider's recorded answers from the committed exports. It has no live connection: no " +
+      "model, courier, Todoist or Telegram request is made.</p>" : "") +
       "<p class=\"fine\">Data: " + esc(a.describe) + ". Writes: " + esc(a.writes) + ".</p>" +
       "<h3>Real and simulated</h3><table class=\"inventory\"><tr><th>Part</th><th>Here</th></tr>" +
       [["Decider's answers (probabilities, confidences, floors)", "Real: as the committed exports recorded them; " +
@@ -356,10 +527,14 @@
        ["Category changes", a.name === "fixtures" ? "Prototype only: saved in this browser, not sent to Todoist" :
         "Live: sent to the courier's owner service; acknowledged only when the courier updated the Todoist task"],
        ["Tags", "Saved in app, not in Todoist"],
-       ["Notifications", "None: this prototype needs no Telegram"]].map(function (r) {
+       ["Notifications", this.sandbox ? "Simulated: drawn in this page by the guided scenario; no Telegram, no " +
+        "browser notification" : "None: this prototype needs no Telegram"]].concat(this.sandbox ?
+       [["Live connection", "None: the sandbox has no live connection and no connection controls"]] : [])
+      .map(function (r) {
         return "<tr><td>" + esc(r[0]) + "</td><td>" + esc(r[1]) + "</td></tr>";
-      }).join("") + "</table>" + this.renderConnection() +
-      "<p><button class=\"btn\" data-reset>Clear prototype data</button></p>";
+      }).join("") + "</table>" + (this.sandbox ? "<p><button class=\"btn\" data-scenario=\"reset\">Reset the " +
+      "sandbox</button></p>" : this.renderConnection() +
+      "<p><button class=\"btn\" data-reset>Clear prototype data</button></p>");
   };
 
   // The owner service (P1): connected, connectable (the page came from a server), or not from here (a file).
@@ -397,7 +572,8 @@
       ((chosen ? chosen.value : pending) === S.LEAVE ? " checked" : "") + (chosen ? " disabled" : "") +
       "> <span class=\"name\">Leave unsorted</span></label>";
     var history = S.activity(this.state).filter(function (e) { return e.item === view.id; });
-    return "<div class=\"sheet\" role=\"dialog\" aria-label=\"Task\"><div class=\"sheethead\"><button class=\"btn\" " +
+    return "<div class=\"sheet\" role=\"dialog\" aria-label=\"Task\">" + this.labelHtml("stick") +
+      "<div class=\"sheethead\"><button class=\"btn\" " +
       "data-close>Back</button><h2>Task</h2></div><div class=\"text\">" + esc(taskText(view)) + "</div><div class=\"meta\">" +
       (view.due ? "Due: " + esc(view.due) + " · " : "") + esc(INPUT[view.input]) + " " + esc(view.ref) +
       (view.from ? " · " + esc(view.from) : "") + "</div>" + badge(view) +
@@ -432,7 +608,7 @@
     if (view.kind === "hold") {
       if (actions.indexOf("keep-held") >= 0) {
         buttons += "<button class=\"btn primary\" data-act=\"keep-held\" data-item=\"" + esc(view.id) + "\">Keep held" +
-          "</button>";
+          "</button><p class=\"fine\">Keep held: the item stays on the laptop and nothing is sent anywhere.</p>";
       }
       if (actions.indexOf("release") >= 0) {
         buttons += "<button class=\"btn warn\" data-act=\"release\" data-item=\"" + esc(view.id) + "\">Release " +
@@ -448,7 +624,8 @@
         "<button class=\"btn\" data-act=\"reference\" data-item=\"" + esc(view.id) + "\">Reference</button>";
     }
     return "<div class=\"viewer\" role=\"dialog\" aria-label=\"Simulated private review\"><div class=\"simbanner\">" +
-      "Simulated private review</div><p class=\"fine\">Opened from an intercepted link (<span class=\"mono\">" +
+      this.labelHtml("inline") + "Simulated private review</div><p class=\"fine\">Opened from an intercepted link " +
+      "(<span class=\"mono\">" +
       esc(REVIEW_LINK + view.ref) + "</span>): it never left this page. No connection to the laptop is made" +
       (view.viewer ? "; this is the repository's fictional fixture, and it" : ", and this page") + " does not show a " +
       "secure connection.</p><div class=\"kind\">" +

@@ -216,7 +216,7 @@ test("scenario B: Decider's suggestions, the owner's category and tag, Categoriz
     ok(/#reading-list/.test($(".sheet .chips").textContent), "and the tag");
     ok(/unsure, top work, confidence 0.63/.test($(".sheet .model").textContent), "the original model answer is kept");
     var history = $$(".sheet .activity .owner").map(function (o) { return o.textContent; });
-    eq(history, ["Owner added tag \"reading-list\"", "Owner chose writing"], "its history");
+    eq(history, ["Owner added tag \"reading-list\"", "Filed by owner: writing"], "its history");
   });
 });
 
@@ -258,7 +258,8 @@ test("scenario C: three tasks organized, the filter and the groups follow, and A
     var cards = $$(".card.task").map(function (c) { return c.getAttribute("data-card"); });
     ok(cards.indexOf("task-rec_001-3") >= 0 && cards.indexOf("task-rec_001-1") >= 0, "the category filter");
     var owners = S.activity(app.state).map(function (e) { return e.owner; });
-    eq(owners.filter(function (o) { return /^Owner chose|^Owner left/.test(o); }).length, 3, "three category entries");
+    eq(owners.filter(function (o) { return /^Filed by owner|^Left unsorted by owner/.test(o); }).length, 3,
+       "three category entries");
     eq(owners.filter(function (o) { return /^Owner added tag/.test(o); }).length, 3, "three tag entries");
     return new RatatoskrApp.App(freshRoot(), fixtureAdapter(store)).start();
   }).then(function (again) {
@@ -480,6 +481,199 @@ test("the adapter is the service only for a page served over http that holds the
   eq(A.choose(F, fresh, { protocol: "http:", hash: "#token=abc%20def", origin: "http://127.0.0.1:8788",
     pathname: "/", search: "" }).name, "service", "served, a token in the fragment");
   eq(fresh.getItem(A.TOKEN_KEY), "abc def", "the fragment's token kept");
+});
+
+// --- the interactive sandbox (ruling 65) ---
+
+var PUBLIC = { hostname: "dan-lee-odinson.github.io", protocol: "https:", origin: "https://dan-lee-odinson.github.io",
+  pathname: "/ratatoskr-demo/", search: "", hash: "" };
+function at(base, extra) { return Object.assign({}, base, extra); }
+function wait(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+// A store that records every key read or written, over a memory store that already holds a dummy token.
+function spiedStore() {
+  var inner = A.memoryStorage(), log = [];
+  inner.setItem(A.TOKEN_KEY, "dummy-stored-token");
+  return { log: log, inner: inner,
+    getItem: function (k) { log.push("get " + k); return inner.getItem(k); },
+    setItem: function (k, v) { log.push("set " + k); inner.setItem(k, v); },
+    removeItem: function (k) { log.push("remove " + k); inner.removeItem(k); } };
+}
+function sandbox(store, fetchImpl) {
+  var adapter = A.choose(F, store || A.memoryStorage(), at(PUBLIC, { hash: "#token=dummy-fragment-token" }), fetchImpl);
+  return new RatatoskrApp.App(freshRoot(), adapter, { delay: 15 }).start();
+}
+function scenario(what) { return click("[data-scenario='" + what + "']"); }
+
+test("sandbox mode is forced on the public host before any token is parsed or read, and nothing switches it off", function () {
+  var store = spiedStore();
+  var fetched = [];
+  var a = A.choose(F, store, at(PUBLIC, { hash: "#token=dummy-fragment-token", search: "?sandbox=0" }),
+    function (u) { fetched.push(u); });
+  eq([a.name, a.sandbox === true], ["fixtures", true], "the sandbox, on the public host, ?sandbox=0 notwithstanding");
+  ok(!store.log.some(function (l) { return l.indexOf(A.TOKEN_KEY) >= 0; }), "no stored credential read or written");
+  eq(store.inner.getItem(A.TOKEN_KEY), "dummy-stored-token", "the stored dummy token untouched");
+  var local = spiedStore();
+  var b = A.choose(F, local, { hostname: "127.0.0.1", protocol: "http:", origin: "http://127.0.0.1:8765",
+    pathname: "/", search: "?sandbox=1", hash: "#token=dummy-fragment-token" });
+  ok(b.sandbox === true && !local.log.some(function (l) { return l.indexOf(A.TOKEN_KEY) >= 0; }),
+     "?sandbox=1 switches it on locally, before the fragment");
+  var plain = spiedStore();
+  eq(A.choose(F, plain, { hostname: "127.0.0.1", protocol: "http:", origin: "http://127.0.0.1:8765", pathname: "/",
+    search: "", hash: "" }).name, "service", "without it, a local page with a token is still the owner service's");
+  return a.load().then(function () {
+    eq(fetched, [], "loading the sandbox asks nothing of the network");
+  });
+});
+
+test("the sandbox makes no request to any origin through the whole scenario, and keeps its own storage key", function () {
+  var calls = [];
+  var realFetch = window.fetch, realOpen = XMLHttpRequest.prototype.open;
+  window.fetch = function (u) { calls.push("fetch " + u); return Promise.reject(new Error("blocked in the test")); };
+  XMLHttpRequest.prototype.open = function (m, u) { calls.push("xhr " + u); return realOpen.apply(this, arguments); };
+  var store = spiedStore(), app;
+  function restore() { window.fetch = realFetch; XMLHttpRequest.prototype.open = realOpen; }
+  return sandbox(store, function (u) { calls.push("adapter " + u); }).then(function (x) {
+    app = x;
+    return scenario("start");
+  }).then(function () { return scenario("send-task"); }).then(function () { return wait(40); }).then(function () {
+    return click("[data-file='writing']");
+  }).then(function () { return scenario("send-private"); }).then(function () { return wait(40); }).then(function () {
+    return click(".notif a[data-review]");
+  }).then(function () { return click("[data-act='release']"); }).then(function () {
+    return click("[data-close-viewer]");
+  }).then(function () { return scenario("open-sensitive"); }).then(function () {
+    return click("[data-close-viewer]");
+  }).then(function () { return click("[data-tab=about]"); }).then(function () { return scenario("reset"); })
+    .then(function () {
+      restore();
+      eq(calls, [], "no fetch, no XMLHttpRequest, no adapter request: no owner-service request to any origin");
+      ok(store.log.some(function (l) { return l === "set " + A.SANDBOX_KEY; }), "actions under the sandbox's key");
+      ok(!store.log.some(function (l) { return l === "set " + A.KEY || l.indexOf(A.TOKEN_KEY) >= 0; }),
+         "never the prototype's key, never the token");
+    }, function (e) { restore(); throw e; });
+});
+
+test("the sandbox label is on screen in every view, the task sheet and the viewer, and only in the sandbox", function () {
+  var label = "Interactive sandbox: recorded Decider results, simulated integrations.";
+  var seen = [];
+  function check(where) { var l = $(where + " .sandbox-label"); ok(l && l.textContent === label, "label in " + where); }
+  return sandbox().then(function () {
+    check(".top");
+    return click("[data-tab=tasks]");
+  }).then(function () { check(".top"); return click("[data-tab=activity]"); }).then(function () {
+    check(".top");
+    return click("[data-tab=about]");
+  }).then(function () { check(".top"); return click("[data-tab=review]"); }).then(function () {
+    return click("[data-open='task-rec_009-3']");
+  }).then(function () { check(".sheet"); return click("[data-close]"); }).then(function () {
+    return click("a[data-review='hold-s6']");
+  }).then(function () {
+    check(".viewer");
+    return start();
+  }).then(function () {
+    ok(!$(".sandbox-label") && !$(".scenario"), "the local prototype carries neither the label nor the scenario");
+  });
+});
+
+test("steps 1 and 2: the notification with Decider's probabilities in its order; filed by owner, kept apart in Activity", function () {
+  var app;
+  return sandbox().then(function (x) {
+    app = x;
+    return scenario("start");
+  }).then(function () { return scenario("send-task"); }).then(function () {
+    ok(!$(".notif") && $("[data-scenario='send-task']").disabled, "arriving: no notification yet");
+    return wait(40);
+  }).then(function () {
+    ok(/Read the Kestrel Launch Systems engineering blog/.test($(".notif.task").textContent), "the sample commitment");
+    ok(/unsure, top work, confidence 0.63 \(floor 0.70\)/.test($(".notif .model").textContent), "Decider unsure");
+    eq($$(".notif [data-file]").map(function (b) { return b.getAttribute("data-file"); }),
+       ["work", "writing", "other", "research", "community", "school", "personal", "unsorted"],
+       "every project in Decider's order, then Leave unsorted");
+    ok(/writing 0.23/.test($(".notif [data-file='writing']").textContent), "each with its recorded probability");
+    return click("[data-file='writing']");
+  }).then(function () {
+    ok(/Filed by owner: writing/.test($(".notif").textContent), "the notification says so");
+    eq(S.category(app.state.views["task-rec_009-3"]), { value: "writing", by: "owner", status: "saved" },
+       "the sandbox task has its category");
+    var entry = S.activity(app.state)[0];
+    eq([entry.owner, entry.model], ["Filed by owner: writing",
+       "Decider (project): unsure, top work, confidence 0.63 (floor 0.70)"], "Activity: the owner's, beside Decider's");
+    ok(/Step 3 of 4/.test($(".scenario").textContent), "the scenario moves on");
+  });
+});
+
+test("step 3: an ID-only notification, the simulated viewer, a release that claims no outcome; a sensitive hold has none", function () {
+  var app;
+  return sandbox().then(function (x) {
+    app = x;
+    return scenario("start");
+  }).then(function () { return scenario("send-task"); }).then(function () { return wait(40); }).then(function () {
+    return click("[data-file='work']");
+  }).then(function () { return scenario("send-private"); }).then(function () { return wait(40); }).then(function () {
+    var n = $(".notif.hold");
+    ok(n && /photo-/.test(n.textContent) && /ID only/.test(n.textContent) && !n.querySelector("img"),
+       "ID only: the reference, no picture, no excerpt");
+    return click(".notif a[data-review='hold-s6']");
+  }).then(function () {
+    var v = $(".viewer");
+    ok(/Simulated private review/.test(v.textContent), "labeled as simulated");
+    ok($("[data-act='keep-held']") && $("[data-act='release']"), "an unsure hold: Keep held and Release");
+    ok(/Keep held: the item stays on the laptop/.test(v.textContent) && /An owner release resumes/.test(v.textContent),
+       "each explained in one line");
+    return click("[data-act='release']");
+  }).then(function () {
+    var text = $(".viewer").textContent;
+    ok(/Released by owner \(owner authorization\)/.test(text), "the owner's authorization");
+    ok(/remaining checks would resume/.test(text) && /shows no later result/.test(text), "and no outcome claimed");
+    eq(app.state.views["hold-s6"].resolution.type, "released", "recorded in the sandbox");
+    return click("[data-close-viewer]");
+  }).then(function () {
+    ok(/Step 4 of 4/.test($(".scenario").textContent), "step 4");
+    return scenario("open-sensitive");
+  }).then(function () {
+    ok(!$("[data-act='release']") && $("[data-act='keep-held']"), "a sensitive hold: Keep held only");
+    ok(/A sensitive verdict has no release/.test($(".viewer").textContent), "and says why");
+  });
+});
+
+test("About in the sandbox: no connection controls, and the inventory says there is no live connection", function () {
+  return sandbox().then(function () { return click("[data-tab=about]"); }).then(function () {
+    ok(!$("[data-token]") && !$("[data-connect]") && !$("[data-disconnect]") && !$("[data-reset]"),
+       "no token field, no connect or disconnect, no prototype reset");
+    ok(/Live connection\s*None: the sandbox has no live connection/.test($(".inventory").textContent), "the inventory");
+    ok($("[data-scenario='reset']"), "the sandbox's own reset");
+  });
+});
+
+test("reset clears the actions, the scenario, open panels and a pending arrival; a second run has no duplicate", function () {
+  var app, store = A.memoryStorage();
+  return sandbox(store).then(function (x) {
+    app = x;
+    return scenario("start");
+  }).then(function () { return scenario("send-task"); }).then(function () { return wait(40); }).then(function () {
+    return click("[data-file='writing']");
+  }).then(function () {
+    return scenario("send-private"); // reset while the private example is still arriving
+  }).then(function () { return scenario("reset"); }).then(function () {
+    var render = app.render, renders = 0;
+    app.render = function () { renders += 1; return render.apply(this, arguments); };
+    return wait(60).then(function () { app.render = render; return renders; });
+  }).then(function (renders) {
+    eq(renders, 0, "the pending arrival was cancelled: nothing redraws the page after the reset");
+    ok(!$(".notif"), "no stale notification after the pending arrival's time");
+    eq([app.actions.length, app.timers.length, app.scenario.step, app.sheet, app.viewer], [0, 0, 0, null, null],
+       "actions, timers, progress and panels cleared");
+    eq(store.getItem(A.SANDBOX_KEY), null, "the sandbox's storage cleared");
+    ok(/Start the scenario/.test($(".scenario").textContent), "back to the start");
+    return scenario("start");
+  }).then(function () { return scenario("send-task"); }).then(function () { return wait(40); }).then(function () {
+    eq($$(".notif").length, 1, "one notification");
+    eq($$("[data-card='task-rec_009-3']").length, 1, "one task card, no duplicate item");
+    return click("[data-file='writing']");
+  }).then(function () {
+    eq(app.actions.filter(function (a) { return a.type === "categorize"; }).length, 1, "one filing");
+    eq(S.activity(app.state).length, 1, "one Activity entry");
+  });
 });
 
 // --- run ---

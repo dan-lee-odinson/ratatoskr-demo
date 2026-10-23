@@ -86,3 +86,23 @@ legend { font-size: 13px; font-weight: 600; padding: 0 4px; }
 .inventory { width: 100%; border-collapse: collapse; font-size: 13px; background: var(--card); }
 .inventory th, .inventory td { border: 1px solid var(--line); padding: 6px; vertical-align: top; text-align: left; }
 code { font-size: 12px; }
+/* The interactive sandbox (Dan's ruling 65): its label in the header, every sheet and every viewer; the guided
+   scenario; a phone-style notification drawn in the page. */
+.sandbox-label { background: #0f5e66; color: #fff; font-size: 12px; font-weight: 600; text-align: center;
+  padding: 5px 10px; margin: -10px -16px 8px; letter-spacing: 0; text-transform: none; }
+.sandbox-label.stick { position: sticky; top: -12px; z-index: 1; margin: -12px -14px 8px; }
+.sandbox-label.inline { margin: -8px -8px 6px; }
+.scenario { background: #e6f2f3; border: 1px solid #9cc9cd; border-radius: 12px; padding: 10px 12px; margin: 8px 0; }
+.scenario .stitle { font-weight: 700; }
+.notif { position: fixed; left: 50%; bottom: 64px; transform: translateX(-50%); width: calc(100% - 24px); max-width: 406px;
+  z-index: 4; background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 10px 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .18); }
+.notif.arrive { animation: notif-in .35s ease-out; }
+.notif.task { border-left: 4px solid var(--copper); }
+.notif.hold { border-left: 4px solid var(--warn); }
+.notif .nhead { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--muted); }
+.notif .x { border: 0; background: none; font-size: 18px; line-height: 1; cursor: pointer; color: var(--muted); }
+.picks .btn { font-size: 13px; padding: 6px 10px; }
+.picks .num { color: var(--muted); font-size: 12px; }
+@keyframes notif-in { from { transform: translate(-50%, 40px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .notif.arrive { animation: none; } }
