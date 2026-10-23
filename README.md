@@ -424,6 +424,8 @@ nothing. Taps are handled by the loop's Telegram receiver: they take effect at o
 
 A twelve-second clip of the tap: https://youtu.be/-QixQrUyyws
 
+The same filing from the companion mobile web prototype in [`app/`](app/README.md), through the courier's owner service, in a 38-second recording: https://youtu.be/BLX68APO6LM
+
 ### Photos
 
 A second input: photos (PNG, JPEG, WebP or GIF) dropped in `ledger/inbox/photos/`, with `"glasses"` in
@@ -449,8 +451,11 @@ page) is kept as a note in `ledger/reference/` with nothing written to Todoist; 
 nothing is sent anywhere and the owner is asked on Telegram, with two buttons, which it is. Reference material never
 leaves the laptop. Who owes whom is read by the extraction and by the owner, not decided from the picture: the
 image evaluation showed the checkpoint could not tell the direction of a promise from a picture and its text. For the evaluation
-(`bench/IMAGE_EVAL_2026-10-21.md`) the folder was fed from the desktop with rendered pictures. The vision server
-runs from its own venv, beside the published one:
+(`bench/IMAGE_EVAL_2026-10-21.md`) the folder was fed from the desktop with rendered pictures. A second evaluation
+(`bench/IMAGE_EVAL_2026-10-22_camera.md`) fed it twelve phone photographs of cards made by hand for the run: none of
+the four sensitive cards reached Bedrock or Todoist, all four reference cards were kept on the laptop with no owner
+action, and none of the four commitments was written as its task, the OCR having missed a key word on every
+handwritten card it read (8 of 8). The vision server runs from its own venv, beside the published one:
 
 ```bash
 python -m venv .venv-decider-vision
@@ -463,6 +468,8 @@ python -m venv .venv-decider-vision
 ```
 
 and the courier needs the OCR: `pip install -e ".[photos]"`.
+
+An 85-second clip of the photo path, four outcomes and two owner taps: https://youtu.be/pDflGWOV-xY
 
 ## Set up your projects and your stop list
 

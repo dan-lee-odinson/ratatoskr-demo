@@ -41,6 +41,8 @@ A category change shows as **pending** until the courier answers, **acknowledged
 task, and **failed** (with the reason) when it has not. Tags, Keep held, Release and scene answers stay in the page,
 as without the service.
 
+A 38-second recording of one real filing through the service: https://youtu.be/BLX68APO6LM
+
 ## The three views
 
 - **Needs review**: a held photograph or transcript, ID only (its input type, its safe identifier, the gate and its
