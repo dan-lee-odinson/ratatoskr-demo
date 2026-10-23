@@ -14,6 +14,9 @@
 
 **Walkthrough (2.5 min, screen capture of the courier running):** https://youtu.be/RGEm62mWekI
 
+**Development roadmap:** planned capabilities, completion criteria, and the public tracking board:
+[ROADMAP.md](ROADMAP.md) and [the Project](https://github.com/users/dan-lee-odinson/projects/3).
+
 A conversation ends (on a Pocket wearable
 recorder, or typed to a Telegram bot with `/demo`); each follow-up in it lands in Todoist and as a
 three-line message on a CircuitMess Artemis smartwatch or any phone with Telegram:
