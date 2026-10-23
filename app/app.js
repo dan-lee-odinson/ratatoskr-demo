@@ -444,8 +444,9 @@
     }
     return "<div class=\"viewer\" role=\"dialog\" aria-label=\"Simulated private review\"><div class=\"simbanner\">" +
       "Simulated private review</div><p class=\"fine\">Opened from an intercepted link (<span class=\"mono\">" +
-      esc(REVIEW_LINK + view.ref) + "</span>): it never left this page. No connection to the laptop is made; this is " +
-      "the repository's fictional fixture, and it does not show a secure connection.</p><div class=\"kind\">" +
+      esc(REVIEW_LINK + view.ref) + "</span>): it never left this page. No connection to the laptop is made" +
+      (view.viewer ? "; this is the repository's fictional fixture, and it" : ", and this page") + " does not show a " +
+      "secure connection.</p><div class=\"kind\">" +
       esc(INPUT[view.input]) + " <span class=\"mono\">" + esc(view.ref) + "</span></div>" + badge(view) +
       "<div class=\"content\">" + content + "</div><div class=\"state\">" + esc(status) + "</div>" +
       (r ? "<div class=\"state done\">" + esc(outcome(view)) + "</div>" : "") +

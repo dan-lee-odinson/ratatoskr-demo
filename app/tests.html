@@ -403,6 +403,7 @@ test("with the service, an unreachable courier fails the pick, and tags and revi
     return click("[data-review='hold-rec_live']");
   }).then(function () {
     ok(/stays on the laptop/.test($(".viewer").textContent), "a live hold's content is not in the page");
+    ok(!/fictional fixture/.test($(".viewer").textContent), "and no fixture is claimed for it");
     ok(/even with the owner service connected/.test($(".viewer").textContent), "its release is prototype-only");
   });
 });

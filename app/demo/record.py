@@ -28,7 +28,8 @@ recorder itself does) and the frames are timed into the MP4 by the ffmpeg above:
 
 With --live the token is read from the courier's settings, as the courier reads it, and handed to the page in the
 address's fragment, which the page keeps and takes out of the address; it is never printed. The live run makes no
-external write: the task the live check filed is shown as the ledger has it (acknowledged), and a tag stays in the page.
+external write: the task the live check filed (the newest answered via the app, as GET /owner/pending reports it) is
+shown as the ledger has it (acknowledged), and a tag stays in the page.
 """
 
 from __future__ import annotations
@@ -36,6 +37,7 @@ from __future__ import annotations
 import argparse
 import base64
 import functools
+import json
 import re
 import shutil
 import subprocess
@@ -43,6 +45,7 @@ import sys
 import tempfile
 import threading
 import time
+import urllib.request
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
@@ -125,7 +128,19 @@ def fixtures_walk(d: Director, page) -> None:
     d.click(page.locator("[data-tab=activity]"), rest=3.5)  # the owner-action history: Model and Owner lines
 
 
-def live_walk(d: Director, page) -> None:
+def filed_via_app(base: str, token: str) -> str:
+    """The task the live check filed: the newest one answered via the app, as the owner service reports it."""
+    request = urllib.request.Request(f"{base}/owner/pending", headers={"Authorization": f"Bearer {token}"})
+    opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))  # loopback, never through a proxy
+    with opener.open(request, timeout=10) as answer:
+        items = json.load(answer)["items"]
+    filed = [item for item in items if (item.get("resolved") or {}).get("via") == "app"]
+    if not filed:
+        raise SystemExit("record --live: no task answered via the app yet (the live check files one first)")
+    return max(filed, key=lambda item: item["resolved"].get("at") or "")["id"]
+
+
+def live_walk(d: Director, page, filed: str) -> None:
     """Section 8 against the owner service: a live hold if the ledger has one, then the task the live check filed,
     acknowledged; nothing is written to Todoist here."""
     d.rest(3)
@@ -134,8 +149,8 @@ def live_walk(d: Director, page) -> None:
         d.click(hold, rest=3)  # a live hold: its content stays on the laptop
         d.click(page.locator(".viewer [data-act=keep-held]"), rest=2.5)
     d.click(page.locator("[data-tab=tasks]"), rest=2.5)
-    filed = page.locator(".card.task", has_text="by owner").first
-    d.click(filed.locator("[data-open]"), rest=3.5)  # its sheet: Decider's answer, the owner's, acknowledged
+    card = page.locator(f".card.task[data-card='{filed}']")
+    d.click(card.locator("[data-open]"), rest=3.5)  # its sheet: Decider's answer, the owner's, acknowledged
     d.type(page.locator("[data-tag-input]"), "reading", rest=0.8)
     d.click(page.locator(".sheet [data-add-tag]"), rest=1.5)
     d.click(page.locator(".sheet button[type=submit]"), rest=3)  # the tag: saved in the app, not in Todoist
@@ -227,7 +242,9 @@ def main(argv: list[str] | None = None) -> int:
         token = settings.secrets.owner_service_token
         if not token:
             raise SystemExit("record --live: no OWNER_SERVICE_TOKEN in the courier's settings")
-        url = f"http://127.0.0.1:{settings.owner.port}/#token={token}"
+        base = f"http://127.0.0.1:{settings.owner.port}"
+        filed = filed_via_app(base, token)
+        url = f"{base}/#token={token}"
     else:
         server, url = serve_fixtures()
     out = Path(args.out).resolve()
@@ -249,7 +266,10 @@ def main(argv: list[str] | None = None) -> int:
         if args.live:
             del token, url
         page.wait_for_selector(".tabs")
-        (live_walk if args.live else fixtures_walk)(Director(page), page)
+        if args.live:
+            live_walk(Director(page), page, filed)
+        else:
+            fixtures_walk(Director(page), page)
         source = screencast.stop() if screencast else None
         video = None if screencast else page.video
         context.close()
