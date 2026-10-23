@@ -317,7 +317,7 @@
         "Recorded results · no live connection" : this.adapter.name === "fixtures" ? "Fixture data · prototype writes" :
         "Owner service · live") + "</div></header>" +
       "<main class=\"main\">" + (this.notice && !this.sheet && !this.viewer ? "<p class=\"notice\" role=\"status\">" +
-        esc(this.notice) + "</p>" : "") + this.renderScenario() + body + "</main>" + this.renderNotification() +
+        esc(this.notice) + "</p>" : "") + this.renderScenario() + this.renderNotification() + body + "</main>" +
       "<nav class=\"tabs\">" + [["review", "Needs review" + (count ? " (" + count + ")" : "")], ["tasks", "Tasks"],
         ["activity", "Activity"], ["about", "About"]].map(function (x) {
           return "<button data-tab=\"" + x[0] + "\" class=\"" + (this.tab === x[0] ? "on" : "") + "\">" + esc(x[1]) +
@@ -365,6 +365,7 @@
   };
 
   // A phone-style notification inside the page (no browser notification API): the scenario's task, or an ID-only hold.
+  // It sits in the page's flow under the scenario, so on a short window it never covers the scenario's controls.
   App.prototype.renderNotification = function () {
     var card = this.sandbox && this.scenario.card;
     var view = card && this.state.views[card.id];

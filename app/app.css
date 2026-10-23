@@ -94,9 +94,8 @@ code { font-size: 12px; }
 .sandbox-label.inline { margin: -8px -8px 6px; }
 .scenario { background: #e6f2f3; border: 1px solid #9cc9cd; border-radius: 12px; padding: 10px 12px; margin: 8px 0; }
 .scenario .stitle { font-weight: 700; }
-.notif { position: fixed; left: 50%; bottom: 64px; transform: translateX(-50%); width: calc(100% - 24px); max-width: 406px;
-  z-index: 4; background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 10px 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, .18); }
+.notif { margin: 8px 0; background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 10px 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .14); }
 .notif.arrive { animation: notif-in .35s ease-out; }
 .notif.task { border-left: 4px solid var(--copper); }
 .notif.hold { border-left: 4px solid var(--warn); }
@@ -104,5 +103,5 @@ code { font-size: 12px; }
 .notif .x { border: 0; background: none; font-size: 18px; line-height: 1; cursor: pointer; color: var(--muted); }
 .picks .btn { font-size: 13px; padding: 6px 10px; }
 .picks .num { color: var(--muted); font-size: 12px; }
-@keyframes notif-in { from { transform: translate(-50%, 40px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
+@keyframes notif-in { from { transform: translateY(-12px); opacity: 0; } to { transform: none; opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .notif.arrive { animation: none; } }

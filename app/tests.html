@@ -585,6 +585,7 @@ test("steps 1 and 2: the notification with Decider's probabilities in its order;
     return wait(40);
   }).then(function () {
     ok(/Read the Kestrel Launch Systems engineering blog/.test($(".notif.task").textContent), "the sample commitment");
+    ok($("main .scenario + .notif"), "in the page's flow, under the scenario: it covers none of its controls");
     ok(/unsure, top work, confidence 0.63 \(floor 0.70\)/.test($(".notif .model").textContent), "Decider unsure");
     eq($$(".notif [data-file]").map(function (b) { return b.getAttribute("data-file"); }),
        ["work", "writing", "other", "research", "community", "school", "personal", "unsorted"],
