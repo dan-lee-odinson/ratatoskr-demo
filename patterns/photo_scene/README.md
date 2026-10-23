@@ -41,7 +41,11 @@ Ratatoskr Demo measured it on rendered pictures, and its photo reports give the 
 - **The direction of a promise is not readable from a picture.** On mirrored pairs (the same wording, the opposite
   direction), one pair got identical probabilities for both directions (the second addendum). That is why the
   question is two-way, and who owes whom is left to the extraction and the owner.
-- **Rendered pictures only.** Phone photographs are not measured yet.
+- **Rendered pictures only.** The figures above come from rendered pictures. On twelve phone photographs of handmade
+  cards ([`bench/IMAGE_EVAL_2026-10-22_camera.md`](../../bench/IMAGE_EVAL_2026-10-22_camera.md)), 0 of 4 sensitive
+  cards were sent to Bedrock or written, 4 of 4 reference cards were kept on the laptop, and 0 of 4 commitments were
+  written as their task, the OCR having missed a key word on every handwritten card it read; the scene decision asked
+  the owner on every commitment card.
 
 The floor is a starting point: measure on your own pictures before trusting it.
 
