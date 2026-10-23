@@ -1700,12 +1700,41 @@ def _chain(row: dict[str, Any]) -> str | None:
         ("no duplicate write" if not duplicate else "a duplicate write")
 
 
+def _notes_only(row: dict[str, Any]) -> bool:
+    """The extraction found no commitment: what was written is the courier's contact note ("... no follow-ups")."""
+    return bool(row["written"]) and all("no follow-ups" in str(w["content"] or "") for w in row["written"])
+
+
 def _disposition(row: dict[str, Any]) -> str:
     if row["status"] == "done" and row["reason"] == "reference":
         return "kept on the laptop (reference)"
+    if row["status"] == "done" and _notes_only(row):
+        return "extracted: no commitment found; the contact note written (no follow-ups)"
     if row["status"] == "done":
         return f"extracted, {len(row['written'])} task(s) written" if row["written"] else _closed(row)
     return f"held ({row['reason']})"
+
+
+def _owner_followed(rows: list[dict[str, Any]], labels: dict[str, Any], seconds: int,
+                    notes: dict[str, str] | None = None) -> str:
+    """What the owner did with the offers and the scene questions, against the labels, from the export."""
+    ordinary = [o for r in rows if r["set"] == "ordinary" for o in r.get("offers", []) if o["step"] == "release"]
+    sensitive = [o for r in rows if r["set"] == "sensitive" for o in r.get("offers", [])]
+    took = sum(1 for o in ordinary if o["taken"])
+    left = sum(1 for o in sensitive if not o["taken"])
+    release = (f"The owner took {took} of the {len(ordinary)} Release offers on photographs the labels call ordinary "
+               f"and left {left} of the {len(sensitive)} offers on photographs the labels call sensitive (an offer left "
+               f"is recorded as offered, not taken by the owner, after {seconds} s)")
+    release += (": whether to release followed the labels; the offers did not." if took == len(ordinary) and
+                left == len(sensitive) else ".")
+    answers = [(r, r["image"]["scene"]) for r in rows if r["image"].get("scene_by") == "owner"]
+    notes = notes or {}
+    against = [f"{r['file']} {a.capitalize()}, labelled {labels[r['file']]['scene']}"
+               + ("; the owner recorded it after the run as a mis-tap" if r["file"] in notes else "")
+               for r, a in answers if labels[r["file"]]["scene"] != a]
+    scene = (f" The owner's scene answers matched the labels on {len(answers) - len(against)} of {len(answers)}"
+             + (f" ({'; '.join(against)}), each standing as answered." if against else ".")) if answers else ""
+    return release + scene
 
 
 def _expected(label: dict[str, Any]) -> str:
@@ -1754,6 +1783,7 @@ def render5(data: dict[str, Any]) -> str:
     rows = data["images"]
     floors = data["floors"]
     wait = data.get("owner_wait", {"sensitive_seconds": 30})
+    notes = {n["file"]: n["note"] for n in data.get("owner_notes", [])}  # the owner's, recorded after the run
     export, _ = camera_files(data["started"], Path("bench"))
     sens = [r for r in rows if r["set"] == "sensitive"]
     done = [r for r in rows if r["status"] == "done"]
@@ -1786,10 +1816,8 @@ def render5(data: dict[str, Any]) -> str:
         f"(its EXIF orientation honoured) with its long side at most {data['input']['long_side']} px, from a copy in "
         "memory; the file is not touched. The configuration's git blobs are listed below, as in the final photo report.",
         "- **Every unsure hold offered:** the harness sent every notice the courier sent with a Release or scene button "
-        "to the owner's chat, whatever the label; a yes verdict has no button. The owner took every offer on a "
-        "photograph the labels call ordinary, and left every offer on a photograph the labels call sensitive (recorded "
-        f"as offered, not taken by the owner, after {wait['sensitive_seconds']} s): the owner's choice followed the "
-        "labels; the offers did not.",
+        "to the owner's chat, whatever the label; a yes verdict has no button. "
+        + _owner_followed(rows, labels, wait["sensitive_seconds"], notes),
         "- **The first run's results are the results:** nothing was rerun to improve them.",
         "- **Simulated integrations, as in the earlier runs:** every Todoist write went to a local record of the Sync "
         "commands, and every Telegram line other than the owner's notices to a local record; the Bedrock calls were "
@@ -1826,6 +1854,10 @@ def render5(data: dict[str, Any]) -> str:
               f"{sum(1 for r in held if any(not o['taken'] for o in r.get('offers', [])))} of {len(rows)} |",
               f"| sensitive photographs sent to Bedrock or written to Todoist | "
               f"{_frac(sum(1 for r in sens if sent(r)), len(sens))} |",
+              f"| commitment photographs written as their task (the written task matches the label's) | "
+              f"{_frac(sum(1 for r in of_kind['commitment'] if r['status'] == 'done' and _judged(r, labels[r['file']])[0].startswith('right')), len(of_kind['commitment']))} |",
+              f"| reference photographs kept on the laptop | "
+              f"{_frac(sum(1 for r in of_kind['reference'] if r['status'] == 'done' and r['reason'] == 'reference'), len(of_kind['reference']))} |",
               f"| owner actions: releases taken / scene answers / offers left | "
               f"{sum(1 for _, x in released if x.get('by') == 'owner')} / {len(owner_scene)} / {len(left)} |",
               f"| confident disagreements with the label at the first model answer (photographs / answers) | "
@@ -1852,15 +1884,24 @@ def render5(data: dict[str, Any]) -> str:
         label, img = labels[r["file"]], r["image"]
         image, text = _first_gates(r, floors)
         lines.append(f"| {r['file']} | {_expected(label)} | {image} | {text} | {_scene_text(_first_scene(r))} | "
-                     f"{'; '.join(_owner_actions(r)) or '-'} | {_disposition(r)} | "
+                     f"{'; '.join(_owner_actions(r)) or '-'}{' (see the note)' if r['file'] in notes else ''} | "
+                     f"{_disposition(r)} | "
                      f"{img.get('extraction_calls', 0)} / {r['extraction_calls_spend_ledger']} | {len(r['written'])} | "
                      f"{chains[r['file']] or '-'} |")
+    if notes:
+        lines += ["", "## Notes recorded after the run", "",
+                  "The owner's, recorded in the export after the run; the results above are the run's as recorded.", ""]
+        lines += [f"- **{n['file']}** ({n['recorded_at']}): {n['note']}" for n in data.get("owner_notes", [])]
     lines += ["", "## Per photograph: against the label", "",
               "| photograph | class | extraction against the label | confident disagreement at the first answer |",
               "|---|---|---|---|"]
     for r in rows:
         label = labels[r["file"]]
         verdict, projects, _ = _judged(r, label) if r["status"] == "done" else ("-", [], [])
+        if r["status"] == "done" and r["reason"] == "reference" and label["expected_tasks"]:
+            verdict = f"not extracted (kept as reference by the {'owner' if r['image'].get('scene_by') == 'owner' else 'model'})"
+        elif verdict == "OCR miss" and _notes_only(r):
+            verdict = "OCR miss: no commitment found in the text read"
         lines.append(f"| {r['file']} | {_kind(label)} | {verdict}{' (' + '; '.join(projects) + ')' if projects else ''}"
                      f" | {'; '.join(disagree[r['file']]) or '-'} |")
     lines += ["", "A project reads written / labelled.", "",
@@ -1928,7 +1969,7 @@ def render5(data: dict[str, Any]) -> str:
               f"call(s); the ledger at ${data['spend_after']['total_usd']:.6f} of the "
               f"${data['spend_after']['hard_stop_usd']:.2f} hard stop |", ""]
     lines += ["## Cloud calls and writes by class", "",
-              "| class | photographs | Bedrock extraction calls (the courier's ledger / the spend ledger) | tasks written "
+              "| class | photographs | Bedrock extraction calls (the courier's ledger / the spend ledger) | Todoist writes "
               "| reference notes kept | Telegram lines to the owner | expected |", "|---|---|---|---|---|---|---|"]
     expect = {"commitment": "a call and a write per photograph", "reference": "no call, no write",
               "sensitive": "no call, no write"}

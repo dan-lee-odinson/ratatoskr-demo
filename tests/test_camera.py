@@ -373,7 +373,7 @@ def test_the_camera_report_is_drawn_from_an_export_alone():
     for words in ("photographs taken by the owner on a phone", "content no earlier run saw",  # ruling 58C, 3
                   "handwritten, some angled, in ordinary room light", "generalization to new content",
                   "the same frozen gates, floors, question, and checkpoint as `bench/IMAGE_EVAL_2026-10-22_final.md`",
-                  "Every unsure hold offered", "whatever the label", "the owner's choice followed the labels",  # 58C, 2
+                  "Every unsure hold offered", "whatever the label", "whether to release followed the labels",  # 58C, 2
                   "The first run's results are the results", "Simulated integrations",
                   "Ruling 57's chain, live",
                   "A successful tap resolves the uncertainty; it does not make the first model answer correct"):  # 58C, 1
@@ -381,6 +381,11 @@ def test_the_camera_report_is_drawn_from_an_export_alone():
     assert "| automatic completions (finished with no owner action: written, or kept as reference) | 1 of 4 |" in text
     assert "| owner-assisted completions (finished after the owner's release or scene answer) | 1 of 4 |" in text
     assert "| held at the end: with no offer / offered, not taken by the owner | 1 / 1 of 4 |" in text
+    assert "| commitment photographs written as their task (the written task matches the label's) | 1 of 2 |" in text
+    assert "| reference photographs kept on the laptop | 0 of 1 |" in text  # c05 was extracted: an extra task
+    assert ("The owner took 1 of the 1 Release offers on photographs the labels call ordinary and left 1 of the 1 offers "
+            "on photographs the labels call sensitive") in text
+    assert "The owner's scene answers matched the labels on 1 of 1." in text
     assert "| owner actions: releases taken / scene answers / offers left | 1 / 1 / 1 |" in text
     assert "| confident disagreements with the label at the first model answer (photographs / answers) | 1 / 1 |" in text
     assert "| OCR misses, of the photographs the OCR read: a key word missed / no words | 1 / 0 of 3 |" in text
@@ -470,3 +475,15 @@ def test_the_owner_release_qualification_stands_beside_the_unsure_invariant_wher
         flat = " ".join(text.split())
         assert "An explicit, recorded owner release (the Release button on a photo held as unsure) authorizes" in flat, name
         assert "a model clear and an owner release are never confused" in flat, name
+
+
+def test_a_note_the_owner_records_after_the_run_is_shown_and_changes_no_result():
+    data = camera_export()
+    plain = run_images.render5(data)
+    data["owner_notes"] = [{"file": "c01.jpg", "recorded_at": "2026-10-24 02:00 UTC",
+                            "note": "The owner's answer was a mis-tap."}]
+    noted = run_images.render5(data)
+    assert "## Notes recorded after the run" in noted and "- **c01.jpg** (2026-10-24 02:00 UTC): The owner's answer was a mis-tap." in noted
+    assert "scene: Commitment (see the note)" in noted and "## Notes recorded after the run" not in plain
+    summary = lambda text: text[text.index("## Summary"):text.index("## Per photograph")]  # noqa: E731
+    assert summary(noted) == summary(plain)  # the counts are the run's as recorded

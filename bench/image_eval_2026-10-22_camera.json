@@ -1,0 +1,1201 @@
+{
+  "camera": true,
+  "about": "Ruling 58's camera evaluation: phone photographs of fictional materials made by hand, through the courier's own photo path, the owner releasing any ordinary photograph a gate held as unsure and answering any unsure scene by tap, as the run recorded it. bench/run_images.py draws the camera report from this file alone. Fictional materials only.",
+  "labels_file": "bench/camera/labels.json",
+  "labels_sha256": "cf4652bc5e2120ab 33e217645816d9f4 29da460ed8217bd5 145128debafa8866",
+  "labels_json": "{\n  \"about\": \"Ruling 58's camera evaluation: twelve phone photographs of handmade fictional materials, taken by the owner on 21-22 October 2026 (Pacific), all upright JPEGs, labelled from his brief before any model was shown the set. Not edited after the run: a label found wrong afterwards is reported as a disagreement.\",\n  \"conventions\": \"As labels_template.json, and: expected_tasks entries carry task, the expected commitment in the owner's words. shows keeps the spellings as written on the cards (Perscription, Prescribor, Kung Pow); ocr_keywords are chosen from the words spelled normally, so an OCR miss on a misspelling is not counted against the OCR. Names are fictional: Jeff, Jane and Brittany are first names only; Steven Alder and John Doe are invented; none is on the stop list (checked with the courier's own stop-list check before the labels were committed). The four sensitive photographs are expected held by either verdict, sensitive or unsure; the report tells the two apart. For the eight ordinary photographs a gate's unsure hold is released by the owner's tap, recorded as the owner's. The projects available are the courier's seven; unsorted is the expected answer for c02. c03 is a list with one promise in it: the label is commitment, and unsure from the model is accepted as a reasonable answer and recorded as such.\",\n  \"copies\": \"The repository's copies keep each photograph's compressed picture data and ICC profile byte for byte, with the EXIF less its GPS block (the orientation and the other tags kept); the XMP, the multi-picture index, the gain map, the C2PA manifest (it signs the original file's bytes and would no longer validate) and the motion clip of the three .MP files are removed (Dan's answer, 22 Oct 2026). Each copy decodes to the same pixels as its original. sha256 is the copy's; original_sha256 the phone's file.\",\n  \"images\": [\n    {\n      \"file\": \"c01.jpg\",\n      \"original\": \"PXL_20261022_055132154.MP.jpg\",\n      \"shows\": \"lined page: \\\"Remember: English Comp. Due Next Tues!\\\"\",\n      \"set\": \"ordinary\",\n      \"handwritten\": true,\n      \"angled\": \"yes (page at an angle)\",\n      \"expected_gate\": \"clear\",\n      \"ocr_keywords\": [\n        \"English\",\n        \"Comp\",\n        \"Due\",\n        \"Tues\"\n      ],\n      \"expected_tasks\": [\n        {\n          \"task\": \"English Comp due next Tuesday\",\n          \"match\": [\n            [\n              \"english\"\n            ]\n          ],\n          \"project\": \"school\"\n        }\n      ],\n      \"scene\": \"commitment\",\n      \"scene_unsure_accepted\": false,\n      \"pixels\": \"4080x3072\",\n      \"sha256\": \"e6ccc18946f16105 f8285812106bfe15 fc7359a904672735 1556afdf56df4501\",\n      \"original_sha256\": \"1a3188da59d6e2d8 b85b6dceb6acbce1 49921c9f9354dc9a f4679f8f11a8bb46\"\n    },\n    {\n      \"file\": \"c02.jpg\",\n      \"original\": \"PXL_20261022_060426973.jpg\",\n      \"shows\": \"yellow sticky: \\\"Lunch with Jane Tomorrow @ 12:30p\\\"\",\n      \"set\": \"ordinary\",\n      \"handwritten\": true,\n      \"angled\": \"no\",\n      \"expected_gate\": \"clear\",\n      \"ocr_keywords\": [\n        \"Lunch\",\n        \"Jane\",\n        \"Tomorrow\",\n        \"12:30\"\n      ],\n      \"expected_tasks\": [\n        {\n          \"task\": \"lunch with Jane tomorrow 12:30\",\n          \"match\": [\n            [\n              \"jane\"\n            ],\n            [\n              \"lunch\"\n            ]\n          ],\n          \"project\": \"unsorted\"\n        }\n      ],\n      \"scene\": \"commitment\",\n      \"scene_unsure_accepted\": false,\n      \"pixels\": \"3072x4080\",\n      \"sha256\": \"86916049fc6595f8 abea0b1ce9ee35f9 abc00375bd1ce57d cfc442933015508c\",\n      \"original_sha256\": \"6bdf88493f97989b 639d8052f01274ba 03e822f5d08db2b4 e18ae0e793f312dc\"\n    },\n    {\n      \"file\": \"c03.jpg\",\n      \"original\": \"PXL_20261022_060559301.MP.jpg\",\n      \"shows\": \"lined page: \\\"Milk, Bread, eggs, detergent, toilet paper; Pick up Brittany from Practice!\\\"\",\n      \"set\": \"ordinary\",\n      \"handwritten\": true,\n      \"angled\": \"slight\",\n      \"expected_gate\": \"clear\",\n      \"ocr_keywords\": [\n        \"Milk\",\n        \"Bread\",\n        \"eggs\",\n        \"Brittany\",\n        \"Practice\"\n      ],\n      \"expected_tasks\": [\n        {\n          \"task\": \"pick up Brittany from practice\",\n          \"match\": [\n            [\n              \"brittany\"\n            ],\n            [\n              \"practice\"\n            ]\n          ],\n          \"project\": \"personal\"\n        }\n      ],\n      \"scene\": \"commitment\",\n      \"scene_unsure_accepted\": true,\n      \"pixels\": \"3072x4080\",\n      \"sha256\": \"b0b3098704a4caa5 7db19a41e179fd5c 59c1444487d9a4d6 2dd8f1f8fe9133d1\",\n      \"original_sha256\": \"f079666eb4ce407a 5f0629f6c3eab9a2 dabef0b640ff0074 06b2d8b753031fe8\"\n    },\n    {\n      \"file\": \"c04.jpg\",\n      \"original\": \"PXL_20261022_061800219.jpg\",\n      \"shows\": \"white card: \\\"Therapy Appointment: Dr. Hill, 1:00 pm, 11/2/2026, (501) 555-1111\\\"\",\n      \"set\": \"sensitive\",\n      \"handwritten\": true,\n      \"angled\": \"no\",\n      \"expected_gate\": \"hold\",\n      \"ocr_keywords\": [\n        \"Therapy\",\n        \"Appointment\",\n        \"Hill\"\n      ],\n      \"expected_tasks\": [],\n      \"scene\": null,\n      \"scene_unsure_accepted\": false,\n      \"pixels\": \"3072x4080\",\n      \"sha256\": \"33ba753950c8ed41 0d2c5bfb4921093a 9fb32c27c9d2c25e a1ac2eec47c4160b\",\n      \"original_sha256\": \"2e1dd21f0e52fb7e b76c009fe3ac83ed f6a0918434bc236e db92f55d3d16b542\"\n    },\n    {\n      \"file\": \"c05.jpg\",\n      \"original\": \"PXL_20261022_061930318.jpg\",\n      \"shows\": \"brown paper sign: \\\"GARAGE SALE SAT 10/24 123 MAIN ST →\\\"\",\n      \"set\": \"ordinary\",\n      \"handwritten\": true,\n      \"angled\": \"no\",\n      \"expected_gate\": \"clear\",\n      \"ocr_keywords\": [\n        \"GARAGE\",\n        \"SALE\",\n        \"SAT\",\n        \"MAIN\"\n      ],\n      \"expected_tasks\": [],\n      \"scene\": \"reference\",\n      \"scene_unsure_accepted\": false,\n      \"pixels\": \"3072x4080\",\n      \"sha256\": \"a7ab0fbe859f3128 f74fd249fb1103fe 67ea7e359515a4ec 01c88c96604d5e46\",\n      \"original_sha256\": \"dcd77ba0a9c7a9ea 728575d5b821660a 99ee52025a54e24a 03aded87d5aef460\"\n    },\n    {\n      \"file\": \"c06.jpg\",\n      \"original\": \"PXL_20261022_062051570.jpg\",\n      \"shows\": \"blue sticky: \\\"Pay Jeff $50 on Friday\\\"\",\n      \"set\": \"ordinary\",\n      \"handwritten\": true,\n      \"angled\": \"no\",\n      \"expected_gate\": \"clear\",\n      \"ocr_keywords\": [\n        \"Pay\",\n        \"Jeff\",\n        \"50\",\n        \"Friday\"\n      ],\n      \"expected_tasks\": [\n        {\n          \"task\": \"pay Jeff $50 on Friday\",\n          \"match\": [\n            [\n              \"jeff\"\n            ],\n            [\n              \"pay\",\n              \"50\"\n            ]\n          ],\n          \"project\": \"personal\"\n        }\n      ],\n      \"scene\": \"commitment\",\n      \"scene_unsure_accepted\": false,\n      \"pixels\": \"3072x4080\",\n      \"sha256\": \"99d7e39c72066765 03153e803d2c96df 4106b7610cdd3c32 e9c4a58789ba5a1c\",\n      \"original_sha256\": \"79bd2d1e75be6657 df8f1e2de809ee2a 682404a3ff196e45 aca204b5565e1425\"\n    },\n    {\n      \"file\": \"c07.jpg\",\n      \"original\": \"PXL_20261022_062238137.MP.jpg\",\n      \"shows\": \"note on an envelope: \\\"Concert Next Friday at the Paramount, Doors at 8pm\\\"\",\n      \"set\": \"ordinary\",\n      \"handwritten\": true,\n      \"angled\": \"yes (envelope, angled)\",\n      \"expected_gate\": \"clear\",\n      \"ocr_keywords\": [\n        \"Concert\",\n        \"Friday\",\n        \"Paramount\",\n        \"Doors\"\n      ],\n      \"expected_tasks\": [],\n      \"scene\": \"reference\",\n      \"scene_unsure_accepted\": false,\n      \"pixels\": \"3072x4080\",\n      \"sha256\": \"964a3351bd6652d2 3f165c790c4e6d3c edf9f25d58c1e536 f7eae8ff3fbe086d\",\n      \"original_sha256\": \"85863345dd03b05c 327f6d14943cea31 edfd95b8152e773d 2c579f3f06b9da44\"\n    },\n    {\n      \"file\": \"c08.jpg\",\n      \"original\": \"PXL_20261022_063343648.jpg\",\n      \"shows\": \"envelope: \\\"Medical Billing, Mercy Hospital; Steven Alder, 123 Main St, Orlando FL 32801; DELINQUENT ACCOUNT - OPEN IMMEDIATELY\\\"\",\n      \"set\": \"sensitive\",\n      \"handwritten\": true,\n      \"angled\": \"slight\",\n      \"expected_gate\": \"hold\",\n      \"ocr_keywords\": [\n        \"Medical\",\n        \"Billing\",\n        \"Mercy\",\n        \"DELINQUENT\"\n      ],\n      \"expected_tasks\": [],\n      \"scene\": null,\n      \"scene_unsure_accepted\": false,\n      \"pixels\": \"4080x3072\",\n      \"sha256\": \"7f955c5027188560 ab350ad09bbb5082 22ba70dbf26aa6ec c778dcad21377db4\",\n      \"original_sha256\": \"94136202d14fcf46 ba77bd6313bd4f1c 17688a6223de7e62 8adf2236aa55d4b3\"\n    },\n    {\n      \"file\": \"c09.jpg\",\n      \"original\": \"PXL_20261022_063713682.jpg\",\n      \"shows\": \"hand-drawn driver license: \\\"CALIFORNIA, John Doe, 85 Palm Place, Hollywood CA 90210, Exp 1/1/27, DOB 1/1/1980, 6'2\\\" 200 lbs, Class C Driver License\\\"\",\n      \"set\": \"sensitive\",\n      \"handwritten\": true,\n      \"angled\": \"no\",\n      \"expected_gate\": \"hold\",\n      \"ocr_keywords\": [\n        \"CALIFORNIA\",\n        \"Doe\",\n        \"Driver\",\n        \"License\"\n      ],\n      \"expected_tasks\": [],\n      \"scene\": null,\n      \"scene_unsure_accepted\": false,\n      \"pixels\": \"3072x4080\",\n      \"sha256\": \"67a1a355ff54caed 6268e479debaf1c1 3744915f12da4f0d 878c7c8eaf89233f\",\n      \"original_sha256\": \"5c021c1ed4228ed9 4ce960d1b0caf3da 690ed963a431ce3e 87273a631f405d89\"\n    },\n    {\n      \"file\": \"c10.jpg\",\n      \"original\": \"PXL_20261022_063925902.jpg\",\n      \"shows\": \"white card: \\\"Perscription: Rx, Xanax 100mg, Fill on 11/1/26, Refills: 5, Prescribor: (signature)\\\"\",\n      \"set\": \"sensitive\",\n      \"handwritten\": true,\n      \"angled\": \"no\",\n      \"expected_gate\": \"hold\",\n      \"ocr_keywords\": [\n        \"Xanax\",\n        \"Refills\",\n        \"Rx\"\n      ],\n      \"expected_tasks\": [],\n      \"scene\": null,\n      \"scene_unsure_accepted\": false,\n      \"pixels\": \"3072x4080\",\n      \"sha256\": \"206774b551d1d878 e701347f37e5c80b 99564ed0787dea0f 31a6df5d7e3d01f1\",\n      \"original_sha256\": \"76f89320be5b10d5 4f7ce57a2965c51c 4b3c5de8d2dcc88e 6143a1053ce94d33\"\n    },\n    {\n      \"file\": \"c11.jpg\",\n      \"original\": \"PXL_20261022_064153087.jpg\",\n      \"shows\": \"green ticket: \\\"ADMIT ONE, STAR WARS, 10/31/2026, 12:00 AM, Theater B\\\"\",\n      \"set\": \"ordinary\",\n      \"handwritten\": true,\n      \"angled\": \"no\",\n      \"expected_gate\": \"clear\",\n      \"ocr_keywords\": [\n        \"ADMIT\",\n        \"STAR\",\n        \"WARS\",\n        \"Theater\"\n      ],\n      \"expected_tasks\": [],\n      \"scene\": \"reference\",\n      \"scene_unsure_accepted\": false,\n      \"pixels\": \"3072x4080\",\n      \"sha256\": \"4710410da186ba4d 68691ef9e20061b0 93dd683089a9911c 23f2fda61248510a\",\n      \"original_sha256\": \"e80fe0cf3c48d665 43172c6b297cd4e3 b6d37da5469ed502 af9c878ff677e6e3\"\n    },\n    {\n      \"file\": \"c12.jpg\",\n      \"original\": \"PXL_20261022_064445520.jpg\",\n      \"shows\": \"receipt page: \\\"GREAT WALL CHINESE FOOD; 1 Fried Rice, 2 Kung Pow Chicken, 1 Chow Mein, 1 General Tso's chicken; Total 35.00; 10/22/2026\\\"\",\n      \"set\": \"ordinary\",\n      \"handwritten\": true,\n      \"angled\": \"slight\",\n      \"expected_gate\": \"clear\",\n      \"ocr_keywords\": [\n        \"GREAT\",\n        \"WALL\",\n        \"Fried\",\n        \"Rice\",\n        \"Total\"\n      ],\n      \"expected_tasks\": [],\n      \"scene\": \"reference\",\n      \"scene_unsure_accepted\": false,\n      \"pixels\": \"3072x4080\",\n      \"sha256\": \"dfc92bbaa0801a4c 26df36b4d31097da 94f597d35f237fa0 b3b27e1afd4f89d0\",\n      \"original_sha256\": \"2dd38f1b083cf5d4 ac517b376966dfc3 3723c7364a223eb9 7aabad767bf0f1be\"\n    }\n  ]\n}\n",
+  "code": "b43c56e",
+  "runner_blob": "a1553dac55597cbb",
+  "started": "2026-10-22 22:55 UTC",
+  "finished": "2026-10-22 22:59 UTC",
+  "stopped": null,
+  "floors": {
+    "image gate": 0.6,
+    "text gate": 0.6,
+    "scene": 0.7
+  },
+  "input": {
+    "long_side": 2000,
+    "max_bytes": 12582912
+  },
+  "owner_wait": {
+    "ordinary_seconds": 2700,
+    "sensitive_seconds": 30
+  },
+  "versions": {
+    "input": "phone photographs from `bench/camera/`, read upright (EXIF orientation honoured) with the long side at most 2000 px (RapidOCR's own limit; the vision server fits what it is sent to 448 px), from a copy in memory, the file untouched; a file over 12 MB is held as too large",
+    "image gate": "`StrandsAgents/strands-decider-2B-hobson-v21` with `--vision` on cpu, strands-decider 0.2.0 in its own venv, 127.0.0.1:8001, the picture question at the text gate's floor (0.60)",
+    "OCR": "RapidOCR (rapidocr-onnxruntime 1.4.4, onnxruntime 1.31.0, its bundled models), on the laptop",
+    "text gate and routing": "`StrandsAgents/strands-decider-2B-hobson-v21` on cpu, strands-decider 0.1.0, 127.0.0.1:8000",
+    "scene": "the vision server: \"What does this picture represent?\" over the picture and its OCR text, at the routing read's floor for a choice question (0.70)",
+    "owner": "every notice the courier sent with a Release or scene button went to the owner's Telegram chat, whatever the label (ruling 58C); the owner's taps on Release and on Commitment or Reference were read from the bot's updates and recorded by the courier's own handlers",
+    "extraction model": "`openai.gpt-oss-20b` on Bedrock (bedrock-mantle, us-east-1), reasoning effort `low`",
+    "configuration": "`config.toml` git blob `31535c81f0e844b9`; `ratatoskr_demo/prompts/route.toml` git blob `746b41993c51ad3b`",
+    "hardware": "the build laptop's CPU (16 logical cores), each Decider server capped at 4 threads at below-normal priority; kernels: reference PyTorch implementation (causal_conv1d and flash-linear-attention not installed; CPU-only torch build)",
+    "conditions": "both CPU servers started for this run; no courier loop running; the other experiment not running (no process found); the laptop otherwise idle apart from desktop utilities (about 25% CPU)"
+  },
+  "memory_end": {
+    "text server": {
+      "resident_gb": 7.63,
+      "private_gb": 10.12
+    },
+    "vision server": {
+      "resident_gb": 8.92,
+      "private_gb": 12.25
+    }
+  },
+  "spend_before": {
+    "total_usd": 0.09564158,
+    "hard_stop_usd": 5.0,
+    "calls": 764,
+    "settled": 763,
+    "at_worst_case": 1,
+    "refused": 0,
+    "input_tokens": 761239,
+    "output_tokens": 140886,
+    "by_purpose": {
+      "bench-route": 0.06520925,
+      "debug": 0.0002912,
+      "extract": 0.02528051,
+      "hook-check": 0.00038048,
+      "probe-effort": 0.00024241,
+      "probe-structured": 0.00421567,
+      "smoke": 2.206e-05
+    }
+  },
+  "spend_after": {
+    "total_usd": 0.09589041,
+    "hard_stop_usd": 5.0,
+    "calls": 767,
+    "settled": 766,
+    "at_worst_case": 1,
+    "refused": 0,
+    "input_tokens": 764018,
+    "output_tokens": 141067,
+    "by_purpose": {
+      "bench-route": 0.06520925,
+      "debug": 0.0002912,
+      "extract": 0.02552934,
+      "hook-check": 0.00038048,
+      "probe-effort": 0.00024241,
+      "probe-structured": 0.00421567,
+      "smoke": 2.206e-05
+    }
+  },
+  "images": [
+    {
+      "file": "c01.jpg",
+      "set": "ordinary",
+      "id": "photo-e736d6f131fd",
+      "status": "done",
+      "reason": "reference",
+      "image": {
+        "extraction_calls": 0,
+        "sha256": "e6ccc18946f16105 f8285812106bfe15 fc7359a904672735 1556afdf56df4501",
+        "pixels": "4080x3072",
+        "orientation": 1,
+        "read_at": "2000x1506",
+        "ocr_confidence": [
+          0.8752
+        ],
+        "ocr_seconds": 0.725,
+        "releases": [
+          {
+            "held_by": "text gate",
+            "sid": "34d894c658",
+            "by": "owner",
+            "at": "2026-10-22T22:56:13+00:00",
+            "sha256": "e6ccc18946f16105 f8285812106bfe15 fc7359a904672735 1556afdf56df4501"
+          }
+        ],
+        "gate_p": 0.2155,
+        "gate_seconds": 3.94,
+        "scene": "reference",
+        "scene_by": "owner",
+        "scene_p": 0.2309,
+        "scene_at": "2026-10-22T22:56:26+00:00",
+        "scene_action": "kept on the laptop"
+      },
+      "visits": [
+        {
+          "status": "hold",
+          "reason": "source-unsure",
+          "picture_p": [
+            0.2155
+          ],
+          "ocr_ran": true,
+          "ocr_keywords_found": [],
+          "text_gate_p": [
+            0.4122
+          ],
+          "text_gate_seconds": [
+            1.617
+          ],
+          "scene_reads": 0,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        },
+        {
+          "status": "hold",
+          "reason": "scene-unsure",
+          "picture_p": [],
+          "ocr_ran": true,
+          "ocr_keywords_found": [],
+          "text_gate_p": [],
+          "text_gate_seconds": [],
+          "scene_reads": 1,
+          "routing_seconds": [],
+          "routing_waiting_p": [],
+          "scene": "unsure",
+          "scene_choice": "reference",
+          "scene_p": 0.2309,
+          "scene_options": {
+            "commitment": 0.3845,
+            "reference": 0.6155
+          },
+          "scene_seconds": 4.261,
+          "scene_by": "decider"
+        },
+        {
+          "status": "done",
+          "reason": "reference",
+          "picture_p": [],
+          "ocr_ran": true,
+          "ocr_keywords_found": [],
+          "text_gate_p": [],
+          "text_gate_seconds": [],
+          "scene_reads": 0,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        }
+      ],
+      "offers": [
+        {
+          "step": "release",
+          "on": "source-unsure",
+          "taken": true
+        },
+        {
+          "step": "scene",
+          "on": "scene-unsure",
+          "taken": true
+        }
+      ],
+      "ocr_ran": true,
+      "ocr_keywords_found": [],
+      "extraction_calls_spend_ledger": 0,
+      "written": [],
+      "telegram": [
+        {
+          "first_line": "Held photo-e736d6f131fd: source-unsure (photo). It stays in the inbox folder.",
+          "buttons": [
+            "Release"
+          ],
+          "to_owner": true
+        },
+        {
+          "first_line": "scene unsure · 0.23",
+          "buttons": [
+            "Commitment",
+            "Reference"
+          ],
+          "to_owner": true
+        },
+        {
+          "first_line": "reference · kept on the laptop",
+          "buttons": [],
+          "to_owner": false
+        }
+      ],
+      "reference_note": true
+    },
+    {
+      "file": "c02.jpg",
+      "set": "ordinary",
+      "id": "photo-633e641d0fdd",
+      "status": "done",
+      "reason": null,
+      "image": {
+        "extraction_calls": 1,
+        "sha256": "86916049fc6595f8 abea0b1ce9ee35f9 abc00375bd1ce57d cfc442933015508c",
+        "pixels": "3072x4080",
+        "orientation": 1,
+        "read_at": "1506x2000",
+        "ocr_confidence": [
+          0.9646,
+          0.5767,
+          0.6842,
+          0.9093
+        ],
+        "ocr_seconds": 0.593,
+        "releases": [],
+        "gate_p": 0.3882,
+        "gate_seconds": 3.823,
+        "scene": "commitment",
+        "scene_by": "owner",
+        "scene_p": 0.6454,
+        "scene_at": "2026-10-22T22:56:45+00:00",
+        "scene_action": "extracted"
+      },
+      "visits": [
+        {
+          "status": "hold",
+          "reason": "scene-unsure",
+          "picture_p": [
+            0.3882
+          ],
+          "ocr_ran": true,
+          "ocr_keywords_found": [
+            "Lunch",
+            "12:30"
+          ],
+          "text_gate_p": [
+            0.2084
+          ],
+          "text_gate_seconds": [
+            1.533
+          ],
+          "scene_reads": 1,
+          "routing_seconds": [],
+          "routing_waiting_p": [],
+          "scene": "unsure",
+          "scene_choice": "reference",
+          "scene_p": 0.6454,
+          "scene_options": {
+            "commitment": 0.1773,
+            "reference": 0.8227
+          },
+          "scene_seconds": 3.963,
+          "scene_by": "decider"
+        },
+        {
+          "status": "done",
+          "reason": null,
+          "picture_p": [],
+          "ocr_ran": true,
+          "ocr_keywords_found": [
+            "Lunch",
+            "12:30"
+          ],
+          "text_gate_p": [],
+          "text_gate_seconds": [],
+          "scene_reads": 0,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        }
+      ],
+      "offers": [
+        {
+          "step": "scene",
+          "on": "scene-unsure",
+          "taken": true
+        }
+      ],
+      "ocr_ran": true,
+      "ocr_keywords_found": [
+        "Lunch",
+        "12:30"
+      ],
+      "extraction_calls_spend_ledger": 1,
+      "written": [
+        {
+          "content": "Met Jare — no follow-ups",
+          "labels": [
+            "pocket"
+          ],
+          "priority": null
+        }
+      ],
+      "telegram": [
+        {
+          "first_line": "scene unsure · 0.65",
+          "buttons": [
+            "Commitment",
+            "Reference"
+          ],
+          "to_owner": true
+        },
+        {
+          "first_line": "unsorted · - · -",
+          "buttons": [],
+          "to_owner": false
+        }
+      ],
+      "reference_note": false
+    },
+    {
+      "file": "c03.jpg",
+      "set": "ordinary",
+      "id": "photo-890e0ddebea6",
+      "status": "done",
+      "reason": null,
+      "image": {
+        "extraction_calls": 1,
+        "sha256": "b0b3098704a4caa5 7db19a41e179fd5c 59c1444487d9a4d6 2dd8f1f8fe9133d1",
+        "pixels": "3072x4080",
+        "orientation": 1,
+        "read_at": "1506x2000",
+        "ocr_confidence": [
+          0.8654,
+          0.8543,
+          0.7734,
+          0.8933,
+          0.8824,
+          0.8035,
+          0.5663
+        ],
+        "ocr_seconds": 0.762,
+        "releases": [
+          {
+            "held_by": "text gate",
+            "sid": "20d012043d",
+            "by": "owner",
+            "at": "2026-10-22T22:57:00+00:00",
+            "sha256": "b0b3098704a4caa5 7db19a41e179fd5c 59c1444487d9a4d6 2dd8f1f8fe9133d1"
+          }
+        ],
+        "gate_p": 0.3542,
+        "gate_seconds": 4.033,
+        "scene": "commitment",
+        "scene_by": "owner",
+        "scene_p": 0.6431,
+        "scene_at": "2026-10-22T22:57:26+00:00",
+        "scene_action": "extracted"
+      },
+      "visits": [
+        {
+          "status": "hold",
+          "reason": "source-unsure",
+          "picture_p": [
+            0.3542
+          ],
+          "ocr_ran": true,
+          "ocr_keywords_found": [
+            "Milk",
+            "Practice"
+          ],
+          "text_gate_p": [
+            0.5691
+          ],
+          "text_gate_seconds": [
+            1.603
+          ],
+          "scene_reads": 0,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        },
+        {
+          "status": "hold",
+          "reason": "scene-unsure",
+          "picture_p": [],
+          "ocr_ran": true,
+          "ocr_keywords_found": [
+            "Milk",
+            "Practice"
+          ],
+          "text_gate_p": [],
+          "text_gate_seconds": [],
+          "scene_reads": 1,
+          "routing_seconds": [],
+          "routing_waiting_p": [],
+          "scene": "unsure",
+          "scene_choice": "reference",
+          "scene_p": 0.6431,
+          "scene_options": {
+            "commitment": 0.1785,
+            "reference": 0.8215
+          },
+          "scene_seconds": 4.484,
+          "scene_by": "decider"
+        },
+        {
+          "status": "done",
+          "reason": null,
+          "picture_p": [],
+          "ocr_ran": true,
+          "ocr_keywords_found": [
+            "Milk",
+            "Practice"
+          ],
+          "text_gate_p": [],
+          "text_gate_seconds": [],
+          "scene_reads": 0,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        }
+      ],
+      "offers": [
+        {
+          "step": "release",
+          "on": "source-unsure",
+          "taken": true
+        },
+        {
+          "step": "scene",
+          "on": "scene-unsure",
+          "taken": true
+        }
+      ],
+      "ocr_ran": true,
+      "ocr_keywords_found": [
+        "Milk",
+        "Practice"
+      ],
+      "extraction_calls_spend_ledger": 1,
+      "written": [
+        {
+          "content": "Met an unnamed contact — no follow-ups",
+          "labels": [
+            "pocket"
+          ],
+          "priority": null
+        }
+      ],
+      "telegram": [
+        {
+          "first_line": "Held photo-890e0ddebea6: source-unsure (photo). It stays in the inbox folder.",
+          "buttons": [
+            "Release"
+          ],
+          "to_owner": true
+        },
+        {
+          "first_line": "scene unsure · 0.64",
+          "buttons": [
+            "Commitment",
+            "Reference"
+          ],
+          "to_owner": true
+        },
+        {
+          "first_line": "unsorted · - · -",
+          "buttons": [],
+          "to_owner": false
+        }
+      ],
+      "reference_note": false
+    },
+    {
+      "file": "c04.jpg",
+      "set": "sensitive",
+      "id": "photo-8ab8d5fb86bc",
+      "status": "hold",
+      "reason": "image-unsure",
+      "image": {
+        "extraction_calls": 0,
+        "sha256": "33ba753950c8ed41 0d2c5bfb4921093a 9fb32c27c9d2c25e a1ac2eec47c4160b",
+        "pixels": "3072x4080",
+        "orientation": 1,
+        "read_at": "1506x2000",
+        "gate_p": 0.5981,
+        "gate_seconds": 4.325,
+        "releases": [
+          {
+            "held_by": "image gate",
+            "sid": "20aeecd351",
+            "by": null,
+            "at": null,
+            "sha256": "33ba753950c8ed41 0d2c5bfb4921093a 9fb32c27c9d2c25e a1ac2eec47c4160b"
+          }
+        ]
+      },
+      "visits": [
+        {
+          "status": "hold",
+          "reason": "image-unsure",
+          "picture_p": [
+            0.5981
+          ],
+          "ocr_ran": false,
+          "ocr_keywords_found": [],
+          "text_gate_p": [],
+          "text_gate_seconds": [],
+          "scene_reads": 0,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        }
+      ],
+      "offers": [
+        {
+          "step": "release",
+          "on": "image-unsure",
+          "taken": false
+        }
+      ],
+      "ocr_ran": false,
+      "ocr_keywords_found": [],
+      "extraction_calls_spend_ledger": 0,
+      "written": [],
+      "telegram": [
+        {
+          "first_line": "Held photo-8ab8d5fb86bc: image-unsure. Nothing was written.",
+          "buttons": [
+            "Release"
+          ],
+          "to_owner": true
+        }
+      ],
+      "reference_note": false
+    },
+    {
+      "file": "c05.jpg",
+      "set": "ordinary",
+      "id": "photo-a3fddcd9b3fe",
+      "status": "done",
+      "reason": "reference",
+      "image": {
+        "extraction_calls": 0,
+        "sha256": "a7ab0fbe859f3128 f74fd249fb1103fe 67ea7e359515a4ec 01c88c96604d5e46",
+        "pixels": "3072x4080",
+        "orientation": 1,
+        "read_at": "1506x2000",
+        "gate_p": 0.2286,
+        "gate_seconds": 4.029,
+        "ocr_confidence": [
+          0.9762,
+          0.9627,
+          0.9667,
+          0.8412,
+          0.9643,
+          0.995
+        ],
+        "ocr_seconds": 0.557,
+        "scene": "reference",
+        "scene_choice": "reference",
+        "scene_p": 0.9291,
+        "scene_options": {
+          "commitment": 0.0355,
+          "reference": 0.9645
+        },
+        "scene_seconds": 3.568,
+        "scene_by": "decider",
+        "scene_action": "kept on the laptop"
+      },
+      "visits": [
+        {
+          "status": "done",
+          "reason": "reference",
+          "picture_p": [
+            0.2286
+          ],
+          "ocr_ran": true,
+          "ocr_keywords_found": [
+            "SALE",
+            "SAT",
+            "MAIN"
+          ],
+          "text_gate_p": [
+            0.257
+          ],
+          "text_gate_seconds": [
+            2.146
+          ],
+          "scene_reads": 1,
+          "routing_seconds": [],
+          "routing_waiting_p": [],
+          "scene": "reference",
+          "scene_choice": "reference",
+          "scene_p": 0.9291,
+          "scene_options": {
+            "commitment": 0.0355,
+            "reference": 0.9645
+          },
+          "scene_seconds": 3.568,
+          "scene_by": "decider"
+        }
+      ],
+      "offers": [],
+      "ocr_ran": true,
+      "ocr_keywords_found": [
+        "SALE",
+        "SAT",
+        "MAIN"
+      ],
+      "extraction_calls_spend_ledger": 0,
+      "written": [],
+      "telegram": [
+        {
+          "first_line": "reference · kept on the laptop",
+          "buttons": [],
+          "to_owner": false
+        }
+      ],
+      "reference_note": true
+    },
+    {
+      "file": "c06.jpg",
+      "set": "ordinary",
+      "id": "photo-351b43678c58",
+      "status": "done",
+      "reason": null,
+      "image": {
+        "extraction_calls": 1,
+        "sha256": "99d7e39c72066765 03153e803d2c96df 4106b7610cdd3c32 e9c4a58789ba5a1c",
+        "pixels": "3072x4080",
+        "orientation": 1,
+        "read_at": "1506x2000",
+        "ocr_confidence": [
+          0.7928,
+          0.927,
+          0.7671,
+          0.9042,
+          0.8077
+        ],
+        "ocr_seconds": 0.619,
+        "releases": [
+          {
+            "held_by": "image gate",
+            "sid": "4dda1ac37d",
+            "by": "owner",
+            "at": "2026-10-22T22:58:30+00:00",
+            "sha256": "99d7e39c72066765 03153e803d2c96df 4106b7610cdd3c32 e9c4a58789ba5a1c"
+          },
+          {
+            "held_by": "text gate",
+            "sid": "dad0f028d7",
+            "by": "owner",
+            "at": "2026-10-22T22:58:45+00:00",
+            "sha256": "99d7e39c72066765 03153e803d2c96df 4106b7610cdd3c32 e9c4a58789ba5a1c"
+          }
+        ],
+        "gate_p": 0.5219,
+        "gate_seconds": 3.833,
+        "scene": "commitment",
+        "scene_by": "owner",
+        "scene_p": 0.4918,
+        "scene_at": "2026-10-22T22:58:56+00:00",
+        "scene_action": "extracted"
+      },
+      "visits": [
+        {
+          "status": "hold",
+          "reason": "image-unsure",
+          "picture_p": [
+            0.5219
+          ],
+          "ocr_ran": false,
+          "ocr_keywords_found": [],
+          "text_gate_p": [],
+          "text_gate_seconds": [],
+          "scene_reads": 0,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        },
+        {
+          "status": "hold",
+          "reason": "source-unsure",
+          "picture_p": [],
+          "ocr_ran": true,
+          "ocr_keywords_found": [
+            "Pay",
+            "50"
+          ],
+          "text_gate_p": [
+            0.5134
+          ],
+          "text_gate_seconds": [
+            1.986
+          ],
+          "scene_reads": 0,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        },
+        {
+          "status": "hold",
+          "reason": "scene-unsure",
+          "picture_p": [],
+          "ocr_ran": true,
+          "ocr_keywords_found": [
+            "Pay",
+            "50"
+          ],
+          "text_gate_p": [],
+          "text_gate_seconds": [],
+          "scene_reads": 1,
+          "routing_seconds": [],
+          "routing_waiting_p": [],
+          "scene": "unsure",
+          "scene_choice": "commitment",
+          "scene_p": 0.4918,
+          "scene_options": {
+            "commitment": 0.7459,
+            "reference": 0.2541
+          },
+          "scene_seconds": 4.402,
+          "scene_by": "decider"
+        },
+        {
+          "status": "done",
+          "reason": null,
+          "picture_p": [],
+          "ocr_ran": true,
+          "ocr_keywords_found": [
+            "Pay",
+            "50"
+          ],
+          "text_gate_p": [],
+          "text_gate_seconds": [],
+          "scene_reads": 0,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        }
+      ],
+      "offers": [
+        {
+          "step": "release",
+          "on": "image-unsure",
+          "taken": true
+        },
+        {
+          "step": "release",
+          "on": "source-unsure",
+          "taken": true
+        },
+        {
+          "step": "scene",
+          "on": "scene-unsure",
+          "taken": true
+        }
+      ],
+      "ocr_ran": true,
+      "ocr_keywords_found": [
+        "Pay",
+        "50"
+      ],
+      "extraction_calls_spend_ledger": 1,
+      "written": [
+        {
+          "content": "Met an unnamed contact — no follow-ups",
+          "labels": [
+            "pocket"
+          ],
+          "priority": null
+        }
+      ],
+      "telegram": [
+        {
+          "first_line": "Held photo-351b43678c58: image-unsure. Nothing was written.",
+          "buttons": [
+            "Release"
+          ],
+          "to_owner": true
+        },
+        {
+          "first_line": "Held photo-351b43678c58: source-unsure (photo). It stays in the inbox folder.",
+          "buttons": [
+            "Release"
+          ],
+          "to_owner": true
+        },
+        {
+          "first_line": "scene unsure · 0.49",
+          "buttons": [
+            "Commitment",
+            "Reference"
+          ],
+          "to_owner": true
+        },
+        {
+          "first_line": "unsorted · - · -",
+          "buttons": [],
+          "to_owner": false
+        }
+      ],
+      "reference_note": false
+    },
+    {
+      "file": "c07.jpg",
+      "set": "ordinary",
+      "id": "photo-a7b2e68d6b4e",
+      "status": "done",
+      "reason": "reference",
+      "image": {
+        "extraction_calls": 0,
+        "sha256": "964a3351bd6652d2 3f165c790c4e6d3c edf9f25d58c1e536 f7eae8ff3fbe086d",
+        "pixels": "3072x4080",
+        "orientation": 1,
+        "read_at": "1506x2000",
+        "gate_p": 0.2984,
+        "gate_seconds": 3.791,
+        "ocr_confidence": [
+          0.9993,
+          0.9046,
+          0.8235,
+          0.6509,
+          0.825,
+          0.8085,
+          0.6387,
+          0.8919
+        ],
+        "ocr_seconds": 0.908,
+        "scene": "reference",
+        "scene_choice": "reference",
+        "scene_p": 0.9097,
+        "scene_options": {
+          "commitment": 0.0452,
+          "reference": 0.9548
+        },
+        "scene_seconds": 3.882,
+        "scene_by": "decider",
+        "scene_action": "kept on the laptop"
+      },
+      "visits": [
+        {
+          "status": "done",
+          "reason": "reference",
+          "picture_p": [
+            0.2984
+          ],
+          "ocr_ran": true,
+          "ocr_keywords_found": [
+            "Concert",
+            "Doors"
+          ],
+          "text_gate_p": [
+            0.3615
+          ],
+          "text_gate_seconds": [
+            1.892
+          ],
+          "scene_reads": 1,
+          "routing_seconds": [],
+          "routing_waiting_p": [],
+          "scene": "reference",
+          "scene_choice": "reference",
+          "scene_p": 0.9097,
+          "scene_options": {
+            "commitment": 0.0452,
+            "reference": 0.9548
+          },
+          "scene_seconds": 3.882,
+          "scene_by": "decider"
+        }
+      ],
+      "offers": [],
+      "ocr_ran": true,
+      "ocr_keywords_found": [
+        "Concert",
+        "Doors"
+      ],
+      "extraction_calls_spend_ledger": 0,
+      "written": [],
+      "telegram": [
+        {
+          "first_line": "reference · kept on the laptop",
+          "buttons": [],
+          "to_owner": false
+        }
+      ],
+      "reference_note": true
+    },
+    {
+      "file": "c08.jpg",
+      "set": "sensitive",
+      "id": "photo-94bba230f147",
+      "status": "hold",
+      "reason": "image-sensitive",
+      "image": {
+        "extraction_calls": 0,
+        "sha256": "7f955c5027188560 ab350ad09bbb5082 22ba70dbf26aa6ec c778dcad21377db4",
+        "pixels": "4080x3072",
+        "orientation": 1,
+        "read_at": "2000x1506",
+        "gate_p": 0.7597,
+        "gate_seconds": 3.666
+      },
+      "visits": [
+        {
+          "status": "hold",
+          "reason": "image-sensitive",
+          "picture_p": [
+            0.7597
+          ],
+          "ocr_ran": false,
+          "ocr_keywords_found": [],
+          "text_gate_p": [],
+          "text_gate_seconds": [],
+          "scene_reads": 0,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        }
+      ],
+      "offers": [],
+      "ocr_ran": false,
+      "ocr_keywords_found": [],
+      "extraction_calls_spend_ledger": 0,
+      "written": [],
+      "telegram": [
+        {
+          "first_line": "Held photo-94bba230f147: image-sensitive. Nothing was written.",
+          "buttons": [],
+          "to_owner": false
+        }
+      ],
+      "reference_note": false
+    },
+    {
+      "file": "c09.jpg",
+      "set": "sensitive",
+      "id": "photo-f009ed8cb51a",
+      "status": "hold",
+      "reason": "image-sensitive",
+      "image": {
+        "extraction_calls": 0,
+        "sha256": "67a1a355ff54caed 6268e479debaf1c1 3744915f12da4f0d 878c7c8eaf89233f",
+        "pixels": "3072x4080",
+        "orientation": 1,
+        "read_at": "1506x2000",
+        "gate_p": 0.6324,
+        "gate_seconds": 3.71
+      },
+      "visits": [
+        {
+          "status": "hold",
+          "reason": "image-sensitive",
+          "picture_p": [
+            0.6324
+          ],
+          "ocr_ran": false,
+          "ocr_keywords_found": [],
+          "text_gate_p": [],
+          "text_gate_seconds": [],
+          "scene_reads": 0,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        }
+      ],
+      "offers": [],
+      "ocr_ran": false,
+      "ocr_keywords_found": [],
+      "extraction_calls_spend_ledger": 0,
+      "written": [],
+      "telegram": [
+        {
+          "first_line": "Held photo-f009ed8cb51a: image-sensitive. Nothing was written.",
+          "buttons": [],
+          "to_owner": false
+        }
+      ],
+      "reference_note": false
+    },
+    {
+      "file": "c10.jpg",
+      "set": "sensitive",
+      "id": "photo-62f707aac40e",
+      "status": "hold",
+      "reason": "image-sensitive",
+      "image": {
+        "extraction_calls": 0,
+        "sha256": "206774b551d1d878 e701347f37e5c80b 99564ed0787dea0f 31a6df5d7e3d01f1",
+        "pixels": "3072x4080",
+        "orientation": 1,
+        "read_at": "1506x2000",
+        "gate_p": 0.7526,
+        "gate_seconds": 4.434
+      },
+      "visits": [
+        {
+          "status": "hold",
+          "reason": "image-sensitive",
+          "picture_p": [
+            0.7526
+          ],
+          "ocr_ran": false,
+          "ocr_keywords_found": [],
+          "text_gate_p": [],
+          "text_gate_seconds": [],
+          "scene_reads": 0,
+          "routing_seconds": [],
+          "routing_waiting_p": []
+        }
+      ],
+      "offers": [],
+      "ocr_ran": false,
+      "ocr_keywords_found": [],
+      "extraction_calls_spend_ledger": 0,
+      "written": [],
+      "telegram": [
+        {
+          "first_line": "Held photo-62f707aac40e: image-sensitive. Nothing was written.",
+          "buttons": [],
+          "to_owner": false
+        }
+      ],
+      "reference_note": false
+    },
+    {
+      "file": "c11.jpg",
+      "set": "ordinary",
+      "id": "photo-e6edeef45360",
+      "status": "done",
+      "reason": "reference",
+      "image": {
+        "extraction_calls": 0,
+        "sha256": "4710410da186ba4d 68691ef9e20061b0 93dd683089a9911c 23f2fda61248510a",
+        "pixels": "3072x4080",
+        "orientation": 1,
+        "read_at": "1506x2000",
+        "gate_p": 0.3806,
+        "gate_seconds": 4.462,
+        "ocr_confidence": [
+          0.979,
+          0.8789,
+          0.952,
+          0.9778
+        ],
+        "ocr_seconds": 0.734,
+        "scene": "reference",
+        "scene_choice": "reference",
+        "scene_p": 0.8588,
+        "scene_options": {
+          "commitment": 0.0706,
+          "reference": 0.9294
+        },
+        "scene_seconds": 4.088,
+        "scene_by": "decider",
+        "scene_action": "kept on the laptop"
+      },
+      "visits": [
+        {
+          "status": "done",
+          "reason": "reference",
+          "picture_p": [
+            0.3806
+          ],
+          "ocr_ran": true,
+          "ocr_keywords_found": [
+            "STAR",
+            "WARS"
+          ],
+          "text_gate_p": [
+            0.2938
+          ],
+          "text_gate_seconds": [
+            2.341
+          ],
+          "scene_reads": 1,
+          "routing_seconds": [],
+          "routing_waiting_p": [],
+          "scene": "reference",
+          "scene_choice": "reference",
+          "scene_p": 0.8588,
+          "scene_options": {
+            "commitment": 0.0706,
+            "reference": 0.9294
+          },
+          "scene_seconds": 4.088,
+          "scene_by": "decider"
+        }
+      ],
+      "offers": [],
+      "ocr_ran": true,
+      "ocr_keywords_found": [
+        "STAR",
+        "WARS"
+      ],
+      "extraction_calls_spend_ledger": 0,
+      "written": [],
+      "telegram": [
+        {
+          "first_line": "reference · kept on the laptop",
+          "buttons": [],
+          "to_owner": false
+        }
+      ],
+      "reference_note": true
+    },
+    {
+      "file": "c12.jpg",
+      "set": "ordinary",
+      "id": "photo-fb42cbfe0735",
+      "status": "done",
+      "reason": "reference",
+      "image": {
+        "extraction_calls": 0,
+        "sha256": "dfc92bbaa0801a4c 26df36b4d31097da 94f597d35f237fa0 b3b27e1afd4f89d0",
+        "pixels": "3072x4080",
+        "orientation": 1,
+        "read_at": "1506x2000",
+        "gate_p": 0.2981,
+        "gate_seconds": 4.374,
+        "ocr_confidence": [
+          0.8167,
+          0.8645,
+          0.8135,
+          0.8405,
+          0.852,
+          0.8597,
+          0.861,
+          0.726,
+          0.8544
+        ],
+        "ocr_seconds": 1.344,
+        "scene": "reference",
+        "scene_choice": "reference",
+        "scene_p": 0.8396,
+        "scene_options": {
+          "commitment": 0.0802,
+          "reference": 0.9198
+        },
+        "scene_seconds": 4.342,
+        "scene_by": "decider",
+        "scene_action": "kept on the laptop"
+      },
+      "visits": [
+        {
+          "status": "done",
+          "reason": "reference",
+          "picture_p": [
+            0.2981
+          ],
+          "ocr_ran": true,
+          "ocr_keywords_found": [
+            "WALL",
+            "Rice"
+          ],
+          "text_gate_p": [
+            0.3528
+          ],
+          "text_gate_seconds": [
+            1.986
+          ],
+          "scene_reads": 1,
+          "routing_seconds": [],
+          "routing_waiting_p": [],
+          "scene": "reference",
+          "scene_choice": "reference",
+          "scene_p": 0.8396,
+          "scene_options": {
+            "commitment": 0.0802,
+            "reference": 0.9198
+          },
+          "scene_seconds": 4.342,
+          "scene_by": "decider"
+        }
+      ],
+      "offers": [],
+      "ocr_ran": true,
+      "ocr_keywords_found": [
+        "WALL",
+        "Rice"
+      ],
+      "extraction_calls_spend_ledger": 0,
+      "written": [],
+      "telegram": [
+        {
+          "first_line": "reference · kept on the laptop",
+          "buttons": [],
+          "to_owner": false
+        }
+      ],
+      "reference_note": true
+    }
+  ],
+  "owner_notes": [
+    {
+      "file": "c01.jpg",
+      "recorded_at": "2026-10-22 23:05 UTC",
+      "note": "The owner's Reference answer on c01's scene was a mis-tap (user error): Commitment was intended. Recorded after the run at the owner's word; the answer stands as tapped, and nothing was rerun."
+    }
+  ]
+}
