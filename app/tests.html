@@ -408,6 +408,67 @@ test("with the service, an unreachable courier fails the pick, and tags and revi
   });
 });
 
+// --- ruling 63: a category chosen and not yet saved survives a tag edit, and Save sends it once ---
+
+function picks(svc) { return svc.calls.filter(function (c) { return /\/owner\/pick$/.test(c.url); }); }
+
+test("a category chosen, then a tag added: Save keeps both and sends exactly one pick", function () {
+  var svc = fakeService([{ status: 200, body: { status: "acknowledged", project: "writing", by: "owner", via: "app" } }]);
+  var app;
+  return startWith(svc.adapter).then(function (a) {
+    app = a;
+    return click("[data-open='pick-abc']");
+  }).then(function () {
+    return click("input[name=category][value=writing]"); // the owner's selection, as a tap makes it
+  }).then(function () {
+    $("[data-tag-input]").value = "grant";
+    return click("[data-add-tag]");
+  }).then(function () {
+    var chosen = $("input[name=category]:checked");
+    eq(chosen && chosen.value, "writing", "the choice still shown after the tag was added");
+    return submit();
+  }).then(function () {
+    eq(picks(svc).map(function (c) { return JSON.parse(c.init.body); }), [{ sid: "abc", project: "writing" }],
+       "one pick, the chosen category");
+    eq(S.category(app.state.views["pick-abc"]).value, "writing", "the category applied");
+    eq(app.state.views["pick-abc"].tags, ["grant"], "the tag kept");
+    return submit();
+  }).then(function () {
+    eq(picks(svc).length, 1, "a second Save sends no second pick");
+  });
+});
+
+test("a category chosen, then a tag removed: Save keeps both and sends exactly one pick", function () {
+  var svc = fakeService([{ status: 200, body: { status: "acknowledged", project: "research", by: "owner", via: "app" } }]);
+  var app;
+  return startWith(svc.adapter).then(function (a) {
+    app = a;
+    return click("[data-open='pick-abc']");
+  }).then(function () {
+    $("[data-tag-input]").value = "grant";
+    return click("[data-add-tag]");
+  }).then(function () {
+    return submit(); // the tag saved first, so there is one to remove
+  }).then(function () {
+    eq([picks(svc).length, app.state.views["pick-abc"].tags], [0, ["grant"]], "the tag saved, no pick yet");
+    return click("input[name=category][value=research]");
+  }).then(function () {
+    return click("[data-remove-tag='grant']");
+  }).then(function () {
+    var chosen = $("input[name=category]:checked");
+    eq(chosen && chosen.value, "research", "the choice still shown after the tag was removed");
+    return submit();
+  }).then(function () {
+    eq(picks(svc).map(function (c) { return JSON.parse(c.init.body); }), [{ sid: "abc", project: "research" }],
+       "one pick, the chosen category");
+    eq(S.category(app.state.views["pick-abc"]).value, "research", "the category applied");
+    eq(app.state.views["pick-abc"].tags, [], "the tag removed");
+    return submit();
+  }).then(function () {
+    eq(picks(svc).length, 1, "a second Save sends no second pick");
+  });
+});
+
 test("the adapter is the service only for a page served over http that holds the token", function () {
   var store = A.memoryStorage();
   eq(A.choose(F, store, { protocol: "file:", hash: "", origin: "null", pathname: "/", search: "" }).name, "fixtures",

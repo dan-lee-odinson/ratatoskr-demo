@@ -27,7 +27,7 @@
     this.tab = "review";
     this.filter = { category: "", tag: "" };
     this.sheet = null; // the task open in its sheet
-    this.draft = null; // that sheet's tags as edited, before Save
+    this.draft = null; // that sheet's edits before Save: its tags, and the category chosen (null until one is)
     this.viewer = null; // the item in the simulated private viewer
     this.notice = "";
     this.busy = false;
@@ -146,13 +146,13 @@
     } else if (t.hasAttribute("data-add-tag")) {
       var input = this.el.querySelector("[data-tag-input]");
       var tag = S.normaliseTag(input ? input.value : "");
-      if (tag && this.draft.indexOf(tag) < 0) {
-        this.draft.push(tag);
+      if (tag && this.draft.tags.indexOf(tag) < 0) {
+        this.draft.tags.push(tag);
       }
       this.render();
     } else if (t.hasAttribute("data-remove-tag")) {
       var gone = t.getAttribute("data-remove-tag");
-      this.draft = this.draft.filter(function (x) { return x !== gone; });
+      this.draft.tags = this.draft.tags.filter(function (x) { return x !== gone; });
       this.render();
     } else if (t.hasAttribute("data-connect")) { // the owner service's token, kept in this browser
       var field = this.el.querySelector("[data-token]");
@@ -173,6 +173,10 @@
   };
 
   App.prototype.onChange = function (e) {
+    if (e.target.name === "category" && this.draft && !e.target.disabled) { // kept until Save: a re-render shows it
+      this.draft.category = e.target.value;
+      return;
+    }
     var key = e.target.getAttribute("data-filter");
     if (key) {
       this.filter[key] = e.target.value;
@@ -183,8 +187,8 @@
   App.prototype.onSave = function (form) {
     var id = form.getAttribute("data-save");
     var chosen = form.querySelector("input[name=category]:checked");
-    var proposals = S.propose(this.state, id, { category: chosen && !chosen.disabled ? chosen.value : null,
-      tags: this.draft });
+    var category = this.draft.category || (chosen && !chosen.disabled ? chosen.value : null);
+    var proposals = S.propose(this.state, id, { category: category, tags: this.draft.tags });
     var view = this.state.views[id];
     var categorized = proposals.some(function (p) { return p.type === "categorize"; });
     return this.record(proposals, categorized ? "Categorized by owner." : "Saved.").then(function () { return view; });
@@ -192,7 +196,7 @@
 
   App.prototype.openSheet = function (id) {
     this.sheet = id;
-    this.draft = this.state.views[id].tags.slice();
+    this.draft = { tags: this.state.views[id].tags.slice(), category: null };
     this.notice = "";
     this.render();
   };
@@ -377,19 +381,20 @@
   App.prototype.renderSheet = function (view) {
     var self = this;
     var chosen = view.ownerCategory;
+    var pending = chosen ? null : this.draft.category; // chosen in this sheet, not saved yet
     var probs = view.project.probabilities || {};
     var order = Object.keys(probs).length ? Object.keys(probs).sort(function (a, b) { return probs[b] - probs[a]; }) :
       this.state.projects.slice(); // no probabilities sent with a live task: the courier's order
     var current = S.category(view).value;
     var radios = order.map(function (p) {
       var prob = probs[p];
-      var checked = chosen ? chosen.value === p : (view.project.sure && current === p);
+      var checked = chosen ? chosen.value === p : pending ? pending === p : (view.project.sure && current === p);
       return "<label class=\"opt\"><input type=\"radio\" name=\"category\" value=\"" + esc(p) + "\"" +
         (checked ? " checked" : "") + (chosen ? " disabled" : "") + "> <span class=\"name\">" + esc(p) + "</span>" +
         "<span class=\"bar\"><span style=\"width:" + Math.round((prob || 0) * 100) + "%\"></span></span>" +
         "<span class=\"num\">" + S.pct(prob) + "</span></label>";
     }).join("") + "<label class=\"opt leave\"><input type=\"radio\" name=\"category\" value=\"" + S.LEAVE + "\"" +
-      (chosen && chosen.value === S.LEAVE ? " checked" : "") + (chosen ? " disabled" : "") +
+      ((chosen ? chosen.value : pending) === S.LEAVE ? " checked" : "") + (chosen ? " disabled" : "") +
       "> <span class=\"name\">Leave unsorted</span></label>";
     var history = S.activity(this.state).filter(function (e) { return e.item === view.id; });
     return "<div class=\"sheet\" role=\"dialog\" aria-label=\"Task\"><div class=\"sheethead\"><button class=\"btn\" " +
@@ -403,7 +408,7 @@
         (chosen.value === S.LEAVE ? "left unsorted by owner" : "categorized by owner") +
         " (the first answer stands, as with the Telegram buttons)" : "") + "</legend>" + radios + "</fieldset>" +
       "<fieldset><legend>Tags <span class=\"fine\">(" + esc(S.STATUS.local) + ")</span></legend><div class=\"chips\">" +
-      this.draft.map(function (t) {
+      this.draft.tags.map(function (t) {
         return "<span class=\"chip tag\">#" + esc(t) + " <button type=\"button\" class=\"x\" data-remove-tag=\"" +
           esc(t) + "\" aria-label=\"Remove " + esc(t) + "\">×</button></span>";
       }).join("") + "</div><div class=\"addtag\"><input data-tag-input placeholder=\"add a tag\" maxlength=\"32\">" +
