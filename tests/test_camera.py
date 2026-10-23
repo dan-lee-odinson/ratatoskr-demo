@@ -221,7 +221,7 @@ def test_the_camera_runs_poller_hands_release_and_scene_taps_and_nothing_else_to
     assert handled == ["release:abc", "scene:def:commitment"]
 
 
-def settle(run, *, ask_owner=True, answer="commitment", taps=None):
+def settle(run, *, answer="commitment", taps=None):
     """The camera run's loop over the courier of tests/test_release.py: the owner's taps as the loop asks for them."""
     asked = [] if taps is None else taps
 
@@ -239,15 +239,16 @@ def settle(run, *, ask_owner=True, answer="commitment", taps=None):
 
     from tests.test_release import RID
 
-    return run_images._settle(visit, run.runtime.state.ledger_get, RID, ask_owner=ask_owner, wait=wait)
+    return run_images._settle(visit, run.runtime.state.ledger_get, RID, wait=wait)
 
 
 @pytest.mark.parametrize("held, kwargs", [("image-unsure", dict(p=0.5)), ("source-unsure", dict(p=0.2, text_gate=0.5))])
 def test_a_photograph_settles_through_the_owners_release_and_then_his_scene_answer(tmp_path, services, clock, held,
                                                                                   kwargs):
     run, taps = Run(tmp_path, services, clock, scene_p=0.5, **kwargs), []
-    visits, stopped = settle(run, taps=taps)
+    visits, offers, stopped = settle(run, taps=taps)
     assert stopped is None and taps == ["release", "scene"]
+    assert offers == [{"step": "release", "on": held, "taken": True}, {"step": "scene", "on": "scene-unsure", "taken": True}]
     assert [(v["status"], v["reason"]) for v in visits] == [("hold", held), ("hold", "scene-unsure"), ("done", None)]
     assert len(run.model.calls) == 1 and len(run.todoist.tasks) == 1  # the chained path of ruling 57, written
     image = run.runtime.state.ledger_get(photo_id(Path("whiteboard.png"))).image
@@ -255,15 +256,27 @@ def test_a_photograph_settles_through_the_owners_release_and_then_his_scene_answ
     assert image["scene_at"].startswith("2026-") and image["releases"][0]["at"].startswith("2026-")  # with their times
 
 
-def test_a_photograph_the_labels_call_sensitive_is_offered_nothing_and_an_unanswered_tap_stops_the_run(
+def test_every_unsure_hold_is_offered_and_one_the_owner_leaves_settles_held_while_a_missing_tap_stops_the_run(
         tmp_path, services, clock):
-    run = Run(tmp_path / "a", services, clock, p=0.5)
-    visits, stopped = settle(run, ask_owner=False)
-    assert [(v["status"], v["reason"]) for v in visits] == [("hold", "image-unsure")] and stopped is None
+    rid = photo_id(Path("whiteboard.png"))
+    run = Run(tmp_path / "a", services, clock, p=0.5)  # an unsure hold: offered, whatever the label (ruling 58C)
+    visits, offers, stopped = run_images._settle(lambda: {"status": run.cycle()["status"]}, run.runtime.state.ledger_get,
+                                                 rid, wait=lambda item, step: None)  # the owner leaves it held
+    assert len(visits) == 1 and stopped is None
+    assert offers == [{"step": "release", "on": "image-unsure", "taken": False}]
     run = Run(tmp_path / "b", services, clock, p=0.5)
-    visits, stopped = run_images._settle(lambda: {"status": run.cycle()["status"]}, run.runtime.state.ledger_get,
-                                         photo_id(Path("whiteboard.png")), ask_owner=True, wait=lambda rid, step: False)
-    assert len(visits) == 1 and stopped == "no release tap within 45 minutes"
+    visits, offers, stopped = run_images._settle(lambda: {"status": run.cycle()["status"]}, run.runtime.state.ledger_get,
+                                                 rid, wait=lambda item, step: False)  # no tap on an ordinary photograph
+    assert len(visits) == 1 and stopped == "no release tap within 45 minutes" and offers[0]["taken"] is False
+    run = Run(tmp_path / "c", services, clock, p=0.8)  # a yes verdict: no button, so nothing is offered
+    visits, offers, stopped = run_images._settle(lambda: {"status": run.cycle()["status"]}, run.runtime.state.ledger_get,
+                                                 rid, wait=lambda item, step: True)
+    assert len(visits) == 1 and offers == [] and stopped is None
+
+
+def test_the_label_sets_only_how_long_the_harness_waits_on_an_offer():
+    assert run_images._patience({"set": "ordinary"}) == (45 * 60, False)  # the owner answers; no tap stops the run
+    assert run_images._patience({"set": "sensitive"}) == (run_images.DECLINE_SECONDS, None) == (30, None)
 
 
 def test_the_camera_files_are_named_by_the_utc_date_the_run_started(tmp_path):
@@ -315,6 +328,8 @@ def camera_export():
          "written": [{"content": "Finish the English comp essay", "labels": ["pocket", "proj:school"], "priority": 4}],
          "telegram": [{"first_line": "Held photo-1: image-unsure.", "buttons": ["Release"], "to_owner": True},
                       {"first_line": "scene unsure · 0.55", "buttons": ["Commitment", "Reference"], "to_owner": True}],
+         "offers": [{"step": "release", "on": "image-unsure", "taken": True},
+                    {"step": "scene", "on": "scene-unsure", "taken": True}],
          "reference_note": False},
         {"file": "c03.jpg", "set": "ordinary", "id": "photo-3", "status": "hold", "reason": "scene-unsure",
          "image": image | {"gate_p": 0.2, "scene": "unsure", "scene_by": "decider", "scene_p": 0.6,
@@ -322,7 +337,7 @@ def camera_export():
          "visits": [visit("hold", "scene-unsure", picture_p=[0.2], ocr_ran=True, found=["Practice"], text_p=[0.3],
                           scene=("unsure", "reference", 0.6))],
          "ocr_ran": True, "ocr_keywords_found": ["Practice"], "extraction_calls_spend_ledger": 0, "written": [],
-         "telegram": [], "reference_note": False},
+         "telegram": [], "offers": [], "reference_note": False},
         {"file": "c05.jpg", "set": "ordinary", "id": "photo-5", "status": "done", "reason": None,
          "image": image | {"gate_p": 0.1, "scene": "commitment", "scene_by": "decider", "scene_p": 0.8,
                            "scene_action": "extracted", "extraction_calls": 1},
@@ -330,12 +345,14 @@ def camera_export():
                           scene=("commitment", "commitment", 0.8))],
          "ocr_ran": True, "ocr_keywords_found": ["GARAGE", "SALE"], "extraction_calls_spend_ledger": 1,
          "written": [{"content": "Go to the garage sale", "labels": ["pocket"], "priority": 1}],
-         "telegram": [], "reference_note": False},
-        {"file": "c04.jpg", "set": "sensitive", "id": "photo-4", "status": "hold", "reason": "image-sensitive",
-         "image": image | {"gate_p": 0.8, "extraction_calls": 0},
-         "visits": [visit("hold", "image-sensitive", picture_p=[0.8])], "ocr_ran": False, "ocr_keywords_found": [],
-         "extraction_calls_spend_ledger": 0, "written": [], "telegram": [{"first_line": "Held photo-4", "buttons": [],
-                                                                          "to_owner": False}],
+         "telegram": [], "offers": [], "reference_note": False},
+        {"file": "c04.jpg", "set": "sensitive", "id": "photo-4", "status": "hold", "reason": "image-unsure",
+         "image": image | {"gate_p": 0.55, "extraction_calls": 0, "releases": [
+             {"held_by": "image gate", "sid": "y", "by": None, "at": None, "sha256": release["sha256"]}]},
+         "visits": [visit("hold", "image-unsure", picture_p=[0.55])], "ocr_ran": False, "ocr_keywords_found": [],
+         "extraction_calls_spend_ledger": 0, "written": [],
+         "telegram": [{"first_line": "Held photo-4: image-unsure.", "buttons": ["Release"], "to_owner": True}],
+         "offers": [{"step": "release", "on": "image-unsure", "taken": False}],  # offered; the owner left it held
          "reference_note": False},
     ]
     return {"camera": True, "labels_file": "bench/camera/labels.json", "labels_json": json.dumps(LABELS),
@@ -343,6 +360,7 @@ def camera_export():
             "finished": "2026-10-24 01:40 UTC", "stopped": None,
             "floors": {"image gate": 0.6, "text gate": 0.6, "scene": 0.7}, "input": {"long_side": 2000,
                                                                                     "max_bytes": photos.MAX_BYTES},
+            "owner_wait": {"ordinary_seconds": 2700, "sensitive_seconds": 30},
             "versions": {"input": "phone photographs"}, "memory_end": {},
             "spend_before": {"total_usd": 0.1, "calls": 1},
             "spend_after": {"total_usd": 0.11, "calls": 3, "hard_stop_usd": 5.0}, "images": rows}
@@ -352,28 +370,43 @@ def test_the_camera_report_is_drawn_from_an_export_alone():
     text = run_images.render5(camera_export())
     assert text.startswith("# Image evaluation, camera photographs")
     assert "from bench/image_eval_2026-10-24_camera.json. Do not edit by hand." in text
-    for words in ("photographs taken by the owner on a phone", "fictional materials made by hand",
-                  "angled pages, handwriting, and ordinary room light", "This set was not used in development",
-                  "the same frozen gates, floors, question, and checkpoint as `bench/IMAGE_EVAL_2026-10-22_final.md`"):
-        assert words in text
-    assert "| automatic completions (written, or kept as reference, with no owner tap) | 1 of 4 |" in text  # c05
-    assert "| ordinary photographs written (a commitment) | 2 of 3 |" in text
-    assert "| sensitive photographs held with nothing sent and no owner tap | 1 of 1 |" in text
-    assert "| owner interventions: releases (photographs / taps) | 1 / 1 |" in text
-    assert "| owner interventions: scene answers | 1 |" in text
-    assert "| confident disagreements with the labels (photographs / answers) | 1 / 1 |" in text  # c05's sure commitment
-    assert "| OCR failures, of the photographs the OCR read: a key word missed / no words | 1 / 0 of 3 |" in text
-    assert "| Bedrock extraction calls (the spend ledger): commitment / reference / sensitive photographs | 1 / 1 / 0 |" in text
-    assert "| Telegram lines to the owner: commitment / reference / sensitive photographs | 2 / 0 / 0 |" in text
-    assert "| c01.jpg | commitment | Release | image gate (0.45) | owner | 2026-10-24T01:20:00 |" in text
-    assert "| c01.jpg | commitment | Commitment | scene (top commitment, 0.55) | owner | 2026-10-24T01:22:00 |" in text
+    for words in ("photographs taken by the owner on a phone", "content no earlier run saw",  # ruling 58C, 3
+                  "handwritten, some angled, in ordinary room light", "generalization to new content",
+                  "the same frozen gates, floors, question, and checkpoint as `bench/IMAGE_EVAL_2026-10-22_final.md`",
+                  "Every unsure hold offered", "whatever the label", "the owner's choice followed the labels",  # 58C, 2
+                  "The first run's results are the results", "Simulated integrations",
+                  "Ruling 57's chain, live",
+                  "A successful tap resolves the uncertainty; it does not make the first model answer correct"):  # 58C, 1
+        assert words in text, words
+    assert "| automatic completions (finished with no owner action: written, or kept as reference) | 1 of 4 |" in text
+    assert "| owner-assisted completions (finished after the owner's release or scene answer) | 1 of 4 |" in text
+    assert "| held at the end: with no offer / offered, not taken by the owner | 1 / 1 of 4 |" in text
+    assert "| owner actions: releases taken / scene answers / offers left | 1 / 1 / 1 |" in text
+    assert "| confident disagreements with the label at the first model answer (photographs / answers) | 1 / 1 |" in text
+    assert "| OCR misses, of the photographs the OCR read: a key word missed / no words | 1 / 0 of 3 |" in text
+    assert "| Telegram lines to the owner: commitment / reference / sensitive photographs | 2 / 0 / 1 |" in text
+    assert "| ruling 57's chain: occurrences / with no gate or scene asked again and no duplicate write | 1 / 1 |" in text
+    assert ("| c01.jpg | commitment: a task (school) | unsure 0.45 | clear 0.20 | unsure (top commitment, 0.55); - / - "
+            "| released (image gate); scene: Commitment | extracted, 1 task(s) written | 1 / 1 | 1 | no gate asked "
+            "again, the scene asked once, no duplicate write |") in text
+    assert ("| c04.jpg | held (sensitive or unsure) | unsure 0.55 | - | not asked | offered Release (image gate), not "
+            "taken by the owner | held (image-unsure) | 0 / 0 | 0 | - |") in text
+    assert "| c05.jpg | reference | extra task | scene commitment (0.80) |" in text
+    assert "| c01.jpg | commitment | Release | image gate (0.45) | released | 2026-10-24T01:20:00 |" in text
+    assert "| c04.jpg | sensitive | Release | image gate (0.55) | not taken | - |" in text
+    assert "| c01.jpg | commitment | Commitment or Reference | scene (top commitment, 0.55) | chose Commitment |" in text
     assert "of which the label accepts unsure on c03.jpg" in text
-    assert ("| c01.jpg | commitment | yes | yes | 3072x4080 | 1 | 1506x2000 | 2 of 2 | - |" in text and
-            "| c03.jpg | commitment | yes | slight | 3072x4080 | 1 | 1506x2000 | 1 of 2 | missed Brittany |" in text and
-            "| c04.jpg | sensitive | yes | no | 3072x4080 | 1 | 1506x2000 | not read (held before the OCR) | - |" in text)
-    assert "| c01.jpg | commitment | 0.45 | image gate: owner | 0.20 | unsure (top commitment, 0.55) | commitment |" in text
-    assert "right (school / school)" in text and "| scene commitment (0.80) |" in text
-    assert "| sensitive | 1 | 0 / 0 | 0 | 0 | 0 | no call, no write, nothing to the owner |" in text
+    assert "| c03.jpg | commitment | yes | slight | 3072x4080 | 1 | 1506x2000 | 1 of 2 | missed Brittany |" in text
+
+
+def test_the_chain_is_marked_when_a_gate_was_asked_twice_or_a_write_repeated():
+    row = camera_export()["images"][0]
+    assert run_images._chain(row) == "no gate asked again, the scene asked once, no duplicate write"
+    twice = dict(row, visits=[*row["visits"][:2], dict(row["visits"][2], picture_p=[0.45])])  # the gate asked again
+    assert run_images._chain(twice).startswith("a gate asked again")
+    repeated = dict(row, written=row["written"] * 2)
+    assert run_images._chain(repeated).endswith("a duplicate write")
+    assert run_images._chain(camera_export()["images"][2]) is None  # no owner action: not the chain
 
 
 def test_the_replay_check_covers_the_sixth_report(tmp_path, monkeypatch, capsys):

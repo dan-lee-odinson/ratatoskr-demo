@@ -632,20 +632,40 @@ def _owner_answered(entry: Any, step: str) -> bool:
     return entry.image.get("scene_by") == "owner"
 
 
-def _settle(visit: Any, ledger_get: Any, rid: str, *, ask_owner: bool, wait: Any) -> tuple[list[dict[str, Any]], str | None]:
-    """One photograph's visits until it settles: each `visit()` one cycle of the courier on it. After a hold the
-    owner can answer (a Release, or the scene: only when `ask_owner`), `wait(rid, step)` until the answer is in the
-    ledger, and the next visit runs it. Returns the visits, and why it stopped before settling, if it did."""
+DECLINE_SECONDS = 30  # ruling 58C: an offer on a photograph the labels call sensitive, seen and left by the owner
+
+
+def _patience(label: dict[str, Any]) -> tuple[int, bool | None]:
+    """How long the harness waits on the owner's tap, and what no tap means (ruling 58C). The offer follows the
+    verdict: every unsure hold's notice goes to the owner, whatever the label. The label sets only the wait: on a
+    photograph the labels call ordinary the owner answers, so the run waits for the tap and a missing one stops it; on
+    one the labels call sensitive the owner leaves it held, so after DECLINE_SECONDS it is offered, not taken."""
+    return (TAP_WAIT_SECONDS, False) if label["set"] == "ordinary" else (DECLINE_SECONDS, None)
+
+
+def _settle(visit: Any, ledger_get: Any, rid: str, *,
+            wait: Any) -> tuple[list[dict[str, Any]], list[dict[str, Any]], str | None]:
+    """One photograph's visits until it settles: each `visit()` one cycle of the courier on it. After a hold that
+    offers the owner a tap (a Release on an unsure gate hold, or the scene's two buttons), `wait(rid, step)`: True
+    once the owner's answer is in the ledger (the next visit runs it), None when the owner left the offer (the
+    photograph settles, held), False when no answer came in time (the run stops). Returns the visits, the offers
+    (each step, the hold it was offered on, and whether the owner took it), and why it stopped early, if it did."""
     visits: list[dict[str, Any]] = []
+    offers: list[dict[str, Any]] = []
     while True:
         visits.append(visit())
-        step = _owner_step(ledger_get(rid)) if ask_owner else None
+        entry = ledger_get(rid)
+        step = _owner_step(entry)
         if step is None:
-            return visits, None
+            return visits, offers, None
         if len(visits) == CAMERA_VISITS:
-            return visits, f"still asking the owner after {CAMERA_VISITS} visits"
-        if not wait(rid, step):
-            return visits, f"no {step} tap within {TAP_WAIT_SECONDS // 60} minutes"
+            return visits, offers, f"still asking the owner after {CAMERA_VISITS} visits"
+        answered = wait(rid, step)
+        offers.append({"step": step, "on": entry.reason, "taken": bool(answered)})
+        if answered is None:
+            return visits, offers, None
+        if not answered:
+            return visits, offers, f"no {step} tap within {TAP_WAIT_SECONDS // 60} minutes"
 
 
 def run_camera(args: argparse.Namespace) -> dict[str, Any]:
@@ -734,8 +754,10 @@ def run_camera(args: argparse.Namespace) -> dict[str, Any]:
             rid = photo_id(target)
             before = bench.extract_calls(settings.spend_path)
             sent_before = len(telegram.sent)
-            # the owner is offered only what the labels call ordinary; a sensitive photograph's lines stay local
-            telegram.forward = label["set"] == "ordinary"
+            # ruling 58C: every notice the courier sends with a Release or scene button goes to the owner, whatever the
+            # label; a yes verdict has no button, and every other line stays on the local record
+            telegram.forward = True
+            patience, no_tap = _patience(label)
 
             def visit() -> dict[str, Any]:
                 reads.reset()
@@ -753,19 +775,20 @@ def run_camera(args: argparse.Namespace) -> dict[str, Any]:
                         "routing_waiting_p": reads.routing_waiting_p,
                         **({k: img.get(k) for k in SCENE_KEYS} if vision.scene_reads else {})}
 
-            def wait(item: str, step: str) -> bool:
-                print(f"  {label['file']}: held ({runtime.state.ledger_get(item).reason}); waiting for the owner's "
-                      f"{'Release' if step == 'release' else 'Commitment or Reference'} tap on {item}", flush=True)
+            def wait(item: str, step: str) -> bool | None:
+                print(f"  {label['file']}: held ({runtime.state.ledger_get(item).reason}); offered the owner "
+                      f"{'Release' if step == 'release' else 'Commitment or Reference'} on {item}", flush=True)
                 waited = time.monotonic()
-                while time.monotonic() - waited < TAP_WAIT_SECONDS:
+                while time.monotonic() - waited < patience:
                     stop.wait(2)
                     if _owner_answered(runtime.state.ledger_get(item), step):
                         print(f"  {label['file']}: the owner's {step} answer is in the ledger", flush=True)
                         return True
-                return False
+                if no_tap is None:
+                    print(f"  {label['file']}: offered, not taken by the owner; it stays held", flush=True)
+                return no_tap
 
-            visits, why = _settle(visit, runtime.state.ledger_get, rid, ask_owner=label["set"] == "ordinary",
-                                  wait=wait)
+            visits, offers, why = _settle(visit, runtime.state.ledger_get, rid, wait=wait)
             entry = runtime.state.ledger_get(rid)
             read = next((v for v in reversed(visits) if v["ocr_ran"]), None)
             note, header = state_dir / "reference" / f"{rid}.txt", ""
@@ -775,7 +798,7 @@ def run_camera(args: argparse.Namespace) -> dict[str, Any]:
             rows.append({
                 "file": label["file"], "set": label["set"], "id": rid,
                 "status": entry.status if entry else None, "reason": entry.reason if entry else None,
-                "image": as_exported(entry.image) if entry else {}, "visits": visits,
+                "image": as_exported(entry.image) if entry else {}, "visits": visits, "offers": offers,
                 "ocr_ran": read is not None, "ocr_keywords_found": read["ocr_keywords_found"] if read else [],
                 "extraction_calls_spend_ledger": bench.extract_calls(settings.spend_path) - before,
                 "written": [{"content": a.get("content"), "labels": a.get("labels"), "priority": a.get("priority")}
@@ -809,6 +832,7 @@ def run_camera(args: argparse.Namespace) -> dict[str, Any]:
         "floors": {"image gate": questions["sensitive"].min_confidence,
                    "text gate": questions["sensitive"].min_confidence, "scene": questions["project"].min_confidence},
         "input": {"long_side": LONG_SIDE, "max_bytes": MAX_BYTES},
+        "owner_wait": {"ordinary_seconds": TAP_WAIT_SECONDS, "sensitive_seconds": DECLINE_SECONDS},
         "versions": {
             "input": (f"phone photographs from `bench/camera/`, read upright (EXIF orientation honoured) with the long "
                       f"side at most {LONG_SIDE} px (RapidOCR's own limit; the vision server fits what it is sent to "
@@ -823,9 +847,9 @@ def run_camera(args: argparse.Namespace) -> dict[str, Any]:
                                       f"{bench._decider_version()}, 127.0.0.1:8000"),
             "scene": ("the vision server: \"What does this picture represent?\" over the picture and its OCR text, at "
                       f"the routing read's floor for a choice question ({questions['project'].min_confidence:.2f})"),
-            "owner": ("the owner's taps on the Release button of an unsure hold's notice and on the Commitment and "
-                      "Reference buttons of an unsure scene, in the owner's Telegram chat, read from the bot's updates "
-                      "and recorded by the courier's own handlers"),
+            "owner": ("every notice the courier sent with a Release or scene button went to the owner's Telegram "
+                      "chat, whatever the label (ruling 58C); the owner's taps on Release and on Commitment or "
+                      "Reference were read from the bot's updates and recorded by the courier's own handlers"),
             "extraction model": (f"`{settings.model.model_id}` on Bedrock (bedrock-mantle, us-east-1), reasoning "
                                  f"effort `{settings.model.reasoning_effort}`"),
             "configuration": (f"`config.toml` git blob `{bench.git_blob_hash(REPO / 'config.toml')}`; "
@@ -1613,26 +1637,101 @@ def _kind(label: dict[str, Any]) -> str:
     return "sensitive" if label["set"] == "sensitive" else str(label["scene"])
 
 
-def _model_scene(row: dict[str, Any]) -> dict[str, Any] | None:
-    """The vision server's own scene answer for a photograph: the last visit that asked it (an owner's later answer
+def _first_scene(row: dict[str, Any]) -> dict[str, Any] | None:
+    """The vision server's first scene answer for a photograph: the first visit that asked it (an owner's later answer
     replaces it in the ledger record, not here)."""
-    return next((v for v in reversed(row["visits"]) if v.get("scene_reads")), None)
+    return next((v for v in row["visits"] if v.get("scene_reads")), None)
+
+
+def _first_gates(row: dict[str, Any], floors: dict[str, float]) -> tuple[str, str]:
+    """The image gate's and the text gate's first answers, as verdict and p, as the model gave them."""
+    picture = next((v["picture_p"][0] for v in row["visits"] if v["picture_p"]), None)
+    windows = next((v["text_gate_p"] for v in row["visits"] if v["text_gate_p"]), [])
+    image = "-" if picture is None else f"{_verdict(picture, floors['image gate'])} {picture:.2f}"
+    if not windows:
+        return image, "-"
+    verdicts = [_verdict(p, floors["text gate"]) for p in windows]
+    worst = "sensitive" if "sensitive" in verdicts else "unsure" if "unsure" in verdicts else "clear"
+    return image, f"{worst} {max(windows):.2f}" + (f" ({len(windows)} windows)" if len(windows) > 1 else "")
+
+
+def _scene_text(answer: dict[str, Any] | None) -> str:
+    if answer is None:
+        return "not asked"
+    options = answer.get("scene_options") or {}
+    probs = " / ".join(f"{options[k]:.2f}" if k in options else "-" for k in SCENES2[:2])
+    said = (f"unsure (top {answer.get('scene_choice')}, {answer['scene_p']:.2f})" if answer["scene"] == UNSURE_SCENE
+            else f"{answer['scene']} {answer['scene_p']:.2f}")
+    return f"{said}; {probs}"
+
+
+def _owner_actions(row: dict[str, Any]) -> list[str]:
+    """What the owner did: each Release taken, each offer left, the scene answered."""
+    done = [f"released ({x.get('held_by')})" for x in row["image"].get("releases") or [] if x.get("by") == "owner"]
+    on = {"image-unsure": "image gate", "source-unsure": "text gate", "scene-unsure": "scene unsure"}
+    for offer in row.get("offers", []):
+        if not offer["taken"]:
+            done.append(f"offered {'Release' if offer['step'] == 'release' else 'the scene'} "
+                        f"({on.get(offer['on'], offer['on'])}), not taken by the owner")
+    if row["image"].get("scene_by") == "owner":
+        done.append(f"scene: {row['image']['scene'].capitalize()}")
+    return done
+
+
+def _assisted(row: dict[str, Any]) -> bool:
+    return any(x.get("by") == "owner" for x in row["image"].get("releases") or []) or \
+        row["image"].get("scene_by") == "owner"
+
+
+def _chain(row: dict[str, Any]) -> str | None:
+    """Ruling 57's chain where it occurred: a gate held it unsure, the owner released it, the scene came back unsure,
+    the owner chose, and it finished; with whether a gate or the scene was asked again and whether a write repeated."""
+    if not (any(x.get("by") == "owner" for x in row["image"].get("releases") or [])
+            and row["image"].get("scene_by") == "owner" and row["status"] == "done"):
+        return None
+    # each gate is asked once at most along the chain: a release lets the photograph past it, the owner's scene answer
+    # past both (a later gate's first read after an earlier gate's release is not "again")
+    gate_again = any(sum(1 for v in row["visits"] if v[key]) > 1 for key in ("picture_p", "text_gate_p"))
+    scene_again = sum(v.get("scene_reads", 0) for v in row["visits"]) > 1
+    contents = [w["content"] for w in row["written"]]
+    duplicate = len(contents) != len(set(contents))
+    return ("no gate asked again, " if not gate_again else "a gate asked again, ") + \
+        ("the scene asked once, " if not scene_again else "the scene asked again, ") + \
+        ("no duplicate write" if not duplicate else "a duplicate write")
+
+
+def _disposition(row: dict[str, Any]) -> str:
+    if row["status"] == "done" and row["reason"] == "reference":
+        return "kept on the laptop (reference)"
+    if row["status"] == "done":
+        return f"extracted, {len(row['written'])} task(s) written" if row["written"] else _closed(row)
+    return f"held ({row['reason']})"
+
+
+def _expected(label: dict[str, Any]) -> str:
+    if label["set"] == "sensitive":
+        return "held (sensitive or unsure)"
+    if label["scene"] == "reference":
+        return "reference: kept"
+    projects = ", ".join(t["project"] for t in label["expected_tasks"])
+    return f"commitment{' (unsure accepted)' if label.get('scene_unsure_accepted') else ''}: a task ({projects})"
 
 
 def _disagreements(row: dict[str, Any], label: dict[str, Any], floors: dict[str, float]) -> list[str]:
-    """The model's answers at or above their floors that contradict the label: an image gate or text gate sure of the
-    wrong side, or a sure scene answer other than the label's. An unsure answer is not a disagreement."""
+    """The model's first answers at or above their floors that contradict the label: an image gate or text gate sure of
+    the wrong side, or a sure first scene answer other than the label's. An unsure answer is not a disagreement, and
+    an owner's later tap does not change the first answer."""
     out, sensitive = [], label["set"] == "sensitive"
     gate = next((v["picture_p"][0] for v in row["visits"] if v["picture_p"]), None)
     if gate is not None and _verdict(gate, floors["image gate"]) == ("clear" if sensitive else "sensitive"):
         out.append(f"image gate {'clear' if sensitive else 'sensitive'} ({gate:.2f})")
-    windows = [p for v in row["visits"] for p in v["text_gate_p"]]
+    windows = next((v["text_gate_p"] for v in row["visits"] if v["text_gate_p"]), [])
     verdicts = [_verdict(p, floors["text gate"]) for p in windows]
     if sensitive and verdicts and all(x == "clear" for x in verdicts):
         out.append(f"text gate clear ({max(windows):.2f})")
     if not sensitive and "sensitive" in verdicts:
         out.append(f"text gate sensitive ({max(windows):.2f})")
-    scene = _model_scene(row)
+    scene = _first_scene(row)
     if scene and label["scene"] and scene.get("scene") in SCENES2[:2] and scene["scene"] != label["scene"]:
         out.append(f"scene {scene['scene']} ({scene['scene_p']:.2f})")
     return out
@@ -1647,21 +1746,23 @@ def _ocr_failure(row: dict[str, Any], label: dict[str, Any]) -> str | None:
 
 
 def render5(data: dict[str, Any]) -> str:
-    """The camera evaluation's report (ruling 58), from its export alone: the final run's tables, with photographs."""
+    """The camera evaluation's report (rulings 58 and 58C), from its export alone: per photograph the expected outcome,
+    the first model answers, the owner's actions and the final disposition, with automatic results and owner-assisted
+    completions counted apart."""
     parsed = json.loads(data["labels_json"])
     labels = {x["file"]: x for x in parsed["images"]}
     rows = data["images"]
     floors = data["floors"]
+    wait = data.get("owner_wait", {"sensitive_seconds": 30})
     export, _ = camera_files(data["started"], Path("bench"))
     sens = [r for r in rows if r["set"] == "sensitive"]
-    ordn = [r for r in rows if r["set"] == "ordinary"]
-    cats = {r["file"]: _category(r) for r in rows}
+    done = [r for r in rows if r["status"] == "done"]
     released = [(r, x) for r in rows for x in r["image"].get("releases") or []]
     owner_scene = [r for r in rows if r["image"].get("scene_by") == "owner"]
-    by_owner = lambda r: (any(x.get("by") == "owner" for x in r["image"].get("releases") or [])  # noqa: E731
-                          or r["image"].get("scene_by") == "owner")
+    left = [(r, o) for r in rows for o in r.get("offers", []) if not o["taken"]]
     disagree = {r["file"]: _disagreements(r, labels[r["file"]], floors) for r in rows}
     failures = {r["file"]: _ocr_failure(r, labels[r["file"]]) for r in rows}
+    chains = {r["file"]: _chain(r) for r in rows}
     sent = lambda r: r["extraction_calls_spend_ledger"] > 0 or bool(r["written"])  # noqa: E731
     to_owner = lambda r: sum(1 for m in r.get("telegram", []) if m.get("to_owner"))  # noqa: E731
     kinds = ("commitment", "reference", "sensitive")
@@ -1673,23 +1774,29 @@ def render5(data: dict[str, Any]) -> str:
         f"Run {data['started']} to {data['finished']} by `bench/run_images.py --camera` (git blob "
         f"`{data['runner_blob']}`), at commit `{data['code']}`.",
         "",
-        f"- **Photographs, not rendered images:** {len(labels)} photographs taken by the owner on a phone, of "
-        "fictional materials made by hand (invented names, invented numbers): angled pages, handwriting, and "
-        "ordinary room light. This set was not used in development: no model was shown it before its labels were "
-        "committed. The repository's copies keep each photograph's picture data byte for byte, without its location "
-        "metadata or embedded motion clip.",
+        f"- **New content, photographed:** {len(labels)} photographs taken by the owner on a phone, of cards made by "
+        "hand for this set (fictional: invented names and numbers), content no earlier run saw: handwritten, some "
+        "angled, in ordinary room light. The run tests two things at once, the capture conditions with the OCR's "
+        "robustness to them, and generalization to new content; it shows the second only as far as the per-photograph "
+        "table does. No model was shown the set before its labels were committed. The repository's copies keep each "
+        "photograph's picture data byte for byte, without its location metadata or embedded motion clip.",
         f"- **The same frozen path:** the same frozen gates, floors, question, and checkpoint as `{FINAL_REPORT}`: "
         "the image gate's picture question at the text gate's floor, the text gate, the two-way scene at the routing "
         "read's floor, the extraction and the routing read. New for photographs (ruling 58): each is read upright "
         f"(its EXIF orientation honoured) with its long side at most {data['input']['long_side']} px, from a copy in "
-        "memory; the file is not touched.",
-        "- **The owner's taps:** every photograph the labels call ordinary that a gate held as unsure was released by "
-        "Dan's tap on the Release button of its notice, and every one whose scene came back unsure was answered by his "
-        "tap on Commitment or Reference, each recorded as the owner's. A photograph the labels call sensitive was "
-        "offered nothing: a sensitive hold has no button, and its other lines stayed on the local record.",
-        "- **What left the laptop:** the Release and scene notices of ordinary photographs went to the owner's "
-        "Telegram chat and the taps came back from it; every other Telegram line and every Todoist write went to "
-        "local records. Bedrock calls are counted below.",
+        "memory; the file is not touched. The configuration's git blobs are listed below, as in the final photo report.",
+        "- **Every unsure hold offered:** the harness sent every notice the courier sent with a Release or scene button "
+        "to the owner's chat, whatever the label; a yes verdict has no button. The owner took every offer on a "
+        "photograph the labels call ordinary, and left every offer on a photograph the labels call sensitive (recorded "
+        f"as offered, not taken by the owner, after {wait['sensitive_seconds']} s): the owner's choice followed the "
+        "labels; the offers did not.",
+        "- **The first run's results are the results:** nothing was rerun to improve them.",
+        "- **Simulated integrations, as in the earlier runs:** every Todoist write went to a local record of the Sync "
+        "commands, and every Telegram line other than the owner's notices to a local record; the Bedrock calls were "
+        "made, and are counted below.",
+        "- **Ruling 57's chain, live:** where a photograph went gate unsure → owner release → scene unsure → owner "
+        "choice → disposition, the per-photograph table marks it, with whether a gate or the scene was asked again "
+        "and whether a write repeated: the live exercise of the ruling 57 fix.",
         "- **An experiment with an untrained checkpoint:** Strands Decider was not trained on images; the image gate "
         "and the scene use the vision tower inside its base model, at floors that are starting points.",
         f"- **The labels:** `{data['labels_file']}`, written from the owner's descriptions of the photographs, sha256 "
@@ -1704,88 +1811,59 @@ def render5(data: dict[str, Any]) -> str:
     if data["stopped"]:
         lines += [f"**Stopped (a partial run):** {data['stopped']}", ""]
     read = [r for r in rows if r["ocr_ran"] or failures[r["file"]] == "no words"]
-    lines += [f"## Summary ({len(rows)} photographs)", "", "| count | result |", "|---|---|",
-              f"| automatic completions (written, or kept as reference, with no owner tap) | "
-              f"{_frac(sum(1 for r in rows if r['status'] == 'done' and not by_owner(r)), len(rows))} |",
-              f"| sensitive photographs held with nothing sent and no owner tap | "
-              f"{_frac(sum(1 for r in sens if r['status'] == 'hold' and not sent(r) and not by_owner(r)), len(sens))} |",
-              f"| owner interventions: releases (photographs / taps) | "
-              f"{len({r['file'] for r, x in released if x.get('by') == 'owner'})} / "
-              f"{sum(1 for _, x in released if x.get('by') == 'owner')} |",
-              f"| owner interventions: scene answers | {len(owner_scene)} |",
-              f"| confident disagreements with the labels (photographs / answers) | "
+    held = [r for r in rows if r["status"] == "hold"]
+    lines += [f"## Summary ({len(rows)} photographs)", "",
+              "Automatic results and owner-assisted completions are counted apart. A successful tap resolves the "
+              "uncertainty; it does not make the first model answer correct: the disagreements counted here, and the "
+              "scene table below, are the first answers, before any tap.", "",
+              "| count | result |", "|---|---|",
+              f"| automatic completions (finished with no owner action: written, or kept as reference) | "
+              f"{_frac(sum(1 for r in done if not _assisted(r)), len(rows))} |",
+              f"| owner-assisted completions (finished after the owner's release or scene answer) | "
+              f"{_frac(sum(1 for r in done if _assisted(r)), len(rows))} |",
+              f"| held at the end: with no offer / offered, not taken by the owner | "
+              f"{sum(1 for r in held if not any(not o['taken'] for o in r.get('offers', [])))} / "
+              f"{sum(1 for r in held if any(not o['taken'] for o in r.get('offers', [])))} of {len(rows)} |",
+              f"| sensitive photographs sent to Bedrock or written to Todoist | "
+              f"{_frac(sum(1 for r in sens if sent(r)), len(sens))} |",
+              f"| owner actions: releases taken / scene answers / offers left | "
+              f"{sum(1 for _, x in released if x.get('by') == 'owner')} / {len(owner_scene)} / {len(left)} |",
+              f"| confident disagreements with the label at the first model answer (photographs / answers) | "
               f"{sum(1 for v in disagree.values() if v)} / {sum(len(v) for v in disagree.values())} |",
-              f"| OCR failures, of the photographs the OCR read: a key word missed / no words | "
+              f"| OCR misses, of the photographs the OCR read: a key word missed / no words | "
               f"{sum(1 for r in read if (failures[r['file']] or '').startswith('missed'))} / "
               f"{sum(1 for r in read if failures[r['file']] == 'no words')} of {len(read)} |",
               "| Bedrock extraction calls (the spend ledger): " + " / ".join(kinds) + " photographs | "
               + " / ".join(str(sum(r["extraction_calls_spend_ledger"] for r in of_kind[k])) for k in kinds) + " |",
               "| Telegram lines to the owner: " + " / ".join(kinds) + " photographs | "
-              + " / ".join(str(sum(to_owner(r) for r in of_kind[k])) for k in kinds) + " |", ""]
-    first_hold = {r["file"]: next((v for v in r["visits"] if v["status"] == "hold"), None) for r in rows}
-    gate_unsure = [r for r in rows if (first_hold[r["file"]] or {}).get("reason") == "image-unsure"]
-    gate_sensitive = [r for r in rows if (first_hold[r["file"]] or {}).get("reason") == "image-sensitive"]
-    lines += ["## The counts", "", "| count | result |", "|---|---|",
-              f"| sensitive photographs sent to Bedrock or written to Todoist | "
-              f"{_frac(sum(1 for r in sens if sent(r)), len(sens))} |",
-              f"| sensitive photographs held by the image gate: as sensitive / as unsure (not released) | "
-              f"{sum(1 for r in gate_sensitive if r['set'] == 'sensitive')} / "
-              f"{sum(1 for r in gate_unsure if r['set'] == 'sensitive')} of {len(sens)} |",
-              f"| ordinary photographs the image gate held as unsure (then released) | "
-              f"{_frac(sum(1 for r in gate_unsure if r['set'] == 'ordinary'), len(ordn))} |"]
-    for name in ("unreadable", "image gate", "tripwire", "text gate", "scene unsure", "task check", "leak guard"):
-        lines.append(f"| ordinary photographs held at the end: {name} | "
-                     f"{_frac(sum(1 for r in ordn if cats[r['file']] == name), len(ordn))} |")
-    lines += [f"| ordinary photographs kept on the laptop as reference | "
-              f"{_frac(sum(1 for r in ordn if cats[r['file']] == 'kept as reference'), len(ordn))} |",
-              f"| ordinary photographs written (a commitment) | "
-              f"{_frac(sum(1 for r in ordn if cats[r['file']] == 'written'), len(ordn))} |"]
-    every = lambda key: [v for r in rows for visit in r["visits"] for v in visit.get(key, [])]  # noqa: E731
-    lines += [f"| image gate read, median / p90 | {_ms([r['image']['gate_seconds'] for r in rows if 'gate_seconds' in r['image']])} |",
-              f"| OCR, median / p90 | {_ms([r['image']['ocr_seconds'] for r in rows if 'ocr_seconds' in r['image']])} |",
-              f"| text gate read, median / p90 | {_ms(every('text_gate_seconds'))} |",
-              f"| scene read, median / p90 | {_ms([v['scene_seconds'] for r in rows for v in [_model_scene(r)] if v and v.get('scene_seconds') is not None])} |",
-              f"| routing read, median / p90 | {_ms(every('routing_seconds'))} |"]
-    for name, m in data["memory_end"].items():
-        if m:
-            lines.append(f"| {name} memory at the end | {m['resident_gb']} GB resident, {m['private_gb']} GB private |")
-    spent = data["spend_after"]["total_usd"] - data["spend_before"]["total_usd"]
-    lines += [f"| Bedrock spend | ${spent:.6f} over {data['spend_after']['calls'] - data['spend_before']['calls']} "
-              f"call(s); the ledger at ${data['spend_after']['total_usd']:.6f} of the "
-              f"${data['spend_after']['hard_stop_usd']:.2f} hard stop |", ""]
-    lines += ["## The owner's taps", "", "| photograph | class | what | held by (p) or scene (top, p) | by | at (UTC) |",
-              "|---|---|---|---|---|---|"]
-    for r, x in released:
-        hold = next((v for v in r["visits"] if v["status"] == "hold" and v["reason"] in RELEASE_REASONS
-                     and ("image" if v["reason"] == "image-unsure" else "text") in x.get("held_by", "")), None)
-        p = None if hold is None else (hold["picture_p"][-1] if hold["reason"] == "image-unsure" and hold["picture_p"]
-                                       else (max(hold["text_gate_p"]) if hold["text_gate_p"] else None))
-        lines.append(f"| {r['file']} | {_kind(labels[r['file']])} | Release | {x.get('held_by')} "
-                     f"({'-' if p is None else f'{p:.2f}'}) | {x.get('by') or 'not released'} | "
-                     f"{(x.get('at') or '-').replace('+00:00', '')} |")
-    for r in owner_scene:
-        asked = _model_scene(r) or {}
-        lines.append(f"| {r['file']} | {_kind(labels[r['file']])} | {r['image']['scene'].capitalize()} | scene (top "
-                     f"{asked.get('scene_choice') or '-'}, "
-                     f"{'-' if asked.get('scene_p') is None else format(asked['scene_p'], '.2f')}) | owner | "
-                     f"{(r['image'].get('scene_at') or '-').replace('+00:00', '')} |")
-    if not released and not owner_scene:
-        lines.append("| - | - | no tap | - | - | - |")
-    asked = [(r, _model_scene(r)) for r in rows if _model_scene(r)]
-    lines += ["", "## The scene, two-way", "",
-              f"The vision server's own answer, asked of {len(asked)} photographs (an owner's later answer is in the "
-              "table above, not here). Rows: the label; columns: the answer.", "",
-              "| label \\ answer | " + " | ".join(SCENES2) + " |", "|---|" + "---|" * len(SCENES2)]
-    for want in ("commitment", "reference", "sensitive"):
-        group = [v for r, v in asked if _kind(labels[r["file"]]) == want]
-        if want == "sensitive" and not group:
-            continue
-        lines.append(f"| {want} | " + " | ".join(str(sum(1 for v in group if v["scene"] == got)) for got in SCENES2) + " |")
-    accepted = [r for r, v in asked if v["scene"] == UNSURE_SCENE and labels[r["file"]].get("scene_unsure_accepted")]
-    lines += ["", f"Answer matches the label on {sum(1 for r, v in asked if labels[r['file']]['scene'] == v['scene'])} "
-                  f"of {len(asked)}; unsure on {sum(1 for _, v in asked if v['scene'] == UNSURE_SCENE)}"
-              + (f", of which the label accepts unsure on {', '.join(r['file'] for r in accepted)}" if accepted else "")
-              + ".", "",
+              + " / ".join(str(sum(to_owner(r) for r in of_kind[k])) for k in kinds) + " |",
+              f"| ruling 57's chain: occurrences / with no gate or scene asked again and no duplicate write | "
+              f"{sum(1 for c in chains.values() if c)} / "
+              f"{sum(1 for c in chains.values() if c and c.startswith('no gate') and 'once' in c and 'no duplicate' in c)} |",
+              ""]
+    lines += ["## Per photograph", "",
+              "In order: the expected outcome from the label; the first model answers (image gate, text gate, the "
+              "scene with its commitment / reference probabilities); the owner's actions; the final disposition; the "
+              "Bedrock calls (the courier's ledger / the spend ledger); the task writes.", "",
+              "| photograph | expected (the label) | image gate, first | text gate, first | scene, first answer | "
+              "the owner's actions | final disposition | Bedrock calls | writes | ruling 57's chain |",
+              "|---|---|---|---|---|---|---|---|---|---|"]
+    for r in rows:
+        label, img = labels[r["file"]], r["image"]
+        image, text = _first_gates(r, floors)
+        lines.append(f"| {r['file']} | {_expected(label)} | {image} | {text} | {_scene_text(_first_scene(r))} | "
+                     f"{'; '.join(_owner_actions(r)) or '-'} | {_disposition(r)} | "
+                     f"{img.get('extraction_calls', 0)} / {r['extraction_calls_spend_ledger']} | {len(r['written'])} | "
+                     f"{chains[r['file']] or '-'} |")
+    lines += ["", "## Per photograph: against the label", "",
+              "| photograph | class | extraction against the label | confident disagreement at the first answer |",
+              "|---|---|---|---|"]
+    for r in rows:
+        label = labels[r["file"]]
+        verdict, projects, _ = _judged(r, label) if r["status"] == "done" else ("-", [], [])
+        lines.append(f"| {r['file']} | {_kind(label)} | {verdict}{' (' + '; '.join(projects) + ')' if projects else ''}"
+                     f" | {'; '.join(disagree[r['file']]) or '-'} |")
+    lines += ["", "A project reads written / labelled.", "",
               "## Per photograph: the input and the OCR", "",
               "| photograph | class | handwritten | angled | pixels | EXIF orientation | read at | OCR key words | "
               "OCR failure |", "|---|---|---|---|---|---|---|---|---|"]
@@ -1796,34 +1874,64 @@ def render5(data: dict[str, Any]) -> str:
         lines.append(f"| {r['file']} | {_kind(label)} | {'yes' if label.get('handwritten') else 'no'} | "
                      f"{label.get('angled') or '-'} | {img.get('pixels', '-')} | {img.get('orientation', '-')} | "
                      f"{img.get('read_at', '-')} | {words} | {failures[r['file']] or '-'} |")
-    lines += ["", "## Per photograph: the path", "",
-              "| photograph | class | image gate p | released | text gate p | scene: the model (confidence) | "
-              "scene: the owner | action | Bedrock calls | writes | extraction against the label | "
-              "confident disagreement |", "|---|---|---|---|---|---|---|---|---|---|---|---|"]
-    for r in rows:
-        img, label = r["image"], labels[r["file"]]
-        gate_p = next((v["picture_p"][0] for v in r["visits"] if v["picture_p"]), img.get("gate_p"))
-        text_p = next((v["text_gate_p"] for v in reversed(r["visits"]) if v["text_gate_p"]), [])
-        rel = "; ".join(f"{x.get('held_by')}: {x.get('by') or 'not released'}" for x in img.get("releases") or []) or "-"
-        model = _model_scene(r)
-        scene = ("-" if model is None else
-                 f"unsure (top {model.get('scene_choice')}, {model['scene_p']:.2f})" if model["scene"] == UNSURE_SCENE
-                 else f"{model['scene']} ({model['scene_p']:.2f})")
-        action = img.get("scene_action") if r["status"] == "done" else f"held ({r['reason']})"
-        verdict, projects, _ = _judged(r, label) if r["status"] == "done" else ("-", [], [])
-        lines.append(f"| {r['file']} | {_kind(label)} | {'-' if gate_p is None else f'{gate_p:.2f}'} | {rel} | "
-                     f"{', '.join(f'{x:.2f}' for x in text_p) or '-'} | {scene} | "
-                     f"{img['scene'] if img.get('scene_by') == 'owner' else '-'} | {action or _closed(r)} | "
-                     f"{img.get('extraction_calls', 0)} / {r['extraction_calls_spend_ledger']} | {len(r['written'])} | "
-                     f"{verdict}{' (' + '; '.join(projects) + ')' if projects else ''} | "
-                     f"{'; '.join(disagree[r['file']]) or '-'} |")
-    lines += ["", "Bedrock calls: the courier's ledger / the spend ledger. The text gate p is the last read of the text "
-                  "gate. A project reads written / labelled.", "",
-              "## Cloud calls and writes by class", "",
+    asked = [(r, _first_scene(r)) for r in rows if _first_scene(r)]
+    lines += ["", "## The scene, first answers", "",
+              f"The vision server's first answer, asked of {len(asked)} photographs (the owner's later answers are "
+              "under the owner's taps, not here). Rows: the label; columns: the answer.", "",
+              "| label \\ answer | " + " | ".join(SCENES2) + " |", "|---|" + "---|" * len(SCENES2)]
+    for want in kinds:
+        group = [v for r, v in asked if _kind(labels[r["file"]]) == want]
+        if want == "sensitive" and not group:
+            continue
+        lines.append(f"| {want} | " + " | ".join(str(sum(1 for v in group if v["scene"] == got)) for got in SCENES2) + " |")
+    accepted = [r for r, v in asked if v["scene"] == UNSURE_SCENE and labels[r["file"]].get("scene_unsure_accepted")]
+    lines += ["", f"First answer matches the label on "
+                  f"{sum(1 for r, v in asked if labels[r['file']]['scene'] == v['scene'])} of {len(asked)}; unsure on "
+                  f"{sum(1 for _, v in asked if v['scene'] == UNSURE_SCENE)}"
+              + (f", of which the label accepts unsure on {', '.join(r['file'] for r in accepted)}" if accepted else "")
+              + ".", "",
+              "## The owner's taps and the offers left", "",
+              "| photograph | class | offer | held by (p) or scene (top, p) | the owner | at (UTC) |",
+              "|---|---|---|---|---|---|"]
+    for r, x in released:
+        hold = next((v for v in r["visits"] if v["status"] == "hold" and v["reason"] in RELEASE_REASONS
+                     and ("image" if v["reason"] == "image-unsure" else "text") in x.get("held_by", "")), None)
+        p = None if hold is None else (hold["picture_p"][-1] if hold["reason"] == "image-unsure" and hold["picture_p"]
+                                       else (max(hold["text_gate_p"]) if hold["text_gate_p"] else None))
+        lines.append(f"| {r['file']} | {_kind(labels[r['file']])} | Release | {x.get('held_by')} "
+                     f"({'-' if p is None else f'{p:.2f}'}) | {'released' if x.get('by') == 'owner' else 'not taken'} | "
+                     f"{(x.get('at') or '-').replace('+00:00', '')} |")
+    for r in owner_scene:
+        first = _first_scene(r) or {}
+        lines.append(f"| {r['file']} | {_kind(labels[r['file']])} | Commitment or Reference | scene (top "
+                     f"{first.get('scene_choice') or '-'}, "
+                     f"{'-' if first.get('scene_p') is None else format(first['scene_p'], '.2f')}) | chose "
+                     f"{r['image']['scene'].capitalize()} | {(r['image'].get('scene_at') or '-').replace('+00:00', '')} |")
+    for r, o in left:
+        if o["step"] == "scene":
+            lines.append(f"| {r['file']} | {_kind(labels[r['file']])} | Commitment or Reference | scene ({o['on']}) | "
+                         "not taken | - |")
+    if not released and not owner_scene and not left:
+        lines.append("| - | - | no offer | - | - | - |")
+    lines += ["", "## Timings, memory and spend", "", "| count | result |", "|---|---|"]
+    every = lambda key: [v for r in rows for visit in r["visits"] for v in visit.get(key, [])]  # noqa: E731
+    lines += [f"| image gate read, median / p90 | {_ms([r['image']['gate_seconds'] for r in rows if 'gate_seconds' in r['image']])} |",
+              f"| OCR, median / p90 | {_ms([r['image']['ocr_seconds'] for r in rows if 'ocr_seconds' in r['image']])} |",
+              f"| text gate read, median / p90 | {_ms(every('text_gate_seconds'))} |",
+              f"| scene read, median / p90 | {_ms([v['scene_seconds'] for r in rows for v in [_first_scene(r)] if v and v.get('scene_seconds') is not None])} |",
+              f"| routing read, median / p90 | {_ms(every('routing_seconds'))} |"]
+    for name, m in data["memory_end"].items():
+        if m:
+            lines.append(f"| {name} memory at the end | {m['resident_gb']} GB resident, {m['private_gb']} GB private |")
+    spent = data["spend_after"]["total_usd"] - data["spend_before"]["total_usd"]
+    lines += [f"| Bedrock spend | ${spent:.6f} over {data['spend_after']['calls'] - data['spend_before']['calls']} "
+              f"call(s); the ledger at ${data['spend_after']['total_usd']:.6f} of the "
+              f"${data['spend_after']['hard_stop_usd']:.2f} hard stop |", ""]
+    lines += ["## Cloud calls and writes by class", "",
               "| class | photographs | Bedrock extraction calls (the courier's ledger / the spend ledger) | tasks written "
               "| reference notes kept | Telegram lines to the owner | expected |", "|---|---|---|---|---|---|---|"]
     expect = {"commitment": "a call and a write per photograph", "reference": "no call, no write",
-              "sensitive": "no call, no write, nothing to the owner"}
+              "sensitive": "no call, no write"}
     for k in kinds:
         group = of_kind[k]
         lines.append(f"| {k} | {len(group)} | {sum(r['image'].get('extraction_calls', 0) for r in group)} / "
@@ -1837,7 +1945,7 @@ def render5(data: dict[str, Any]) -> str:
               f"- Rates: {len(rows)} photographs, a few of each kind; a count of one or two is an observation, not a "
               "rate.",
               "- The gates' own reading of a released photograph: each was let through by the owner after a gate held "
-              "it as unsure.",
+              "it as unsure; and a tap resolves the uncertainty without making the first answer right.",
               "- A trained image gate or scene decision: the checkpoint's image answers come from its base model's "
               "vision tower, untrained on images.", ""]
     return "\n".join(lines)
