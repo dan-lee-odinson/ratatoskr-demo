@@ -17,6 +17,9 @@
 **Development roadmap:** planned capabilities, completion criteria, and the public tracking board:
 [ROADMAP.md](ROADMAP.md) and [the Project](https://github.com/users/dan-lee-odinson/projects/3).
 
+**Interactive sandbox (no sign-in, no install):** recorded Decider results, simulated integrations:
+https://dan-lee-odinson.github.io/ratatoskr-demo/
+
 A conversation ends (on a Pocket wearable
 recorder, or typed to a Telegram bot with `/demo`); each follow-up in it lands in Todoist and as a
 three-line message on a CircuitMess Artemis smartwatch or any phone with Telegram:

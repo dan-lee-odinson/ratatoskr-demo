@@ -5,6 +5,8 @@ JavaScript, no framework and no external asset. It is not a native app. It shows
 Telegram: ID-only review requests for held photographs and transcripts, a simulated private viewer, category and tag
 choices for ordinary tasks, and a history that keeps Decider's answer apart from the owner's choice.
 
+Interactive sandbox, with no sign-in or install (recorded Decider results, simulated integrations): https://dan-lee-odinson.github.io/ratatoskr-demo/
+
 ## Open it
 
 Open `app/index.html` in a browser at phone width (in Chrome's device toolbar, for instance), or serve the folder on
